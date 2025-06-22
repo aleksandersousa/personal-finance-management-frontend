@@ -1,30 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { AddEntryPage } from '@/presentation/components/server/add-entry-page';
-import { mockFormValidator } from '../../mocks';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
-
-// Mock do FormValidator
-const mockValidator = mockFormValidator<EntryFormData>();
-const mockOnSubmit = jest.fn();
 
 describe('AddEntryPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockValidator.validate.mockReturnValue({
-      success: true,
-      data: {
-        description: 'Test entry',
-        amount: 100.5,
-        type: 'INCOME',
-        categoryId: '1',
-        date: new Date('2024-01-01'),
-        isFixed: false,
-      },
-    });
   });
 
   it('should render page title and description', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     expect(screen.getByText('Adicionar Nova Entrada')).toBeInTheDocument();
     expect(
@@ -35,7 +18,7 @@ describe('AddEntryPage', () => {
   });
 
   it('should render EntryFormWithFeedback component', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     // Verificar se o formulário está presente
     expect(screen.getByLabelText('Descrição')).toBeInTheDocument();
@@ -46,7 +29,7 @@ describe('AddEntryPage', () => {
   });
 
   it('should render help tips', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     expect(
       screen.getByText('💡 Dicas para categorizar suas entradas')
@@ -62,7 +45,7 @@ describe('AddEntryPage', () => {
   });
 
   it('should have proper layout and styling', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     // Verificar se tem o layout correto - buscar pelo container principal
     const mainContainer = screen
@@ -82,7 +65,7 @@ describe('AddEntryPage', () => {
   });
 
   it('should render quick action links', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     expect(screen.getByText('📋 Ver Todas as Entradas')).toBeInTheDocument();
     expect(screen.getByText('📈 Ver Resumo Mensal')).toBeInTheDocument();
@@ -98,7 +81,7 @@ describe('AddEntryPage', () => {
   });
 
   it('should render fixed entries explanation', () => {
-    render(<AddEntryPage validator={mockValidator} onSubmit={mockOnSubmit} />);
+    render(<AddEntryPage />);
 
     expect(screen.getByText('Entradas fixas:')).toBeInTheDocument();
     expect(

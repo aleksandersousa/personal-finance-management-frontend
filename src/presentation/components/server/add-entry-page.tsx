@@ -1,17 +1,7 @@
 import React from 'react';
 import { EntryFormWithFeedback } from '@/presentation/components/client/entry-form-with-feedback';
-import { FormValidator } from '@/presentation/protocols/form-validator';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
 
-interface AddEntryPageProps {
-  validator: FormValidator<EntryFormData>;
-  onSubmit: (data: EntryFormData) => Promise<void>;
-}
-
-export const AddEntryPage: React.FC<AddEntryPageProps> = ({
-  validator,
-  onSubmit,
-}) => {
+export const AddEntryPage: React.FC = () => {
   return (
     <div className='min-h-screen bg-slate-50 py-8'>
       <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -27,7 +17,7 @@ export const AddEntryPage: React.FC<AddEntryPageProps> = ({
 
         {/* Main Form Card */}
         <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-          <EntryFormWithFeedback validator={validator} onSubmit={onSubmit} />
+          <EntryFormWithFeedback />
         </div>
 
         {/* Help Section */}

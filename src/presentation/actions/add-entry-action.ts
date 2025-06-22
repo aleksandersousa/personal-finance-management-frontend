@@ -1,37 +1,23 @@
 'use server';
 
-import { revalidateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { EntryFormData } from '@/infra/validation/entry-form-schema';
 import { AddEntryParams } from '@/domain/usecases/add-entry';
 
-export async function addEntryAction(formData: FormData): Promise<void> {
-  try {
-    const description = formData.get('description') as string;
-    const amount = parseFloat(formData.get('amount') as string);
-    const type = formData.get('type') as 'INCOME' | 'EXPENSE';
-    const categoryId = formData.get('categoryId') as string;
-    const date = new Date(formData.get('date') as string);
-    const isFixed = formData.get('isFixed') === 'true';
+export async function addEntryAction(data: EntryFormData): Promise<void> {
+  // Convert EntryFormData to AddEntryParams
+  const params: AddEntryParams = {
+    description: data.description,
+    amount: Math.round(data.amount * 100), // Convert to cents
+    type: data.type,
+    categoryId: data.categoryId,
+    date: data.date,
+    isFixed: data.isFixed,
+    userId: 'mock-user-id', // In real implementation, get from auth
+  };
 
-    const params: AddEntryParams = {
-      description,
-      amount,
-      type,
-      categoryId,
-      date,
-      isFixed,
-      userId: 'mock-user-id', // In real implementation, get from auth
-    };
+  // Mock implementation - would call actual use case
+  console.log('Adding entry:', params);
 
-    // Mock implementation - would call real API
-    console.log('Adding entry:', params);
-
-    // Revalidate cache
-    revalidateTag('entries');
-  } catch (error) {
-    console.error('Error adding entry:', error);
-    throw error;
-  }
-
-  redirect('/entries');
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
 }

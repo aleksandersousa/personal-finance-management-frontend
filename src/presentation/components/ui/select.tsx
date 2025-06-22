@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 
 export interface SelectOption {
   value: string;
@@ -24,7 +24,8 @@ export const Select: React.FC<SelectProps> = ({
   id,
   ...props
 }) => {
-  const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+  const generatedId = useId();
+  const selectId = id || generatedId;
 
   const baseClasses =
     'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm';
