@@ -18,18 +18,24 @@ const customJestConfig = {
     '^@/main/(.*)$': '<rootDir>/src/main/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['<rootDir>/tests/**/*.spec.{js,jsx,ts,tsx}'],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/index.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/app/layout.tsx',
+    '!src/app/page.tsx',
+    '!src/app/**/page.tsx',
+    '!src/app/globals.css',
+    '!src/app/favicon.ico',
   ],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
   testPathIgnorePatterns: [

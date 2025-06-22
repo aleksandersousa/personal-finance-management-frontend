@@ -42,17 +42,21 @@ frontend/
 │   │   ├── models/    # Modelos de domínio (interfaces)
 │   │   └── usecases/  # Interfaces de casos de uso
 │   ├── data/          # Implementações de casos de uso
-│   │   ├── usecases/  # Implementações concretas
-│   │   └── actions/   # Server Actions para mutações
+│   │   ├── protocols/ # Interfaces de comunicação (sem dependências externas)
+│   │   │   └── http/  # Interfaces HTTP
+│   │   └── usecases/  # Implementações concretas
 │   ├── infra/         # Implementações técnicas
 │   │   ├── http/      # HTTP clients (server/client)
 │   │   ├── cache/     # Cache e revalidation
+│   │   ├── validation/# Implementações de validação (Zod, etc.)
 │   │   └── auth/      # Autenticação (middleware)
 │   ├── presentation/  # Componentes UI
+│   │   ├── actions/   # Server Actions para mutações
 │   │   ├── components/
 │   │   │   ├── server/  # Server Components
 │   │   │   ├── client/  # Client Components
 │   │   │   └── ui/      # Componentes base (atoms)
+│   │   ├── protocols/ # Interfaces de validação e outros protocolos
 │   │   └── hooks/     # Hooks para Client Components
 │   └── main/          # Composição e configuração
 │       ├── factories/ # Factories para DI
@@ -84,6 +88,10 @@ frontend/
 
 - **Fluxo de dependência**: presentation → data → domain
 - **Domain não depende** de nenhuma camada externa
+- **Data Layer com protocolos**: Interfaces de comunicação separadas das implementações
+- **Presentation Layer com Server Actions**: Actions movidas para presentation layer
+- **Protocols separados por responsabilidade**: Validação e comunicação em pastas protocols
+- **Mocks organizados por layer**: Cada camada tem sua pasta de mocks
 - **Server Components por padrão**: Maximize o uso de Server Components
 - **Client Components quando necessário**: Use 'use client' apenas quando precisar de interatividade
 - **Server Actions para mutações**: Substitua API routes por Server Actions quando possível
@@ -105,14 +113,29 @@ export type LoadEntriesParams = {
   userId: string;
 };
 
-// 2. Implementar no data layer para Server Components
+// 2. Definir protocolo HTTP no data layer
+// data/protocols/http/http-client.ts
+export interface HttpClient {
+  get<T = unknown>(url: string, config?: unknown): Promise<T>;
+  post<T = unknown>(url: string, data?: unknown, config?: unknown): Promise<T>;
+  put<T = unknown>(url: string, data?: unknown, config?: unknown): Promise<T>;
+  delete<T = unknown>(url: string, config?: unknown): Promise<T>;
+}
+
+// 3. Implementar no data layer para Server Components
 // data/usecases/server-load-entries.ts
+import { LoadEntriesByMonth, LoadEntriesParams } from '@/domain/usecases/load-entries';
+import { EntryModel } from '@/domain/models/entry';
+import { HttpClient } from '@/data/protocols/http/http-client';
+
 export class ServerLoadEntries implements LoadEntriesByMonth {
-  constructor(private readonly baseUrl: string) {}
+  constructor(
+    private readonly baseUrl: string,
+    private readonly httpClient: HttpClient
+  ) {}
 
   async load(params: LoadEntriesParams): Promise<EntryModel[]> {
-    // Next.js fetch com cache automático
-    const response = await fetch(
+    const response = await this.httpClient.get<{ data: any[] }>(
       `${this.baseUrl}/entries?month=${params.month}`,
       {
         headers: {
@@ -126,12 +149,7 @@ export class ServerLoadEntries implements LoadEntriesByMonth {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to load entries");
-    }
-
-    const data = await response.json();
-    return data.data.map(this.mapToEntryModel);
+    return response.data.map(this.mapToEntryModel);
   }
 
   private mapToEntryModel(apiEntry: any): EntryModel {
@@ -174,13 +192,13 @@ export default async function EntriesPage({ searchParams }: PageProps) {
 
 ```typescript
 // 1. Server Action para mutações
-// data/actions/add-entry-action.ts
-"use server";
+// presentation/actions/add-entry-action.ts
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/infra/auth/server-auth";
-import { AddEntryParams } from "@/domain/usecases/add-entry";
+import { revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/infra/auth/server-auth';
+import { AddEntryParams } from '@/domain/usecases/add-entry';
 
 export async function addEntryAction(params: AddEntryParams) {
   const user = await getCurrentUser();
@@ -221,10 +239,10 @@ export async function addEntryAction(params: AddEntryParams) {
 
 // 2. Client Component para o formulário
 // presentation/components/client/add-entry-form.tsx
-("use client");
+('use client');
 
-import { useFormState } from "react-dom";
-import { addEntryAction } from "@/data/actions/add-entry-action";
+import { useFormState } from 'react-dom';
+import { addEntryAction } from '@/presentation/actions/add-entry-action';
 
 export function AddEntryForm() {
   const [state, formAction] = useFormState(addEntryAction, null);
@@ -350,7 +368,7 @@ Se estiver usando o App Router do Next.js, a integração seria:
 
 ```typescript
 // app/entries/add/page.tsx
-import { makeAddEntryPage } from "@/main/factories/pages/add-entry-page-factory";
+import { makeAddEntryPage } from '@/main/factories/pages/add-entry-page-factory';
 
 export default function AddEntryPage() {
   return makeAddEntryPage();
@@ -441,7 +459,7 @@ interface AuthenticatedRequest {
 // Validar propriedade dos recursos
 const validateOwnership = (resourceUserId: string, currentUserId: string) => {
   if (resourceUserId !== currentUserId) {
-    throw new UnauthorizedError("Resource not owned by user");
+    throw new UnauthorizedError('Resource not owned by user');
   }
 };
 ```
@@ -450,21 +468,21 @@ const validateOwnership = (resourceUserId: string, currentUserId: string) => {
 
 ```typescript
 // middleware.ts - Autenticação no Edge Runtime
-import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
 export async function middleware(request: NextRequest) {
   // Rotas que precisam de autenticação
-  const protectedPaths = ["/dashboard", "/entries", "/summary", "/forecast"];
-  const isProtectedPath = protectedPaths.some((path) =>
+  const protectedPaths = ['/dashboard', '/entries', '/summary', '/forecast'];
+  const isProtectedPath = protectedPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   );
 
   if (isProtectedPath) {
-    const token = request.cookies.get("accessToken")?.value;
+    const token = request.cookies.get('accessToken')?.value;
 
     if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
     try {
@@ -472,7 +490,7 @@ export async function middleware(request: NextRequest) {
       await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));
     } catch (error) {
       // Token inválido, tentar refresh
-      const refreshToken = request.cookies.get("refreshToken")?.value;
+      const refreshToken = request.cookies.get('refreshToken')?.value;
 
       if (refreshToken) {
         try {
@@ -480,10 +498,10 @@ export async function middleware(request: NextRequest) {
           const response = NextResponse.next();
 
           // Atualizar cookies
-          response.cookies.set("accessToken", newTokens.accessToken, {
+          response.cookies.set('accessToken', newTokens.accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: 'strict',
             maxAge: 15 * 60, // 15 minutos
           });
 
@@ -491,15 +509,15 @@ export async function middleware(request: NextRequest) {
         } catch (refreshError) {
           // Refresh falhou, redirecionar para login
           const response = NextResponse.redirect(
-            new URL("/login", request.url)
+            new URL('/login', request.url)
           );
-          response.cookies.delete("accessToken");
-          response.cookies.delete("refreshToken");
+          response.cookies.delete('accessToken');
+          response.cookies.delete('refreshToken');
           return response;
         }
       }
 
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
@@ -507,19 +525,19 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|login|register).*)"],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|register).*)'],
 };
 
 // infra/auth/server-auth.ts - Autenticação em Server Components
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
 
 export async function getCurrentUser() {
   const cookieStore = cookies();
-  const token = cookieStore.get("accessToken")?.value;
+  const token = cookieStore.get('accessToken')?.value;
 
   if (!token) {
-    throw new Error("No authentication token");
+    throw new Error('No authentication token');
   }
 
   try {
@@ -534,52 +552,52 @@ export async function getCurrentUser() {
       name: payload.name as string,
     };
   } catch (error) {
-    throw new Error("Invalid token");
+    throw new Error('Invalid token');
   }
 }
 
 // Server Action para login
-("use server");
+('use server');
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export async function loginAction(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
   try {
     const response = await fetch(`${process.env.API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
-      throw new Error("Login failed");
+      throw new Error('Login failed');
     }
 
     const { tokens } = await response.json();
 
     // Armazenar tokens em cookies httpOnly
-    cookies().set("accessToken", tokens.accessToken, {
+    cookies().set('accessToken', tokens.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       maxAge: 15 * 60, // 15 minutos
     });
 
-    cookies().set("refreshToken", tokens.refreshToken, {
+    cookies().set('refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60, // 7 dias
     });
   } catch (error) {
-    throw new Error("Login failed");
+    throw new Error('Login failed');
   }
 
-  redirect("/dashboard");
+  redirect('/dashboard');
 }
 ```
 
@@ -619,25 +637,25 @@ export default async function EntriesPage() {
 
 ```typescript
 // Cache automático para Server Components
-const entries = await fetch("/api/entries", {
+const entries = await fetch('/api/entries', {
   next: {
     revalidate: 300, // 5 minutos
-    tags: ["entries", `user-${userId}`],
+    tags: ['entries', `user-${userId}`],
   },
 });
 
 // Revalidação sob demanda
-import { revalidateTag } from "next/cache";
-await revalidateTag("entries");
+import { revalidateTag } from 'next/cache';
+await revalidateTag('entries');
 
 // Cache de uso específico
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from 'next/cache';
 
 const getCachedSummary = unstable_cache(
   async (userId: string, month: string) => {
     return await fetchMonthlySummary(userId, month);
   },
-  ["monthly-summary"],
+  ['monthly-summary'],
   { revalidate: 3600 } // 1 hora
 );
 ```
@@ -651,16 +669,16 @@ const nextConfig = {
   experimental: {
     turbo: {
       rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
         },
       },
     },
   },
 
   // Otimizações de produção
-  optimizePackageImports: ["lodash", "date-fns", "recharts"],
+  optimizePackageImports: ['lodash', 'date-fns', 'recharts'],
 
   // Compressão
   compress: true,
@@ -748,19 +766,19 @@ export function SearchableEntries() {
 // Monitoramento de performance com Next.js 15
 const performanceMetrics = {
   // Core Web Vitals
-  LCP: "<2.5s", // Largest Contentful Paint
-  INP: "<200ms", // Interaction to Next Paint (substitui FID)
-  CLS: "<0.1", // Cumulative Layout Shift
+  LCP: '<2.5s', // Largest Contentful Paint
+  INP: '<200ms', // Interaction to Next Paint (substitui FID)
+  CLS: '<0.1', // Cumulative Layout Shift
 
   // Next.js específico
-  TTFB: "<800ms", // Time to First Byte (Server Components)
-  FCP: "<1.5s", // First Contentful Paint
-  TTI: "<3.5s", // Time to Interactive
-  Bundle: "<500KB", // Bundle size (gzipped)
+  TTFB: '<800ms', // Time to First Byte (Server Components)
+  FCP: '<1.5s', // First Contentful Paint
+  TTI: '<3.5s', // Time to Interactive
+  Bundle: '<500KB', // Bundle size (gzipped)
 
   // PPR específico
-  Static_Generation_Time: "<2s",
-  Dynamic_Streaming_Time: "<1s",
+  Static_Generation_Time: '<2s',
+  Dynamic_Streaming_Time: '<1s',
 };
 ```
 
@@ -778,53 +796,152 @@ const performanceMetrics = {
 /__________________\
 ```
 
-### Testes por Camada
+### Testes por Camada com Mocks Organizados
 
 **Domain Layer:**
 
 ```typescript
+// tests/domain/usecases/add-entry.spec.ts
 // Testes de regras de negócio puras
-describe("Entry validation", () => {
-  it("should reject negative amounts", () => {
+describe('Entry validation', () => {
+  it('should reject negative amounts', () => {
     expect(() => createEntry({ amount: -100 })).toThrow(
-      "Amount must be positive"
+      'Amount must be positive'
     );
   });
 });
 ```
 
-**Data Layer:**
+**Data Layer com Mocks:**
 
 ```typescript
-// Testes de casos de uso com mocks
-describe("RemoteAddEntry", () => {
-  it("should convert amount to cents", async () => {
-    const httpClient = mockHttpClient();
-    const addEntry = new RemoteAddEntry(url, httpClient);
+// tests/data/mocks/http-client-mock.ts
+import { HttpClient } from '@/data/protocols/http/http-client';
 
-    await addEntry.add({ amount: 100.5 });
+export const mockHttpClient: jest.Mocked<HttpClient> = {
+  get: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+  delete: jest.fn(),
+};
 
-    expect(httpClient.request).toHaveBeenCalledWith({
-      body: expect.objectContaining({ amount: 10050 }),
+// tests/data/mocks/index.ts
+export * from './http-client-mock';
+
+// tests/data/usecases/remote-add-entry.spec.ts
+import { RemoteAddEntry } from '@/data/usecases/remote-add-entry';
+import { AddEntryParams } from '@/domain/usecases/add-entry';
+import { mockHttpClient } from '../mocks';
+
+describe('RemoteAddEntry', () => {
+  let sut: RemoteAddEntry;
+  const url = 'http://localhost:3001';
+
+  beforeEach(() => {
+    sut = new RemoteAddEntry(url, mockHttpClient);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should convert amount to cents', async () => {
+    const params: AddEntryParams = {
+      amount: 100.5,
+      // ... outros campos
+    };
+
+    mockHttpClient.post.mockResolvedValueOnce({
+      id: 'entry-1',
+      ...params,
     });
+
+    await sut.add(params);
+
+    expect(mockHttpClient.post).toHaveBeenCalledWith(
+      `${url}/entries`,
+      expect.objectContaining({ amount: 10050 })
+    );
   });
 });
 ```
 
-**Presentation Layer:**
+**Presentation Layer com Mocks:**
 
 ```typescript
-// Testes de componentes
-describe("EntryForm", () => {
-  it("should call onSubmit with formatted data", async () => {
-    const onSubmit = jest.fn();
-    render(<EntryForm onSubmit={onSubmit} />);
+// tests/presentation/mocks/form-validator-mock.ts
+import { FormValidator } from '@/presentation/protocols/form-validator';
 
-    await userEvent.type(screen.getByLabelText("Valor"), "100,50");
-    await userEvent.click(screen.getByRole("button", { name: "Salvar" }));
+export const mockFormValidator = <T>(): jest.Mocked<FormValidator<T>> => ({
+  validate: jest.fn(),
+});
 
-    expect(onSubmit).toHaveBeenCalledWith({
-      amount: 100.5,
+// tests/presentation/mocks/index.ts
+export * from './form-validator-mock';
+
+// tests/presentation/components/client/entry-form.spec.tsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { EntryForm } from '@/presentation/components/client/entry-form';
+import { EntryFormData } from '@/infra/validation/entry-form-schema';
+import { mockFormValidator } from '../../mocks';
+
+describe('EntryForm', () => {
+  const validator = mockFormValidator<EntryFormData>();
+  const mockOnSubmit = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    validator.validate.mockReturnValue({
+      success: true,
+      data: {
+        description: 'Test entry',
+        amount: 100.5,
+        type: 'INCOME',
+        categoryId: '1',
+        date: new Date('2024-01-01'),
+        isFixed: false,
+      },
+    });
+  });
+
+  it('should call validator and onSubmit with formatted data', async () => {
+    render(
+      <EntryForm
+        validator={validator}
+        onSubmit={mockOnSubmit}
+        isLoading={false}
+      />
+    );
+
+    // Fill and submit form
+    fireEvent.change(screen.getByLabelText('Descrição'), {
+      target: { value: 'Test entry' },
+    });
+    fireEvent.change(screen.getByLabelText('Valor (R$)'), {
+      target: { value: '100.50' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Adicionar Entrada' }));
+
+    await waitFor(() => {
+      expect(validator.validate).toHaveBeenCalledWith({
+        description: 'Test entry',
+        amount: 100.5,
+        type: 'INCOME',
+        categoryId: '1',
+        date: new Date('2024-01-01'),
+        isFixed: false,
+      });
+    });
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        description: 'Test entry',
+        amount: 100.5,
+        type: 'INCOME',
+        categoryId: '1',
+        date: new Date('2024-01-01'),
+        isFixed: false,
+      });
     });
   });
 });
@@ -840,7 +957,7 @@ name: Frontend CI/CD
 on:
   push:
     branches: [main, develop]
-    paths: ["frontend/**"]
+    paths: ['frontend/**']
 
 jobs:
   test:
@@ -850,8 +967,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -1100,7 +1217,7 @@ Para gerenciar dados que precisam persistir entre navegações de páginas:
 
 ```typescript
 // pages/entries/index.tsx
-import { makeEntriesListPage } from "@/main/factories/pages/entries-list-page-factory";
+import { makeEntriesListPage } from '@/main/factories/pages/entries-list-page-factory';
 
 export async function getServerSideProps(context) {
   // Buscar dados iniciais do servidor
