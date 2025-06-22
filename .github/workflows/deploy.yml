@@ -26,22 +26,26 @@ jobs:
       - name: Run tests
         run: yarn test:ci
 
-      - name: Set environment
-        id: set-env
-        run: |
-          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-            echo "VERCEL_ENVIRONMENT=production" >> $GITHUB_ENV
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_PROD }}" >> $GITHUB_ENV
-          else
-            echo "VERCEL_ENVIRONMENT=preview" >> $GITHUB_ENV
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}" >> $GITHUB_ENV
-          fi
+      - name: Build application
+        run: yarn build
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
-          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+      # TODO: Configurar deploy quando necessário
+      # - name: Set environment
+      #   id: set-env
+      #   run: |
+      #     if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+      #       echo "VERCEL_ENVIRONMENT=production" >> $GITHUB_ENV
+      #       echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_PROD }}" >> $GITHUB_ENV
+      #     else
+      #       echo "VERCEL_ENVIRONMENT=preview" >> $GITHUB_ENV
+      #       echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}" >> $GITHUB_ENV
+      #     fi
+
+      # - name: Deploy to Vercel
+      #   uses: amondnet/vercel-action@v25
+      #   with:
+      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
+      #     vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
