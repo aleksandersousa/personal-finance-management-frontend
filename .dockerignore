@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+.git
+.github
+.vscode
+*.log
+.env*
+.DS_Store
+coverage
+README.md
+cypress.config.ts
+jest.config.mjs
+jest.setup.js
+tests
+.husky
+.prettierrc 
