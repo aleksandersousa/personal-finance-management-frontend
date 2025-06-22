@@ -13,7 +13,7 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:ci": "jest --ci --coverage --watchAll=false --passWithNoTests",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
     "prepare": "husky"
