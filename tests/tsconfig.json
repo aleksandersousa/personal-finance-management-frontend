@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["jest", "@testing-library/jest-dom", "node"]
+    "types": ["jest", "@testing-library/jest-dom", "@types/jest"],
+    "skipLibCheck": true
   },
-  "include": ["./**/*", "../jest.setup.js", "../jest.d.ts"],
-  "exclude": ["./e2e/**/*"]
+  "include": ["../jest.setup.js", "../jest.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["../node_modules", "../cypress", "../cypress.config.ts", "e2e"]
 }

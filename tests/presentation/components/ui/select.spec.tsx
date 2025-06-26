@@ -152,7 +152,10 @@ describe('Select', () => {
     const label = container.querySelector('label');
 
     expect(select).toHaveAttribute('id');
-    expect(label).toHaveAttribute('for', select?.getAttribute('id'));
+    expect(label).toHaveAttribute(
+      'for',
+      select?.getAttribute('id') || undefined
+    );
   });
 
   it('should use provided id', () => {
