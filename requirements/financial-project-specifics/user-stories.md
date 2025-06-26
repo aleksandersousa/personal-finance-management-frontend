@@ -35,6 +35,122 @@ O **Sistema de Gerenciamento Financeiro Pessoal** permite aos usuários:
 
 ## 📱 Histórias de Usuário
 
+### História 0.1: Cadastro de usuário
+
+**Como** visitante  
+**Quero** criar uma conta no sistema  
+**Para** começar a gerenciar minhas finanças pessoais
+
+#### Tarefas:
+
+- Criar interface `AddAccount` em `domain/usecases`
+- Implementar `RemoteAddAccount` em `data/usecases`
+- Criar factory `makeRemoteAddAccount` em `main/factories/usecases`
+- Criar componente `RegisterForm` que recebe a função de submissão via props
+- Criar componente de página `RegisterPage` que recebe o caso de uso via props
+- Criar factory `makeRegisterPage` em `main/factories/pages`
+- Implementar página Next.js que utiliza a factory da página
+- Adicionar validações client-side: email válido, senha forte, confirmação de senha
+- Implementar feedback de sucesso/erro após submissão
+- Adicionar redirecionamento automático para login após cadastro bem-sucedido
+- Implementar testes unitários para cada camada
+- Implementar teste E2E do fluxo completo de registro
+
+#### Critérios de Aceitação:
+
+- ✅ Campos obrigatórios: nome, email, senha, confirmação de senha
+- ✅ Validação de email único no sistema
+- ✅ Senha com mínimo 8 caracteres, incluindo maiúscula, minúscula e número
+- ✅ Confirmação de senha deve coincidir com a senha
+- ✅ Feedback claro em caso de erro (email já existe, senha fraca, etc.)
+- ✅ Loading state durante submissão
+- ✅ Redirecionamento para página de login após sucesso
+
+### História 0.2: Login de usuário
+
+**Como** usuário cadastrado  
+**Quero** fazer login no sistema  
+**Para** acessar meus dados financeiros
+
+#### Tarefas:
+
+- Criar interface `Authentication` em `domain/usecases`
+- Implementar `RemoteAuthentication` em `data/usecases`
+- Criar factory `makeRemoteAuthentication` em `main/factories/usecases`
+- Criar componente `LoginForm` que recebe a função de submissão via props
+- Criar componente de página `LoginPage` que recebe o caso de uso via props
+- Criar factory `makeLoginPage` em `main/factories/pages`
+- Implementar página Next.js que utiliza a factory da página
+- Implementar gerenciamento de tokens JWT (access + refresh)
+- Criar sistema de armazenamento seguro de tokens (localStorage/cookies)
+- Adicionar redirecionamento baseado em autenticação
+- Implementar "Lembrar-me" para sessões persistentes
+- Adicionar link para página de cadastro
+- Implementar testes unitários para cada camada
+- Implementar teste E2E do fluxo completo de login
+
+#### Critérios de Aceitação:
+
+- ✅ Campos obrigatórios: email e senha
+- ✅ Validação de credenciais via API
+- ✅ Armazenamento seguro de tokens JWT
+- ✅ Redirecionamento para dashboard após login bem-sucedido
+- ✅ Feedback claro em caso de credenciais inválidas
+- ✅ Loading state durante autenticação
+- ✅ Opção "Lembrar-me" funcional
+- ✅ Link para página de cadastro
+
+### História 0.3: Logout de usuário
+
+**Como** usuário logado  
+**Quero** fazer logout do sistema  
+**Para** proteger meus dados quando não estiver usando
+
+#### Tarefas:
+
+- Criar interface `Logout` em `domain/usecases`
+- Implementar `RemoteLogout` em `data/usecases`
+- Criar factory `makeRemoteLogout` em `main/factories/usecases`
+- Criar componente `LogoutButton` que recebe a função de logout via props
+- Adicionar componente de logout no header/navbar
+- Implementar limpeza de tokens e dados do usuário
+- Adicionar redirecionamento para página de login
+- Implementar confirmação antes do logout (opcional)
+- Implementar testes unitários para cada camada
+
+#### Critérios de Aceitação:
+
+- ✅ Botão de logout visível em todas as páginas autenticadas
+- ✅ Limpeza completa de tokens e dados do localStorage
+- ✅ Redirecionamento imediato para página de login
+- ✅ Invalidação do token no servidor (se implementado)
+- ✅ Feedback visual durante processo de logout
+
+### História 0.4: Renovação automática de token
+
+**Como** usuário logado  
+**Quero** que minha sessão seja renovada automaticamente  
+**Para** não perder dados durante o uso prolongado do sistema
+
+#### Tarefas:
+
+- Criar interface `RefreshToken` em `domain/usecases`
+- Implementar `RemoteRefreshToken` em `data/usecases`
+- Criar factory `makeRemoteRefreshToken` em `main/factories/usecases`
+- Implementar interceptador HTTP para renovação automática
+- Criar sistema de detecção de token expirado
+- Implementar retry automático de requisições após renovação
+- Adicionar fallback para logout em caso de falha na renovação
+- Implementar testes para cenários de renovação
+
+#### Critérios de Aceitação:
+
+- ✅ Renovação automática antes da expiração do token
+- ✅ Retry transparente de requisições falhadas por token expirado
+- ✅ Logout automático se renovação falhar
+- ✅ Não interromper fluxo do usuário durante renovação
+- ✅ Logs apropriados para debug de problemas de autenticação
+
 ### História 1: Adicionar entrada financeira
 
 **Como** usuário  
