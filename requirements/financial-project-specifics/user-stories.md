@@ -193,7 +193,7 @@ const amountInReais = amountInCents / 100;
 
 ```typescript
 // Frontend → API
-const dateISO = date.toISOString().split("T")[0]; // YYYY-MM-DD
+const dateISO = date.toISOString().split('T')[0]; // YYYY-MM-DD
 
 // API → Frontend
 const dateObject = new Date(dateISO);
@@ -204,7 +204,7 @@ const dateObject = new Date(dateISO);
 ```typescript
 const headers = {
   Authorization: `Bearer ${accessToken}`,
-  "Content-Type": "application/json",
+  'Content-Type': 'application/json',
 };
 ```
 
