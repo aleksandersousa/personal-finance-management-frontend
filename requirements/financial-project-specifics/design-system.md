@@ -23,44 +23,95 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 
 ### Logo
 
-- **Principal**: Versão colorida para uso em fundos claros
-- **Alternativa**: Versão monocromática para fundos escuros
-- **Favicon**: Versão simplificada para uso em ícones pequenos
+A logo do **FinanceApp** combina elementos visuais que representam crescimento financeiro e modernidade:
+
+- **Principal** (`logo.svg`): Versão colorida para uso em fundos claros
+
+  - Círculo com gradiente slate (primário)
+  - Ícone de cifrão em branco
+  - Elementos de gráfico em pink (terciário)
+  - Borda cyan (secundário)
+
+- **Alternativa** (`logo-dark.svg`): Versão para fundos escuros
+
+  - Círculo com gradiente escuro
+  - Ícone de cifrão em cyan
+  - Elementos de gráfico em pink
+  - Texto em branco
+
+- **Favicon** (`favicon-logo.svg`): Versão simplificada 32x32px
+
+  - Apenas o círculo com ícone de cifrão
+  - Elementos de gráfico minimalistas
+
 - **Espaçamento**: Manter área de respiro de 1x a altura do logotipo em todos os lados
+
+### Elementos da Logo
+
+- **Símbolo Principal**: Cifrão ($) representando controle financeiro
+- **Gráfico**: Pontos e linhas sugerindo crescimento e análise
+- **Tipografia**: Plus Jakarta Sans Bold para o nome, Regular para o subtítulo
+- **Forma**: Círculo transmitindo completude e segurança
 
 ## 🎨 Cores
 
 ### Paleta Principal
 
-| Nome           | Hex       | Tailwind     | Uso                                            |
-| -------------- | --------- | ------------ | ---------------------------------------------- |
-| **Primária**   | `#624CF5` | `indigo-600` | Ações principais, links, elementos de destaque |
-| **Secundária** | `#0A84FF` | `blue-500`   | Elementos secundários, ações alternativas      |
-| **Terciária**  | `#32D583` | `green-500`  | Receitas, sucesso, crescimento positivo        |
-| **Alerta**     | `#FF9500` | `amber-500`  | Avisos, notificações, atenção                  |
-| **Erro**       | `#FF2D55` | `red-500`    | Erros, despesas, crescimento negativo          |
+| Nome           | Hex       | Tailwind    | Uso                                          |
+| -------------- | --------- | ----------- | -------------------------------------------- |
+| **Primária**   | `#1A1D47` | `slate-900` | Fundos principais, navegação, elementos base |
+| **Secundária** | `#00D4FF` | `cyan-400`  | Elementos de destaque, valores positivos     |
+| **Terciária**  | `#FF6B9D` | `pink-400`  | Ações secundárias, elementos interativos     |
+| **Sucesso**    | `#00E676` | `green-400` | Receitas, crescimento positivo, confirmações |
+| **Alerta**     | `#FFB74D` | `amber-300` | Avisos, notificações, atenção                |
+| **Erro**       | `#FF5252` | `red-400`   | Erros, despesas, crescimento negativo        |
 
 ### Tons de Cinza
 
-| Nome          | Hex       | Tailwind   | Uso                                         |
-| ------------- | --------- | ---------- | ------------------------------------------- |
-| **Branco**    | `#FFFFFF` | `white`    | Fundo principal, texto em áreas escuras     |
-| **Cinza 50**  | `#F7F9FC` | `gray-50`  | Fundo secundário, hover em elementos claros |
-| **Cinza 100** | `#EEF1F9` | `gray-100` | Fundo de cards, bordas sutis                |
-| **Cinza 300** | `#D3D8E2` | `gray-300` | Bordas, separadores                         |
-| **Cinza 500** | `#6B7280` | `gray-500` | Texto secundário, placeholders              |
-| **Cinza 700** | `#384766` | `gray-700` | Texto primário                              |
-| **Cinza 900** | `#111827` | `gray-900` | Títulos, texto de ênfase                    |
+| Nome          | Hex       | Tailwind    | Uso                                         |
+| ------------- | --------- | ----------- | ------------------------------------------- |
+| **Branco**    | `#FFFFFF` | `white`     | Fundo principal, texto em áreas escuras     |
+| **Cinza 50**  | `#F8FAFC` | `slate-50`  | Fundo secundário, hover em elementos claros |
+| **Cinza 100** | `#F1F5F9` | `slate-100` | Fundo de cards, bordas sutis                |
+| **Cinza 300** | `#CBD5E1` | `slate-300` | Bordas, separadores                         |
+| **Cinza 500** | `#64748B` | `slate-500` | Texto secundário, placeholders              |
+| **Cinza 700** | `#334155` | `slate-700` | Texto primário                              |
+| **Cinza 800** | `#1E293B` | `slate-800` | Fundos escuros secundários                  |
+| **Cinza 900** | `#0F172A` | `slate-900` | Títulos, texto de ênfase, fundos escuros    |
 
 ### Cores Adicionais
 
-| Nome             | Hex       | Tailwind     | Uso                                |
-| ---------------- | --------- | ------------ | ---------------------------------- |
-| **Purple Light** | `#EDE9FE` | `purple-100` | Backgrounds, estados de hover      |
-| **Blue Light**   | `#EFF6FF` | `blue-50`    | Backgrounds alternativos           |
-| **Green Light**  | `#DCFCE7` | `green-100`  | Backgrounds para valores positivos |
-| **Red Light**    | `#FFE2E5` | `red-100`    | Backgrounds para valores negativos |
-| **Dark Purple**  | `#4318FF` | `purple-700` | Elementos de maior destaque        |
+| Nome               | Hex       | Tailwind    | Uso                                |
+| ------------------ | --------- | ----------- | ---------------------------------- |
+| **Cyan Light**     | `#E0F7FF` | `cyan-50`   | Backgrounds, estados de hover      |
+| **Pink Light**     | `#FCE7F3` | `pink-50`   | Backgrounds alternativos           |
+| **Green Light**    | `#E8F5E8` | `green-50`  | Backgrounds para valores positivos |
+| **Red Light**      | `#FFEBEE` | `red-50`    | Backgrounds para valores negativos |
+| **Slate Dark**     | `#0F172A` | `slate-900` | Elementos de maior destaque        |
+| **Gradient Start** | `#1A1D47` | `slate-900` | Início de gradientes               |
+| **Gradient End**   | `#2D3748` | `gray-800`  | Final de gradientes                |
+
+### Gradientes
+
+Os gradientes são uma parte importante do design system, especialmente para cards de destaque e fundos principais:
+
+| Nome                 | CSS                                                 | Uso                                     |
+| -------------------- | --------------------------------------------------- | --------------------------------------- |
+| **Primary Gradient** | `linear-gradient(135deg, #1A1D47 0%, #2D3748 100%)` | Fundos principais, cards de destaque    |
+| **Accent Gradient**  | `linear-gradient(135deg, #00D4FF 0%, #FF6B9D 100%)` | Botões especiais, elementos interativos |
+| **Success Gradient** | `linear-gradient(135deg, #00E676 0%, #00D4FF 100%)` | Indicadores de sucesso, receitas        |
+| **Subtle Gradient**  | `linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)` | Fundos sutis, cards secundários         |
+
+```css
+/* Exemplos de uso */
+.primary-gradient {
+  background: linear-gradient(135deg, #1a1d47 0%, #2d3748 100%);
+}
+
+.accent-gradient {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+}
+```
 
 ### Estados
 
@@ -132,11 +183,12 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 
 **Variantes:**
 
-- **Primary**: Fundo `indigo-600`, texto branco
-- **Secondary**: Fundo `gray-100`, borda `gray-300`, texto `gray-700`
-- **Tertiary**: Sem fundo, texto `indigo-600`
-- **Danger**: Fundo `red-500`, texto branco
-- **Success**: Fundo `green-500`, texto branco
+- **Primary**: Fundo `slate-900`, texto branco
+- **Secondary**: Fundo `cyan-400`, texto `slate-900`
+- **Tertiary**: Sem fundo, texto `cyan-400`
+- **Accent**: Fundo `pink-400`, texto branco
+- **Success**: Fundo `green-400`, texto branco
+- **Danger**: Fundo `red-400`, texto branco
 
 **Tamanhos:**
 
@@ -153,15 +205,21 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 ```html
 <!-- Exemplos -->
 <button
-  class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg"
+  class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-2 px-4 rounded-lg"
 >
   Botão Primário
 </button>
 
 <button
-  class="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg"
+  class="bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-medium py-2 px-4 rounded-lg"
 >
   Botão Secundário
+</button>
+
+<button
+  class="bg-pink-400 hover:bg-pink-500 text-white font-medium py-2 px-4 rounded-lg"
+>
+  Botão Accent
 </button>
 ```
 
@@ -169,17 +227,17 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 
 **Variantes:**
 
-- **Default**: Borda `gray-300`, fundo branco
-- **Focus**: Borda `indigo-600`, ring-2 ring-indigo-100
-- **Error**: Borda `red-500`, texto de erro em `red-500`
-- **Disabled**: Fundo `gray-100`, opacidade reduzida
+- **Default**: Borda `slate-300`, fundo branco
+- **Focus**: Borda `cyan-400`, ring-2 ring-cyan-100
+- **Error**: Borda `red-400`, texto de erro em `red-400`
+- **Disabled**: Fundo `slate-100`, opacidade reduzida
 
 **Componentes:**
 
-- **Label**: Texto `gray-700`, font-medium, margin-bottom 6px
+- **Label**: Texto `slate-700`, font-medium, margin-bottom 6px
 - **Input/Select**: Height 40px, padding 10px 14px, rounded-lg
-- **Helper Text**: Texto `gray-500`, font-size 14px, margin-top 6px
-- **Error Text**: Texto `red-500`, font-size 14px, margin-top 6px
+- **Helper Text**: Texto `slate-500`, font-size 14px, margin-top 6px
+- **Error Text**: Texto `red-400`, font-size 14px, margin-top 6px
 
 ```html
 <!-- Exemplo -->
@@ -371,20 +429,27 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 
 ### Cores em Modo Escuro
 
-| Claro        | Escuro          |
-| ------------ | --------------- |
-| `white`      | `gray-900`      |
-| `gray-50`    | `gray-800`      |
-| `gray-100`   | `gray-700`      |
-| `gray-700`   | `gray-300`      |
-| `gray-900`   | `gray-50`       |
-| `indigo-600` | `indigo-400`    |
-| `purple-100` | `purple-900/40` |
+| Claro       | Escuro      |
+| ----------- | ----------- |
+| `white`     | `slate-900` |
+| `slate-50`  | `slate-800` |
+| `slate-100` | `slate-700` |
+| `slate-700` | `slate-300` |
+| `slate-900` | `slate-50`  |
+| `cyan-400`  | `cyan-300`  |
+| `pink-400`  | `pink-300`  |
+| `green-400` | `green-300` |
+| `red-400`   | `red-300`   |
 
 ```html
 <!-- Exemplo com suporte a dark mode -->
-<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-  <h2 class="text-gray-700 dark:text-gray-300">Título da Seção</h2>
+<div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50">
+  <h2 class="text-slate-700 dark:text-slate-300">Título da Seção</h2>
+  <button
+    class="bg-cyan-400 dark:bg-cyan-300 text-slate-900 dark:text-slate-900"
+  >
+    Botão com Dark Mode
+  </button>
 </div>
 ```
 
@@ -421,3 +486,7 @@ Este documento define as diretrizes visuais para o **Sistema de Gerenciamento Fi
 ![Dashboard de Finanças](https://cdn.dribbble.com/userupload/15288619/file/original-025d1ae894c8952a0822a244a6209ab1.jpg?resize=752x&vertical=center)
 
 ![Dashboard de Finanças 2](https://cdn.dribbble.com/userupload/12226562/file/original-cdf6affe9a6cf0955f79f9abbc9e2c2c.png?resize=752x&vertical=center)
+
+![App](https://cdn.dribbble.com/userupload/17823211/file/original-cc06da9f88cf9efcbe715ef80627fb89.png?resize=752x&vertical=center)
+
+![App 2](https://cdn.dribbble.com/userupload/17823210/file/original-283a9871554b4a792874f32985685f99.png?resize=752x&vertical=center)

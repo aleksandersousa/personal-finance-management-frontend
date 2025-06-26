@@ -35,8 +35,8 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - "frontend/**"
-      - ".github/workflows/ci.yml"
+      - 'frontend/**'
+      - '.github/workflows/ci.yml'
 
 jobs:
   lint-test:
@@ -52,8 +52,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
-          cache-dependency-path: "./frontend/package-lock.json"
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -85,8 +85,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
-          cache-dependency-path: "./frontend/package-lock.json"
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -114,8 +114,8 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - "frontend/**"
-      - ".github/workflows/deploy.yml"
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   deploy:
@@ -131,8 +131,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
-          cache-dependency-path: "./frontend/package-lock.json"
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -160,7 +160,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
           working-directory: ./frontend
-          vercel-args: "--prod"
+          vercel-args: '--prod'
 
       # Opção 2: Deploy para Netlify (alternativa)
       # - name: Deploy to Netlify
@@ -289,9 +289,9 @@ module.exports = {
 ```typescript
 // Exemplo de implementação simples de feature flags
 export const featureFlags = {
-  NEW_DASHBOARD: process.env.NEXT_PUBLIC_ENABLE_NEW_DASHBOARD === "true",
-  DARK_MODE: process.env.NEXT_PUBLIC_ENABLE_DARK_MODE === "true",
-  BETA_FEATURES: process.env.NEXT_PUBLIC_ENVIRONMENT !== "production",
+  NEW_DASHBOARD: process.env.NEXT_PUBLIC_ENABLE_NEW_DASHBOARD === 'true',
+  DARK_MODE: process.env.NEXT_PUBLIC_ENABLE_DARK_MODE === 'true',
+  BETA_FEATURES: process.env.NEXT_PUBLIC_ENVIRONMENT !== 'production',
 };
 ```
 
@@ -348,7 +348,7 @@ export const featureFlags = {
     uploadArtifacts: true
     temporaryPublicStorage: true
     runs: 3
-    configPath: "./lighthouse-config.js"
+    configPath: './lighthouse-config.js'
 ```
 
 ## 🔄 Rollback

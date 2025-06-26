@@ -72,7 +72,7 @@ CMD ["node", "server.js"]
 ## 🧱 docker-compose.yml
 
 ```yaml
-version: "3.9"
+version: '3.9'
 
 services:
   frontend:
@@ -86,7 +86,7 @@ services:
       - NODE_ENV=${NODE_ENV:-development}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3000/api}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - '${FRONTEND_PORT:-3000}:3000'
     volumes:
       - ./frontend:/app
       - /app/node_modules

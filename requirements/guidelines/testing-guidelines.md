@@ -40,35 +40,35 @@ Os testes devem espelhar a estrutura do projeto, mantendo a mesma organização 
 
 ```typescript
 // tests/data/usecases/remote-add-entry.spec.ts
-describe("RemoteAddEntry", () => {
+describe('RemoteAddEntry', () => {
   let sut: RemoteAddEntry;
   let httpClientSpy: HttpClientSpy;
   let mockAddEntryParams: AddEntryParams;
 
   beforeEach(() => {
     httpClientSpy = new HttpClientSpy();
-    sut = new RemoteAddEntry("any_url", httpClientSpy);
+    sut = new RemoteAddEntry('any_url', httpClientSpy);
     mockAddEntryParams = {
-      description: "any_description",
+      description: 'any_description',
       amount: 100,
       date: new Date(),
-      type: "INCOME",
-      category_id: "any_category",
+      type: 'INCOME',
+      category_id: 'any_category',
       is_fixed: false,
     };
   });
 
-  test("Should call HttpClient with correct values", async () => {
+  test('Should call HttpClient with correct values', async () => {
     await sut.add(mockAddEntryParams);
 
-    expect(httpClientSpy.url).toBe("any_url");
-    expect(httpClientSpy.method).toBe("post");
+    expect(httpClientSpy.url).toBe('any_url');
+    expect(httpClientSpy.method).toBe('post');
     expect(httpClientSpy.body).toEqual(mockAddEntryParams);
   });
 
-  test("Should return an EntryModel if HttpClient returns 200", async () => {
+  test('Should return an EntryModel if HttpClient returns 200', async () => {
     const httpResult = {
-      id: "any_id",
+      id: 'any_id',
       ...mockAddEntryParams,
     };
 
@@ -82,10 +82,10 @@ describe("RemoteAddEntry", () => {
     expect(entry).toEqual(httpResult);
   });
 
-  test("Should throw if HttpClient throws", async () => {
+  test('Should throw if HttpClient throws', async () => {
     httpClientSpy.response = {
       statusCode: 500,
-      body: new Error("server_error"),
+      body: new Error('server_error'),
     };
 
     const promise = sut.add(mockAddEntryParams);
@@ -319,29 +319,29 @@ describe("MakeAddEntryPage Factory", () => {
 
 ```typescript
 // tests/e2e/flows/add-entry.spec.ts
-describe("Add Financial Entry", () => {
+describe('Add Financial Entry', () => {
   beforeEach(() => {
-    cy.intercept("POST", "/api/entries", {
+    cy.intercept('POST', '/api/entries', {
       statusCode: 201,
       body: {
-        id: "generated-id",
-        description: "Test Entry",
+        id: 'generated-id',
+        description: 'Test Entry',
         amount: 1000,
-        date: "2023-07-05T00:00:00Z",
-        type: "INCOME",
-        category_id: "salary-category",
+        date: '2023-07-05T00:00:00Z',
+        type: 'INCOME',
+        category_id: 'salary-category',
         is_fixed: false,
       },
-    }).as("createEntry");
+    }).as('createEntry');
 
-    cy.visit("/entries/add");
+    cy.visit('/entries/add');
   });
 
-  it("should allow user to add a new income entry", () => {
+  it('should allow user to add a new income entry', () => {
     // Fill form
-    cy.findByLabelText(/descrição/i).type("Salário Mensal");
-    cy.findByLabelText(/valor/i).type("5000");
-    cy.findByLabelText(/data/i).type("2023-07-05");
+    cy.findByLabelText(/descrição/i).type('Salário Mensal');
+    cy.findByLabelText(/valor/i).type('5000');
+    cy.findByLabelText(/data/i).type('2023-07-05');
     cy.findByLabelText(/receita/i).click();
 
     // Select category
@@ -349,33 +349,33 @@ describe("Add Financial Entry", () => {
     cy.findByText(/salário/i).click();
 
     // Submit form
-    cy.findByRole("button", { name: /salvar/i }).click();
+    cy.findByRole('button', { name: /salvar/i }).click();
 
     // Wait for API call
-    cy.wait("@createEntry");
+    cy.wait('@createEntry');
 
     // Verify success message
-    cy.findByText(/entrada adicionada com sucesso/i).should("be.visible");
+    cy.findByText(/entrada adicionada com sucesso/i).should('be.visible');
 
     // Verify redirect to entries list
-    cy.url().should("include", "/entries");
+    cy.url().should('include', '/entries');
 
     // Verify entry appears in the list
-    cy.findByText(/salário mensal/i).should("be.visible");
-    cy.findByText(/r\$ 5\.000,00/i).should("be.visible");
+    cy.findByText(/salário mensal/i).should('be.visible');
+    cy.findByText(/r\$ 5\.000,00/i).should('be.visible');
   });
 
-  it("should validate required fields", () => {
+  it('should validate required fields', () => {
     // Submit empty form
-    cy.findByRole("button", { name: /salvar/i }).click();
+    cy.findByRole('button', { name: /salvar/i }).click();
 
     // Check validation messages
-    cy.findByText(/descrição é obrigatória/i).should("be.visible");
-    cy.findByText(/valor é obrigatório/i).should("be.visible");
-    cy.findByText(/data é obrigatória/i).should("be.visible");
+    cy.findByText(/descrição é obrigatória/i).should('be.visible');
+    cy.findByText(/valor é obrigatório/i).should('be.visible');
+    cy.findByText(/data é obrigatória/i).should('be.visible');
 
     // API should not be called
-    cy.get("@createEntry.all").should("have.length", 0);
+    cy.get('@createEntry.all').should('have.length', 0);
   });
 });
 ```
@@ -398,19 +398,19 @@ describe("Add Financial Entry", () => {
 
 ```typescript
 // tests/mocks/mock-add-entry.ts
-import { AddEntry, AddEntryParams } from "@/domain/usecases/add-entry";
-import { EntryModel } from "@/domain/models/entry-model";
+import { AddEntry, AddEntryParams } from '@/domain/usecases/add-entry';
+import { EntryModel } from '@/domain/models/entry-model';
 
 export class AddEntrySpy implements AddEntry {
   params: AddEntryParams;
   callsCount = 0;
   result: EntryModel = {
-    id: "generated_id",
-    description: "any_description",
+    id: 'generated_id',
+    description: 'any_description',
     amount: 100,
     date: new Date(),
-    type: "INCOME",
-    category_id: "any_category",
+    type: 'INCOME',
+    category_id: 'any_category',
     is_fixed: false,
   };
 
@@ -422,16 +422,16 @@ export class AddEntrySpy implements AddEntry {
 }
 
 export const mockAddEntryParams = (): AddEntryParams => ({
-  description: "any_description",
+  description: 'any_description',
   amount: 100,
   date: new Date(),
-  type: "INCOME",
-  category_id: "any_category",
+  type: 'INCOME',
+  category_id: 'any_category',
   is_fixed: false,
 });
 
 export const mockEntryModel = (): EntryModel => ({
-  id: "any_id",
+  id: 'any_id',
   ...mockAddEntryParams(),
 });
 ```

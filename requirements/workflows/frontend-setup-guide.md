@@ -146,20 +146,20 @@ const nextConfig = {
     reactCompiler: true, // React Compiler
     turbo: {
       rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
         },
       },
     },
   },
 
   // Path aliases
-  webpack: (config) => {
+  webpack: config => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.resolve(__dirname, "src"),
-      "@/app": path.resolve(__dirname, "app"),
+      '@': path.resolve(__dirname, 'src'),
+      '@/app': path.resolve(__dirname, 'app'),
     };
     return config;
   },
@@ -243,31 +243,31 @@ export default nextConfig;
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
         // Financial app color palette
         primary: {
-          50: "#f0f9ff",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
+          50: '#f0f9ff',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
         },
         success: {
-          50: "#f0fdf4",
-          500: "#22c55e",
-          600: "#16a34a",
+          50: '#f0fdf4',
+          500: '#22c55e',
+          600: '#16a34a',
         },
         danger: {
-          50: "#fef2f2",
-          500: "#ef4444",
-          600: "#dc2626",
+          50: '#fef2f2',
+          500: '#ef4444',
+          600: '#dc2626',
         },
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };
 ```
 
@@ -277,24 +277,24 @@ module.exports = {
 
 ```javascript
 // jest.config.js
-const nextJest = require("next/jest");
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
-  dir: "./",
+  dir: './',
 });
 
 const customJestConfig = {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
-  testEnvironment: "jest-environment-jsdom",
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: 'jest-environment-jsdom',
   moduleNameMapping: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^@/app/(.*)$": "<rootDir>/app/$1",
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/app/(.*)$': '<rootDir>/app/$1',
   },
   collectCoverageFrom: [
-    "src/**/*.{ts,tsx}",
-    "app/**/*.{ts,tsx}",
-    "!**/*.d.ts",
-    "!**/node_modules/**",
+    'src/**/*.{ts,tsx}',
+    'app/**/*.{ts,tsx}',
+    '!**/*.d.ts',
+    '!**/node_modules/**',
   ],
 };
 
@@ -305,10 +305,10 @@ module.exports = createJestConfig(customJestConfig);
 
 ```javascript
 // jest.setup.js
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 // Mock Next.js router
-jest.mock("next/navigation", () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
@@ -327,18 +327,18 @@ global.fetch = jest.fn();
 
 ```javascript
 // cypress.config.js
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:3000",
-    supportFile: "cypress/support/e2e.ts",
-    specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    baseUrl: 'http://localhost:3000',
+    supportFile: 'cypress/support/e2e.ts',
+    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
   },
   component: {
     devServer: {
-      framework: "next",
-      bundler: "webpack",
+      framework: 'next',
+      bundler: 'webpack',
     },
   },
 });

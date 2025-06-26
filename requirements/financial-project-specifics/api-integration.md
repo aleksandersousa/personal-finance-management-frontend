@@ -146,7 +146,7 @@ export interface EntryModel {
   id: string;
   amount: number; // em centavos
   description: string;
-  type: "INCOME" | "EXPENSE";
+  type: 'INCOME' | 'EXPENSE';
   isFixed: boolean;
   categoryId: string;
   categoryName: string;
@@ -540,46 +540,46 @@ export default async function EntriesPage() {
 
 ```typescript
 // data/actions/entry-actions.ts
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/infra/auth/server-auth";
+import { revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/infra/auth/server-auth';
 
 export async function createEntryAction(formData: FormData) {
   const user = await getCurrentUser();
 
   const entryData = {
-    description: formData.get("description") as string,
-    amount: Math.round(parseFloat(formData.get("amount") as string) * 100),
-    type: formData.get("type") as "INCOME" | "EXPENSE",
-    categoryId: formData.get("categoryId") as string,
-    isFixed: formData.get("isFixed") === "true",
-    date: formData.get("date") as string,
+    description: formData.get('description') as string,
+    amount: Math.round(parseFloat(formData.get('amount') as string) * 100),
+    type: formData.get('type') as 'INCOME' | 'EXPENSE',
+    categoryId: formData.get('categoryId') as string,
+    isFixed: formData.get('isFixed') === 'true',
+    date: formData.get('date') as string,
   };
 
   try {
     const response = await fetch(`${process.env.API_URL}/entries`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${user.accessToken}`,
       },
       body: JSON.stringify(entryData),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create entry");
+      throw new Error('Failed to create entry');
     }
 
     // Revalidar cache
     revalidateTag(`entries-${user.id}`);
     revalidateTag(`summary-${user.id}`);
   } catch (error) {
-    throw new Error("Failed to create entry");
+    throw new Error('Failed to create entry');
   }
 
-  redirect("/entries");
+  redirect('/entries');
 }
 
 export async function updateEntryAction(id: string, formData: FormData) {
@@ -589,7 +589,7 @@ export async function updateEntryAction(id: string, formData: FormData) {
   // ...
 
   revalidateTag(`entries-${user.id}`);
-  redirect("/entries");
+  redirect('/entries');
 }
 
 export async function deleteEntryAction(id: string) {
@@ -597,19 +597,19 @@ export async function deleteEntryAction(id: string) {
 
   try {
     const response = await fetch(`${process.env.API_URL}/entries/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete entry");
+      throw new Error('Failed to delete entry');
     }
 
     revalidateTag(`entries-${user.id}`);
   } catch (error) {
-    throw new Error("Failed to delete entry");
+    throw new Error('Failed to delete entry');
   }
 }
 ```
@@ -620,7 +620,7 @@ export async function deleteEntryAction(id: string) {
 // infra/http/axios-http-client.ts
 export interface HttpRequest {
   url: string;
-  method: "get" | "post" | "put" | "delete";
+  method: 'get' | 'post' | 'put' | 'delete';
   body?: any;
   headers?: Record<string, string>;
 }
@@ -663,8 +663,8 @@ export interface TokenStorage {
 }
 
 export class LocalStorageTokenStorage implements TokenStorage {
-  private readonly ACCESS_TOKEN_KEY = "@financial:accessToken";
-  private readonly REFRESH_TOKEN_KEY = "@financial:refreshToken";
+  private readonly ACCESS_TOKEN_KEY = '@financial:accessToken';
+  private readonly REFRESH_TOKEN_KEY = '@financial:refreshToken';
 
   getAccessToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
@@ -715,9 +715,8 @@ export class AuthenticatedHttpClient implements HttpClient {
         const refreshToken = this.tokenStorage.getRefreshToken();
         if (refreshToken) {
           try {
-            const newTokens = await this.refreshTokenUseCase.refresh(
-              refreshToken
-            );
+            const newTokens =
+              await this.refreshTokenUseCase.refresh(refreshToken);
             this.tokenStorage.setTokens(newTokens);
 
             // Repetir requisição com novo token
@@ -749,14 +748,14 @@ export class RemoteAddEntry implements AddEntry {
   async add(params: AddEntryParams): Promise<EntryModel> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
-      method: "post",
+      method: 'post',
       body: {
         amount: Math.round(params.amount * 100), // converter para centavos
         description: params.description,
         type: params.type,
         isFixed: params.isFixed,
         categoryId: params.categoryId,
-        date: params.date.toISOString().split("T")[0], // YYYY-MM-DD
+        date: params.date.toISOString().split('T')[0], // YYYY-MM-DD
       },
     });
 
@@ -796,16 +795,16 @@ A documentação inclui:
 export class MockHttpClient implements HttpClient {
   async request(data: HttpRequest): Promise<HttpResponse> {
     // Simular delay de rede
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     // Mock responses baseados na URL e método
-    if (data.url.includes("/entries") && data.method === "post") {
+    if (data.url.includes('/entries') && data.method === 'post') {
       return {
         statusCode: 201,
         body: {
-          id: "mock-id",
+          id: 'mock-id',
           ...data.body,
-          userId: "mock-user-id",
+          userId: 'mock-user-id',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },

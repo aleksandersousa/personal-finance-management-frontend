@@ -25,10 +25,10 @@ Este documento descreve as práticas recomendadas para implementar observabilida
 
 ```typescript
 // utils/performance.ts
-import { getCLS, getFID, getLCP } from "web-vitals";
+import { getCLS, getFID, getLCP } from 'web-vitals';
 
 export function reportWebVitals(onPerfEntry?: (metric: any) => void) {
-  if (onPerfEntry && typeof onPerfEntry === "function") {
+  if (onPerfEntry && typeof onPerfEntry === 'function') {
     getCLS(onPerfEntry); // Cumulative Layout Shift
     getFID(onPerfEntry); // First Input Delay
     getLCP(onPerfEntry); // Largest Contentful Paint
@@ -40,8 +40,8 @@ export function sendToAnalytics(metric: any) {
   const { name, value } = metric;
 
   // Assumindo que gtag está disponível
-  window.gtag("event", name, {
-    value: Math.round(name === "CLS" ? value * 1000 : value),
+  window.gtag('event', name, {
+    value: Math.round(name === 'CLS' ? value * 1000 : value),
     metric_id: name,
     metric_value: value,
     metric_delta: metric.delta,
@@ -53,7 +53,7 @@ export function sendToAnalytics(metric: any) {
 
 ```typescript
 // pages/_app.tsx
-import { reportWebVitals, sendToAnalytics } from "@/utils/performance";
+import { reportWebVitals, sendToAnalytics } from '@/utils/performance';
 
 export function reportWebVitals(metric: any) {
   sendToAnalytics(metric);
@@ -66,7 +66,7 @@ export function reportWebVitals(metric: any) {
 
 ```typescript
 // utils/sentry.ts
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 export const initSentry = () => {
   Sentry.init({
@@ -77,7 +77,7 @@ export const initSentry = () => {
     integrations: [
       new Sentry.BrowserTracing({
         tracePropagationTargets: [
-          "localhost",
+          'localhost',
           /^https:\/\/api\.financeapp\.example\.com/,
         ],
       }),
@@ -100,9 +100,9 @@ export const setUserContext = (userId: string) => {
 
 // Adicionar tags e contexto de negócio
 export const setFinanceContext = (data: any) => {
-  Sentry.setTag("subscription_plan", data.subscriptionPlan);
-  Sentry.setTag("user_account_type", data.accountType);
-  Sentry.setContext("finance_data", {
+  Sentry.setTag('subscription_plan', data.subscriptionPlan);
+  Sentry.setTag('user_account_type', data.accountType);
+  Sentry.setContext('finance_data', {
     totalEntries: data.totalEntries,
     hasPendingTransactions: data.pendingTransactions > 0,
   });
@@ -142,15 +142,15 @@ export function withErrorBoundary<P>(Component: React.ComponentType<P>) {
 
 ```typescript
 // hooks/use-analytics.ts
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
 type EventName =
-  | "entry_created"
-  | "entry_updated"
-  | "entry_deleted"
-  | "report_generated"
-  | "filter_applied"
-  | "forecast_viewed";
+  | 'entry_created'
+  | 'entry_updated'
+  | 'entry_deleted'
+  | 'report_generated'
+  | 'filter_applied'
+  | 'forecast_viewed';
 
 type EventProperties = Record<string, any>;
 
@@ -158,17 +158,17 @@ export function useAnalytics() {
   const trackEvent = useCallback(
     (eventName: EventName, properties?: EventProperties) => {
       // Google Analytics
-      if (typeof window.gtag === "function") {
-        window.gtag("event", eventName, properties);
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', eventName, properties);
       }
 
       // Mixpanel (se disponível)
-      if (typeof window.mixpanel?.track === "function") {
+      if (typeof window.mixpanel?.track === 'function') {
         window.mixpanel.track(eventName, properties);
       }
 
       // Log interno para debugging em dev
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV === 'development') {
         console.log(`[Analytics] ${eventName}`, properties);
       }
     },
@@ -177,8 +177,8 @@ export function useAnalytics() {
 
   // Eventos específicos de finanças
   const trackEntryCreated = useCallback(
-    (entryType: "INCOME" | "EXPENSE", amount: number, isFixed: boolean) => {
-      trackEvent("entry_created", {
+    (entryType: 'INCOME' | 'EXPENSE', amount: number, isFixed: boolean) => {
+      trackEvent('entry_created', {
         entry_type: entryType,
         amount,
         is_fixed: isFixed,
@@ -189,7 +189,7 @@ export function useAnalytics() {
 
   const trackReportGenerated = useCallback(
     (reportType: string, dateRange: string) => {
-      trackEvent("report_generated", {
+      trackEvent('report_generated', {
         report_type: reportType,
         date_range: dateRange,
         generation_time: new Date().toISOString(),
@@ -210,12 +210,12 @@ export function useAnalytics() {
 
 ```tsx
 // components/EntryForm.tsx
-import { useAnalytics } from "@/hooks/use-analytics";
+import { useAnalytics } from '@/hooks/use-analytics';
 
 export function EntryForm({ onSubmit }) {
   const { trackEntryCreated } = useAnalytics();
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async data => {
     try {
       await onSubmit(data);
       trackEntryCreated(data.type, data.amount, data.isFixed);
@@ -234,30 +234,30 @@ export function EntryForm({ onSubmit }) {
 
 ```typescript
 // utils/session-replay.ts
-import LogRocket from "logrocket";
-import setupLogRocketReact from "logrocket-react";
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
 
 export function initLogRocket() {
   // Inicializar apenas em produção
-  if (process.env.NODE_ENV !== "production") return;
+  if (process.env.NODE_ENV !== 'production') return;
 
-  LogRocket.init("app/finance-app");
+  LogRocket.init('app/finance-app');
   setupLogRocketReact(LogRocket);
 
   // Sanitização de dados
-  LogRocket.getSessionURL((sessionURL) => {
-    console.log("LogRocket session URL:", sessionURL);
+  LogRocket.getSessionURL(sessionURL => {
+    console.log('LogRocket session URL:', sessionURL);
   });
 }
 
 export function identifyUser(userId: string, email?: string, name?: string) {
-  if (process.env.NODE_ENV !== "production") return;
+  if (process.env.NODE_ENV !== 'production') return;
 
   LogRocket.identify(userId, {
     name,
     email,
     // Informações específicas de finanças (não sensíveis)
-    subscriptionTier: "free", // ou 'premium', etc.
+    subscriptionTier: 'free', // ou 'premium', etc.
   });
 }
 ```
@@ -268,7 +268,7 @@ export function identifyUser(userId: string, email?: string, name?: string) {
 
 ```typescript
 // middleware/logging.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export function loggingMiddleware(req: NextRequest) {
   const start = performance.now();
@@ -282,17 +282,17 @@ export function loggingMiddleware(req: NextRequest) {
   const duration = end - start;
 
   // Adicionar header para debugging
-  response.headers.set("Server-Timing", `app;dur=${duration}`);
+  response.headers.set('Server-Timing', `app;dur=${duration}`);
 
   // Opcional: enviar para backend para aggregação
   if (duration > 1000) {
     // Se for lento
-    fetch("/api/metrics/slow-page", {
-      method: "POST",
+    fetch('/api/metrics/slow-page', {
+      method: 'POST',
       body: JSON.stringify({
         url,
         duration,
-        userAgent: req.headers.get("user-agent"),
+        userAgent: req.headers.get('user-agent'),
       }),
     }).catch(console.error); // Silenciar erro para não afetar usuário
   }
@@ -307,18 +307,18 @@ export function loggingMiddleware(req: NextRequest) {
 
 ```typescript
 // hooks/use-network-monitor.ts
-import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
+import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 
 export function useNetworkMonitor() {
   useEffect(() => {
     const handleOnline = () => {
-      console.log("Aplicação está online");
+      console.log('Aplicação está online');
     };
 
     const handleOffline = () => {
-      console.log("Aplicação está offline");
-      Sentry.captureMessage("User went offline", { level: "info" });
+      console.log('Aplicação está offline');
+      Sentry.captureMessage('User went offline', { level: 'info' });
     };
 
     // Monitorar erros de fetch/axios
@@ -328,10 +328,10 @@ export function useNetworkMonitor() {
         const response = await originalFetch(...args);
 
         // Monitorar apenas chamadas para nossa API
-        const url = typeof args[0] === "string" ? args[0] : args[0].url;
-        if (url.includes("/api/") && !response.ok) {
+        const url = typeof args[0] === 'string' ? args[0] : args[0].url;
+        if (url.includes('/api/') && !response.ok) {
           Sentry.captureMessage(`API Error: ${response.status} for ${url}`, {
-            level: "error",
+            level: 'error',
             extra: {
               status: response.status,
               statusText: response.statusText,
@@ -347,12 +347,12 @@ export function useNetworkMonitor() {
       }
     };
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
       window.fetch = originalFetch;
     };
   }, []);
@@ -380,26 +380,26 @@ export function useNetworkMonitor() {
 
 ```typescript
 // utils/alerts.ts
-import { init as initAlerting, notify } from "@highlight-run/highlight";
+import { init as initAlerting, notify } from '@highlight-run/highlight';
 
 export function setupAlerting() {
   initAlerting({
     projectId: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
-    serviceName: "finance-frontend",
+    serviceName: 'finance-frontend',
     tracingOrigins: true,
   });
 
   // Configurar alertas para Core Web Vitals ruins
-  window.addEventListener("load", () => {
+  window.addEventListener('load', () => {
     setTimeout(() => {
-      const lcpElement = document.querySelector("[largest-contentful-paint]");
+      const lcpElement = document.querySelector('[largest-contentful-paint]');
       if (lcpElement && performance.now() > 2500) {
-        notify("Slow LCP detected", {
-          level: "warning",
-          fingerprint: "slow-lcp",
+        notify('Slow LCP detected', {
+          level: 'warning',
+          fingerprint: 'slow-lcp',
           context: {
             url: window.location.href,
-            performance: performance.getEntriesByType("navigation")[0],
+            performance: performance.getEntriesByType('navigation')[0],
           },
         });
       }

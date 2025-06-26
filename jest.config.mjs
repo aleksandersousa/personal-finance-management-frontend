@@ -8,6 +8,11 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tests/tsconfig.json',
+    },
+  },
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you based on your tsconfig.json paths)
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -18,18 +23,24 @@ const customJestConfig = {
     '^@/main/(.*)$': '<rootDir>/src/main/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['<rootDir>/tests/**/*.spec.{js,jsx,ts,tsx}'],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/index.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/app/layout.tsx',
+    '!src/app/page.tsx',
+    '!src/app/**/page.tsx',
+    '!src/app/globals.css',
+    '!src/app/favicon.ico',
   ],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
   testPathIgnorePatterns: [
