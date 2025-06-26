@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntryFormWithFeedback } from '@/presentation/components/client/entry-form-with-feedback';
+import { EntryFormWithFeedbackFactory } from '@/main/factories/components/entry-form-with-feedback-factory';
 
 export const AddEntryPage: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ export const AddEntryPage: React.FC = () => {
 
         {/* Main Form Card */}
         <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-          <EntryFormWithFeedback />
+          <EntryFormWithFeedbackFactory />
         </div>
 
         {/* Help Section */}

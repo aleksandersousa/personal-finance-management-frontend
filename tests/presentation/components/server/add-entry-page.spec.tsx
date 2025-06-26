@@ -1,6 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import { AddEntryPage } from '@/presentation/components/server/add-entry-page';
 
+// Mock the factory
+jest.mock(
+  '@/main/factories/components/entry-form-with-feedback-factory',
+  () => ({
+    EntryFormWithFeedbackFactory: jest.fn(() => (
+      <div data-testid='entry-form-with-feedback'>
+        <input aria-label='Descrição' />
+        <input aria-label='Valor (R$)' />
+        <select aria-label='Tipo' />
+        <select aria-label='Categoria' />
+        <input aria-label='Data' />
+      </div>
+    )),
+  })
+);
+
 describe('AddEntryPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,6 +42,13 @@ describe('AddEntryPage', () => {
     expect(screen.getByLabelText('Tipo')).toBeInTheDocument();
     expect(screen.getByLabelText('Categoria')).toBeInTheDocument();
     expect(screen.getByLabelText('Data')).toBeInTheDocument();
+  });
+
+  it('should render factory-created form component', () => {
+    render(<AddEntryPage />);
+
+    // Verificar se o componente criado pelo factory está presente
+    expect(screen.getByTestId('entry-form-with-feedback')).toBeInTheDocument();
   });
 
   it('should render help tips', () => {

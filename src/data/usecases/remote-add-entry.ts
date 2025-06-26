@@ -1,6 +1,6 @@
 import { AddEntry, AddEntryParams } from '@/domain/usecases/add-entry';
 import { EntryModel } from '@/domain/models/entry';
-import { HttpClient } from '@/data/http/http-client';
+import { HttpClient } from '@/data/protocols';
 
 export class RemoteAddEntry implements AddEntry {
   constructor(

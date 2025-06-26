@@ -7,6 +7,22 @@ import { Select } from '@/presentation/components/ui/select';
 import { FormValidator } from '@/presentation/protocols';
 import { EntryFormData } from '@/infra/validation/entry-form-schema';
 
+const typeOptions = [
+  { value: 'INCOME', label: 'Receita' },
+  { value: 'EXPENSE', label: 'Despesa' },
+];
+
+const categoryOptions = [
+  { value: '1', label: 'Alimentação' },
+  { value: '2', label: 'Transporte' },
+  { value: '3', label: 'Lazer' },
+  { value: '4', label: 'Saúde' },
+  { value: '5', label: 'Educação' },
+  { value: '6', label: 'Salário' },
+  { value: '7', label: 'Freelance' },
+  { value: '8', label: 'Investimentos' },
+];
+
 export interface EntryFormProps {
   validator: FormValidator<EntryFormData>;
   onSubmit: (data: EntryFormData) => Promise<void>;
@@ -83,22 +99,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       });
     }
   };
-
-  const typeOptions = [
-    { value: 'INCOME', label: 'Receita' },
-    { value: 'EXPENSE', label: 'Despesa' },
-  ];
-
-  const categoryOptions = [
-    { value: '1', label: 'Alimentação' },
-    { value: '2', label: 'Transporte' },
-    { value: '3', label: 'Lazer' },
-    { value: '4', label: 'Saúde' },
-    { value: '5', label: 'Educação' },
-    { value: '6', label: 'Salário' },
-    { value: '7', label: 'Freelance' },
-    { value: '8', label: 'Investimentos' },
-  ];
 
   return (
     <form onSubmit={handleSubmit} className='space-y-6'>

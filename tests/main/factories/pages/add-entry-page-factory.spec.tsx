@@ -1,6 +1,15 @@
 import { render } from '@testing-library/react';
 import { makeAddEntryPage } from '@/main/factories/pages/add-entry-page-factory';
 
+// Mock the AddEntryPage component
+jest.mock('@/presentation/components/server/add-entry-page', () => ({
+  AddEntryPage: () => (
+    <div data-testid='add-entry-page'>
+      <div data-testid='component-rendered'>true</div>
+    </div>
+  ),
+}));
+
 describe('makeAddEntryPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -13,9 +22,10 @@ describe('makeAddEntryPage', () => {
   it('should render AddEntryPage component', () => {
     const component = makeAddEntryPage();
 
-    const { container } = render(component);
+    const { getByTestId } = render(component);
 
-    expect(container).toBeInTheDocument();
+    expect(getByTestId('add-entry-page')).toBeInTheDocument();
+    expect(getByTestId('component-rendered')).toHaveTextContent('true');
   });
 
   it('should create component without props', () => {

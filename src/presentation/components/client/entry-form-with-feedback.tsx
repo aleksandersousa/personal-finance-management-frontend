@@ -3,19 +3,21 @@
 import { useState, useTransition } from 'react';
 import { EntryForm } from './entry-form';
 import { EntryFormData } from '@/infra/validation';
-import { ZodFormValidator } from '@/infra/validation/zod-form-validator';
-import { entryFormSchema } from '@/infra/validation/entry-form-schema';
+import { FormValidator } from '@/presentation/protocols';
 import { addEntryAction } from '@/presentation/actions/add-entry-action';
 
-export function EntryFormWithFeedback() {
+export interface EntryFormWithFeedbackProps {
+  validator: FormValidator<EntryFormData>;
+}
+
+export function EntryFormWithFeedback({
+  validator,
+}: EntryFormWithFeedbackProps) {
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
-
-  // Create validator on the client side
-  const validator = new ZodFormValidator(entryFormSchema);
 
   const handleSubmit = async (data: EntryFormData) => {
     setFeedback({ type: null, message: '' });
