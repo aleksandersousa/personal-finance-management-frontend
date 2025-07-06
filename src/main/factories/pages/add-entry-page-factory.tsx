@@ -1,4 +1,4 @@
-import { AddEntryPage } from '@/presentation/components/server/add-entry-page';
+import { AddEntryPage } from '@/presentation/components';
 
 export function makeAddEntryPage() {
   return <AddEntryPage />;

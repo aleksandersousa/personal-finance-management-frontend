@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-import { EntryFormWithFeedbackFactory } from '@/main/factories/components/entry-form-with-feedback-factory';
-import { makeEntryFormValidator } from '@/main/factories/validation/entry-form-validator-factory';
+import { EntryFormWithFeedbackFactory } from '@/main/factories/components';
+import { makeEntryFormValidator } from '@/main/factories/validation';
 
 // Mock the makeEntryFormValidator
 jest.mock('@/main/factories/validation/entry-form-validator-factory', () => ({

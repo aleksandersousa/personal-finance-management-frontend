@@ -1,7 +1,7 @@
 'use server';
 
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
-import { AddEntryParams } from '@/domain/usecases/add-entry';
+import { EntryFormData } from '@/infra/validation';
+import { AddEntryParams } from '@/domain/usecases';
 
 export async function addEntryAction(data: EntryFormData): Promise<void> {
   // Convert EntryFormData to AddEntryParams

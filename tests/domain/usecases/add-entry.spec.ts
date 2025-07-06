@@ -1,5 +1,5 @@
-import { AddEntry, AddEntryParams } from '@/domain/usecases/add-entry';
-import { EntryModel } from '@/domain/models/entry';
+import { AddEntry, AddEntryParams } from '@/domain/usecases';
+import { EntryModel } from '@/domain/models';
 
 class AddEntrySpy implements AddEntry {
   params!: AddEntryParams;

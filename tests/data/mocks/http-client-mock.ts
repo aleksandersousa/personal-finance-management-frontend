@@ -1,4 +1,4 @@
-import { HttpClient } from '@/data/protocols/http/http-client';
+import { HttpClient } from '@/data/protocols';
 
 export const mockHttpClient: jest.Mocked<HttpClient> = {
   get: jest.fn(),

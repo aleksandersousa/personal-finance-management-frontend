@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ZodFormValidator } from '@/infra/validation/zod-form-validator';
+import { ZodFormValidator } from '@/infra/validation';
 
 describe('ZodFormValidator', () => {
   const testSchema = z.object({

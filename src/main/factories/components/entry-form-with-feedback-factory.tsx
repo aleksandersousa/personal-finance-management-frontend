@@ -1,7 +1,7 @@
 'use client';
 
-import { EntryFormWithFeedback } from '@/presentation/components/client/entry-form-with-feedback';
-import { makeEntryFormValidator } from '@/main/factories/validation/entry-form-validator-factory';
+import { EntryFormWithFeedback } from '@/presentation/components';
+import { makeEntryFormValidator } from '@/main/factories/validation';
 
 export function EntryFormWithFeedbackFactory() {
   const validator = makeEntryFormValidator();

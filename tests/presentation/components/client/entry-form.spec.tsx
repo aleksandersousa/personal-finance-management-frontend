@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { EntryForm } from '@/presentation/components/client/entry-form';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
+import { EntryForm } from '@/presentation/components/client';
+import { EntryFormData } from '@/infra/validation';
 import { mockFormValidator } from '../../mocks';
 
 const mockOnSubmit = jest.fn();
