@@ -12,37 +12,16 @@ export class RemoteAuthentication implements Authentication {
   ) {}
 
   async auth(params: AuthenticationParams): Promise<AuthenticationModel> {
+    const { email, password, rememberMe } = params;
+
     const response = await this.httpClient.post<unknown>(this.url, {
-      email: params.email,
-      password: params.password,
-      rememberMe: params.rememberMe || false,
+      email,
+      password,
+      rememberMe: rememberMe || false,
     });
 
-    // Type assertion baseada na documentação da API
-    const apiResponse = response as {
-      user: {
-        id: string;
-        name: string;
-        email: string;
-      };
-      tokens: {
-        accessToken: string;
-        refreshToken: string;
-        expiresIn: number;
-      };
-    };
+    const { user, tokens } = response as AuthenticationModel;
 
-    return {
-      user: {
-        id: apiResponse.user.id,
-        name: apiResponse.user.name,
-        email: apiResponse.user.email,
-      },
-      tokens: {
-        accessToken: apiResponse.tokens.accessToken,
-        refreshToken: apiResponse.tokens.refreshToken,
-        expiresIn: apiResponse.tokens.expiresIn,
-      },
-    };
+    return { user, tokens };
   }
 }
