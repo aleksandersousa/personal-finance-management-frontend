@@ -1,4 +1,4 @@
 export * from './add-entry';
-export * from './load-entries';
 export * from './authentication';
+export * from './load-entries-by-month';
 export * from './refresh-token';
