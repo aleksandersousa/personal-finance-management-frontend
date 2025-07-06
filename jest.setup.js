@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom';
 
+// Polyfill para TextEncoder/TextDecoder (necessário para Next.js 15)
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // Mock do Next.js router
 jest.mock('next/navigation', () => ({
   useRouter: () => ({

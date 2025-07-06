@@ -1,142 +1,244 @@
 import { addEntryAction } from '@/presentation/actions';
 import { EntryFormData } from '@/infra/validation';
+import { AddEntry, AddEntryParams } from '@/domain/usecases';
+import type { TokenStorage } from '@/data/protocols';
+
+// Mock Next.js functions
+jest.mock('next/navigation', () => ({
+  redirect: jest.fn(),
+}));
+
+jest.mock('next/cache', () => ({
+  revalidateTag: jest.fn(),
+}));
+
+const mockRedirect = jest.mocked(jest.requireMock('next/navigation').redirect);
+const mockRevalidateTag = jest.mocked(
+  jest.requireMock('next/cache').revalidateTag
+);
+
+const mockAddEntry: jest.Mocked<AddEntry> = {
+  add: jest.fn(),
+};
+
+const mockTokenStorage: jest.Mocked<TokenStorage> = {
+  setAccessToken: jest.fn(),
+  getAccessToken: jest.fn(() => 'mock-access-token'),
+  setRefreshToken: jest.fn(),
+  getRefreshToken: jest.fn(),
+  setTokens: jest.fn(),
+  clearTokens: jest.fn(),
+};
 
 describe('addEntryAction', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, 'log').mockImplementation();
+    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('should process entry data and log the converted params', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
+  it('should call addEntry.add with correct params', async () => {
     const entryData: EntryFormData = {
-      description: 'Test entry',
+      description: 'Test Entry',
       amount: 100.5,
       type: 'INCOME',
       categoryId: 'category-1',
       date: new Date('2024-01-01'),
-      isFixed: true,
+      isFixed: false,
     };
 
-    await addEntryAction(entryData);
-
-    expect(consoleSpy).toHaveBeenCalledWith('Adding entry:', {
-      description: 'Test entry',
+    const expectedParams: AddEntryParams = {
+      description: 'Test Entry',
       amount: 10050, // Converted to cents
       type: 'INCOME',
       categoryId: 'category-1',
       date: new Date('2024-01-01'),
-      isFixed: true,
-      userId: 'mock-user-id',
-    });
-  });
-
-  it('should handle EXPENSE type correctly', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    const entryData: EntryFormData = {
-      description: 'Test expense',
-      amount: 50.25,
-      type: 'EXPENSE',
-      categoryId: 'category-2',
-      date: new Date('2024-02-01'),
       isFixed: false,
+      userId: 'mock-user-id',
     };
 
-    await addEntryAction(entryData);
-
-    expect(consoleSpy).toHaveBeenCalledWith('Adding entry:', {
-      description: 'Test expense',
-      amount: 5025, // Converted to cents
-      type: 'EXPENSE',
-      categoryId: 'category-2',
-      date: new Date('2024-02-01'),
-      isFixed: false,
+    mockAddEntry.add.mockResolvedValueOnce({
+      id: 'entry-1',
+      description: 'Test Entry',
+      amount: 10050,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      categoryName: 'Test Category',
       userId: 'mock-user-id',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
     });
+
+    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+
+    expect(mockAddEntry.add).toHaveBeenCalledWith(expectedParams);
   });
 
-  it('should handle boolean values for isFixed', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-
-    // Test with true
-    const entryData1: EntryFormData = {
-      description: 'Test',
-      amount: 100,
-      type: 'INCOME',
-      categoryId: 'cat-1',
+  it('should convert amount to cents correctly', async () => {
+    const entryData: EntryFormData = {
+      description: 'Test Entry',
+      amount: 123.45,
+      type: 'EXPENSE',
+      categoryId: 'category-1',
       date: new Date('2024-01-01'),
       isFixed: true,
     };
 
-    await addEntryAction(entryData1);
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Adding entry:',
-      expect.objectContaining({
-        isFixed: true,
-      })
-    );
-
-    // Test with false
-    const entryData2: EntryFormData = {
-      description: 'Test',
-      amount: 100,
-      type: 'INCOME',
-      categoryId: 'cat-1',
+    mockAddEntry.add.mockResolvedValueOnce({
+      id: 'entry-1',
+      description: 'Test Entry',
+      amount: 12345,
+      type: 'EXPENSE',
+      categoryId: 'category-1',
+      categoryName: 'Test Category',
+      userId: 'mock-user-id',
       date: new Date('2024-01-01'),
-      isFixed: false,
-    };
+      isFixed: true,
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    });
 
-    await addEntryAction(entryData2);
+    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Adding entry:',
+    expect(mockAddEntry.add).toHaveBeenCalledWith(
       expect.objectContaining({
-        isFixed: false,
+        amount: 12345, // Should be converted to cents
       })
     );
   });
 
-  it('should simulate API call delay', async () => {
+  it('should revalidate cache tags on success', async () => {
     const entryData: EntryFormData = {
-      description: 'Test',
-      amount: 100,
+      description: 'Test Entry',
+      amount: 100.5,
       type: 'INCOME',
-      categoryId: 'cat-1',
+      categoryId: 'category-1',
       date: new Date('2024-01-01'),
       isFixed: false,
     };
 
-    const startTime = Date.now();
-    await addEntryAction(entryData);
-    const endTime = Date.now();
+    mockAddEntry.add.mockResolvedValueOnce({
+      id: 'entry-1',
+      description: 'Test Entry',
+      amount: 10050,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      categoryName: 'Test Category',
+      userId: 'mock-user-id',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    });
 
-    // Should take at least 1000ms due to the setTimeout
-    expect(endTime - startTime).toBeGreaterThanOrEqual(1000);
+    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+
+    expect(mockRevalidateTag).toHaveBeenCalledWith('entries');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('entries-mock-user-id');
   });
 
-  it('should use mock user ID', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
+  it('should redirect to entries page on success', async () => {
     const entryData: EntryFormData = {
-      description: 'Test',
-      amount: 100,
+      description: 'Test Entry',
+      amount: 100.5,
       type: 'INCOME',
-      categoryId: 'cat-1',
+      categoryId: 'category-1',
       date: new Date('2024-01-01'),
       isFixed: false,
     };
 
-    await addEntryAction(entryData);
+    mockAddEntry.add.mockResolvedValueOnce({
+      id: 'entry-1',
+      description: 'Test Entry',
+      amount: 10050,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      categoryName: 'Test Category',
+      userId: 'mock-user-id',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Adding entry:',
-      expect.objectContaining({
-        userId: 'mock-user-id',
-      })
+    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+
+    expect(mockRedirect).toHaveBeenCalledWith('/entries');
+  });
+
+  it('should log error and re-throw when addEntry fails', async () => {
+    const consoleSpy = jest.spyOn(console, 'error');
+    const entryData: EntryFormData = {
+      description: 'Test Entry',
+      amount: 100.5,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+    };
+
+    const addEntryError = new Error('Failed to add entry');
+    mockAddEntry.add.mockRejectedValueOnce(addEntryError);
+
+    const promise = addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+
+    await expect(promise).rejects.toThrow('Failed to add entry');
+    expect(consoleSpy).toHaveBeenCalledWith('Add entry error:', addEntryError);
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  it('should handle addEntry error without calling revalidate or redirect', async () => {
+    const entryData: EntryFormData = {
+      description: 'Test Entry',
+      amount: 100.5,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+    };
+
+    mockAddEntry.add.mockRejectedValueOnce(new Error('Network error'));
+
+    try {
+      await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    } catch {
+      // Expected to throw
+    }
+
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  it('should throw error when user is not authenticated', async () => {
+    const entryData: EntryFormData = {
+      description: 'Test Entry',
+      amount: 100.5,
+      type: 'INCOME',
+      categoryId: 'category-1',
+      date: new Date('2024-01-01'),
+      isFixed: false,
+    };
+
+    const mockTokenStorageWithoutToken: jest.Mocked<TokenStorage> = {
+      ...mockTokenStorage,
+      getAccessToken: jest.fn(() => null),
+    };
+
+    const promise = addEntryAction(
+      entryData,
+      mockAddEntry,
+      mockTokenStorageWithoutToken
     );
+
+    await expect(promise).rejects.toThrow('Usuário não autenticado');
+    expect(mockAddEntry.add).not.toHaveBeenCalled();
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 });
