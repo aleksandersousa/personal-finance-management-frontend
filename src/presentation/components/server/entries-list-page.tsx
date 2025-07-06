@@ -3,7 +3,7 @@ import { EntryListItem } from '../ui/entry-list-item';
 import { Pagination } from '../client/pagination';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
 import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases';
-import { makeLocalStorageAdapter } from '@/main/factories/storage';
+import { makeCookieStorageAdapter } from '@/main/factories/storage';
 
 type Props = {
   searchParams: Record<string, string>;
@@ -11,7 +11,7 @@ type Props = {
 
 export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();
-  const getStorage = makeLocalStorageAdapter();
+  const getStorage = makeCookieStorageAdapter();
 
   try {
     const result = await loadEntriesByMonthAction(

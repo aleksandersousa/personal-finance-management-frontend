@@ -16,6 +16,18 @@ export async function loadEntriesByMonthAction(
   try {
     const user = await getCurrentUser(getStorage);
 
+    if (!user) {
+      return {
+        data: [],
+        meta: {
+          page: 1,
+          limit: 20,
+          total: 0,
+          totalPages: 0,
+        },
+      };
+    }
+
     // Extrair parâmetros da query string
     const month = searchParams.month || new Date().toISOString().slice(0, 7); // YYYY-MM
     const page = Number(searchParams.page) || 1;
