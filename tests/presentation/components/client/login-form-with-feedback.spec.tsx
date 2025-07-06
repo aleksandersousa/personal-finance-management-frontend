@@ -4,7 +4,7 @@ import { LoginFormData } from '@/infra/validation';
 import { loginAction } from '@/presentation/actions';
 import { FormValidator } from '@/presentation/protocols';
 import type { Authentication } from '@/domain';
-import type { TokenStorage } from '@/data/protocols';
+import type { SetStorage } from '@/data/protocols';
 
 // Mock the Server Action
 jest.mock('@/presentation/actions/login-action', () => ({
@@ -54,19 +54,14 @@ describe('LoginFormWithFeedback', () => {
     auth: jest.fn(),
   };
 
-  const mockTokenStorage: jest.Mocked<TokenStorage> = {
-    setAccessToken: jest.fn(),
-    getAccessToken: jest.fn(),
-    setRefreshToken: jest.fn(),
-    getRefreshToken: jest.fn(),
-    setTokens: jest.fn(),
-    clearTokens: jest.fn(),
+  const mockSetStorage: jest.Mocked<SetStorage> = {
+    set: jest.fn(),
   };
 
   const defaultProps = {
     validator: mockValidator,
     authentication: mockAuthentication,
-    tokenStorage: mockTokenStorage,
+    setStorage: mockSetStorage,
   };
 
   beforeEach(() => {
@@ -109,7 +104,7 @@ describe('LoginFormWithFeedback', () => {
           rememberMe: false,
         },
         mockAuthentication,
-        mockTokenStorage
+        mockSetStorage
       );
     });
   });
@@ -195,7 +190,7 @@ describe('LoginFormWithFeedback', () => {
       expect(mockLoginAction).toHaveBeenCalledWith(
         expect.any(Object),
         mockAuthentication,
-        mockTokenStorage
+        mockSetStorage
       );
     });
   });
@@ -260,7 +255,7 @@ describe('LoginFormWithFeedback', () => {
 
   it('should handle token storage errors', async () => {
     mockLoginAction.mockResolvedValue(undefined);
-    mockTokenStorage.setTokens.mockImplementation(() => {
+    mockSetStorage.set.mockImplementation(() => {
       throw new Error('Storage error');
     });
 
@@ -335,7 +330,7 @@ describe('LoginFormWithFeedback', () => {
           rememberMe: undefined,
         },
         mockAuthentication,
-        mockTokenStorage
+        mockSetStorage
       );
     });
   });
@@ -381,7 +376,7 @@ describe('LoginFormWithFeedback', () => {
           rememberMe: true,
         },
         mockAuthentication,
-        mockTokenStorage
+        mockSetStorage
       );
     });
   });

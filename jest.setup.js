@@ -1,18 +1,9 @@
 import '@testing-library/jest-dom';
 
-// Mock do Next.js router
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  }),
-  useSearchParams: () => new URLSearchParams(),
-  usePathname: () => '/',
-}));
+// Polyfill para TextEncoder/TextDecoder (necessário para Next.js 15)
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 // Mock do fetch
 global.fetch = jest.fn();

@@ -3,6 +3,8 @@ import { EntryFormWithFeedback } from '@/presentation/components/client';
 import { EntryFormData } from '@/infra/validation';
 import { addEntryAction } from '@/presentation/actions';
 import { FormValidator } from '@/presentation/protocols';
+import type { AddEntry } from '@/domain/usecases';
+import type { GetStorage } from '@/data/protocols';
 
 // Mock the Server Action
 jest.mock('@/presentation/actions/add-entry-action', () => ({
@@ -48,6 +50,14 @@ const mockAddEntryAction = addEntryAction as jest.MockedFunction<
   typeof addEntryAction
 >;
 
+const mockAddEntry: jest.Mocked<AddEntry> = {
+  add: jest.fn(),
+};
+
+const mockGetStorage: jest.Mocked<GetStorage> = {
+  get: jest.fn(),
+};
+
 describe('EntryFormWithFeedback', () => {
   const mockValidator: jest.Mocked<FormValidator<EntryFormData>> = {
     validate: jest.fn(),
@@ -62,7 +72,13 @@ describe('EntryFormWithFeedback', () => {
   });
 
   it('should render EntryForm with injected validator', () => {
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     expect(screen.getByTestId('entry-form')).toBeInTheDocument();
     expect(screen.getByTestId('validator-used')).toHaveTextContent(
@@ -71,7 +87,13 @@ describe('EntryFormWithFeedback', () => {
   });
 
   it('should pass validator prop to EntryForm', () => {
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     const validatorElement = screen.getByTestId('validator-used');
     expect(validatorElement).toHaveTextContent('validator-present');
@@ -80,7 +102,13 @@ describe('EntryFormWithFeedback', () => {
   it('should show success feedback when form submission succeeds', async () => {
     mockAddEntryAction.mockResolvedValue(undefined);
 
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     const submitButton = screen.getByTestId('submit-button');
     fireEvent.click(submitButton);
@@ -91,20 +119,30 @@ describe('EntryFormWithFeedback', () => {
       ).toBeInTheDocument();
     });
 
-    expect(mockAddEntryAction).toHaveBeenCalledWith({
-      description: 'Test entry',
-      amount: 100,
-      type: 'INCOME',
-      categoryId: 'cat-1',
-      date: expect.any(Date),
-      isFixed: false,
-    });
+    expect(mockAddEntryAction).toHaveBeenCalledWith(
+      {
+        description: 'Test entry',
+        amount: 100,
+        type: 'INCOME',
+        categoryId: 'cat-1',
+        date: expect.any(Date),
+        isFixed: false,
+      },
+      mockAddEntry,
+      mockGetStorage
+    );
   });
 
   it('should show error feedback when form submission fails', async () => {
     mockAddEntryAction.mockRejectedValue(new Error('API Error'));
 
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     const submitButton = screen.getByTestId('submit-button');
     fireEvent.click(submitButton);
@@ -121,7 +159,13 @@ describe('EntryFormWithFeedback', () => {
       () => new Promise(resolve => setTimeout(resolve, 100))
     );
 
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     const submitButton = screen.getByTestId('submit-button');
     fireEvent.click(submitButton);
@@ -136,7 +180,13 @@ describe('EntryFormWithFeedback', () => {
   it('should clear feedback when new submission starts', async () => {
     mockAddEntryAction.mockResolvedValue(undefined);
 
-    render(<EntryFormWithFeedback validator={mockValidator} />);
+    render(
+      <EntryFormWithFeedback
+        validator={mockValidator}
+        addEntry={mockAddEntry}
+        getStorage={mockGetStorage}
+      />
+    );
 
     const submitButton = screen.getByTestId('submit-button');
 
