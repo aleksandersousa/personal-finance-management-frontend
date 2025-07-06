@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import { EntryForm } from './entry-form';
 import { EntryFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
-import { addEntryAction } from '@/presentation/actions/add-entry-action';
+import { addEntryAction } from '@/presentation/actions';
 
 export interface EntryFormWithFeedbackProps {
   validator: FormValidator<EntryFormData>;

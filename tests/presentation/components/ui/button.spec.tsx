@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Button } from '@/presentation/components/ui/button';
+import { Button } from '@/presentation/components/ui';
 
 describe('Button', () => {
   it('should render with default props', () => {

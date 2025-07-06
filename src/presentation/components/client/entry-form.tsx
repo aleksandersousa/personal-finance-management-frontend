@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '@/presentation/components/ui/button';
-import { Input } from '@/presentation/components/ui/input';
-import { Select } from '@/presentation/components/ui/select';
+import { Button, Input, Select } from '@/presentation/components/ui';
 import { FormValidator } from '@/presentation/protocols';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
+import { EntryFormData } from '@/infra/validation';
 
 const typeOptions = [
   { value: 'INCOME', label: 'Receita' },
@@ -51,7 +49,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       [field]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -63,7 +60,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Convert form data to proper types for validation
     const dataToValidate = {
       description: formData.description,
       amount: parseFloat(formData.amount) || 0,
@@ -82,7 +78,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
     try {
       await onSubmit(result.data!);
-      // Reset form on success
       setFormData({
         description: '',
         amount: '',

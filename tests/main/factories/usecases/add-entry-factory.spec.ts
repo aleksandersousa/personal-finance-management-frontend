@@ -1,5 +1,5 @@
-import { makeRemoteAddEntry } from '@/main/factories/usecases/add-entry-factory';
-import { RemoteAddEntry } from '@/data/usecases/remote-add-entry';
+import { makeRemoteAddEntry } from '@/main/factories/usecases';
+import { RemoteAddEntry } from '@/data/usecases';
 
 jest.mock('@/data/usecases/remote-add-entry');
 

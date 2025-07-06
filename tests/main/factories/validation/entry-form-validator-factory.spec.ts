@@ -1,5 +1,5 @@
-import { makeEntryFormValidator } from '@/main/factories/validation/entry-form-validator-factory';
-import { ZodFormValidator } from '@/infra/validation/zod-form-validator';
+import { makeEntryFormValidator } from '@/main/factories/validation';
+import { ZodFormValidator } from '@/infra/validation';
 
 describe('makeEntryFormValidator', () => {
   it('should return a ZodFormValidator instance', () => {

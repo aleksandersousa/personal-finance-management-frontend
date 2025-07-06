@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { EntryFormWithFeedback } from '@/presentation/components/client/entry-form-with-feedback';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
-import { addEntryAction } from '@/presentation/actions/add-entry-action';
-import { FormValidator } from '@/presentation/protocols/form-validator';
+import { EntryFormWithFeedback } from '@/presentation/components/client';
+import { EntryFormData } from '@/infra/validation';
+import { addEntryAction } from '@/presentation/actions';
+import { FormValidator } from '@/presentation/protocols';
 
 // Mock the Server Action
 jest.mock('@/presentation/actions/add-entry-action', () => ({

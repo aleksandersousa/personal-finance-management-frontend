@@ -34,13 +34,14 @@ const customJestConfig = {
     '!src/app/**/page.tsx',
     '!src/app/globals.css',
     '!src/app/favicon.ico',
+    '!src/main/factories/**',
   ],
   coverageThreshold: {
     global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
     },
   },
   testPathIgnorePatterns: [

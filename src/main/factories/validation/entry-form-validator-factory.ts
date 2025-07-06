@@ -1,8 +1,5 @@
-import { ZodFormValidator } from '@/infra/validation/zod-form-validator';
-import {
-  entryFormSchema,
-  EntryFormData,
-} from '@/infra/validation/entry-form-schema';
+import { ZodFormValidator } from '@/infra/validation';
+import { entryFormSchema, EntryFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
 
 export function makeEntryFormValidator(): FormValidator<EntryFormData> {

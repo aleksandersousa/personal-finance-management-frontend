@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntryFormWithFeedbackFactory } from '@/main/factories/components/entry-form-with-feedback-factory';
+import { EntryFormWithFeedbackFactory } from '@/main/factories/components';
 
 export const AddEntryPage: React.FC = () => {
   return (

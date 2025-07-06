@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Input } from '@/presentation/components/ui/input';
+import { Input } from '@/presentation/components/ui';
 
 describe('Input', () => {
   it('should render with basic props', () => {

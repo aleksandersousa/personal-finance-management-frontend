@@ -1,5 +1,5 @@
-import { AddEntry, AddEntryParams } from '@/domain/usecases/add-entry';
-import { EntryModel } from '@/domain/models/entry';
+import { AddEntry, AddEntryParams } from '@/domain/usecases';
+import { EntryModel } from '@/domain/models';
 import { HttpClient } from '@/data/protocols';
 
 export class RemoteAddEntry implements AddEntry {
@@ -9,10 +9,7 @@ export class RemoteAddEntry implements AddEntry {
   ) {}
 
   async add(params: AddEntryParams): Promise<EntryModel> {
-    const response = await this.httpClient.post<unknown>(
-      `${this.url}/entries`,
-      params
-    );
+    const response = await this.httpClient.post<unknown>(this.url, params);
 
     // Type assertion with runtime validation would be ideal here
     const apiResponse = response as {

@@ -1,5 +1,5 @@
-import { addEntryAction } from '@/presentation/actions/add-entry-action';
-import { EntryFormData } from '@/infra/validation/entry-form-schema';
+import { addEntryAction } from '@/presentation/actions';
+import { EntryFormData } from '@/infra/validation';
 
 describe('addEntryAction', () => {
   beforeEach(() => {

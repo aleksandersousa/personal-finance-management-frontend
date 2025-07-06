@@ -4,7 +4,7 @@ import { mockHttpClient } from '../mocks';
 
 describe('RemoteAddEntry', () => {
   let sut: RemoteAddEntry;
-  const url = 'http://localhost:3001';
+  const url = 'http://localhost:3001/entries';
 
   beforeEach(() => {
     sut = new RemoteAddEntry(url, mockHttpClient);
@@ -35,7 +35,7 @@ describe('RemoteAddEntry', () => {
 
     await sut.add(params);
 
-    expect(mockHttpClient.post).toHaveBeenCalledWith(`${url}/entries`, params);
+    expect(mockHttpClient.post).toHaveBeenCalledWith(url, params);
   });
 
   it('should return entry on success', async () => {

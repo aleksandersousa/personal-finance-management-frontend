@@ -1,4 +1,4 @@
-import { EntryModel } from '../models/entry';
+import { EntryModel } from '../models';
 
 export interface AddEntry {
   add: (params: AddEntryParams) => Promise<EntryModel>;
