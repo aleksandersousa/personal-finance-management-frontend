@@ -6,18 +6,18 @@ import { EntryFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
 import { addEntryAction } from '@/presentation/actions';
 import type { AddEntry } from '@/domain/usecases';
-import type { TokenStorage } from '@/data/protocols';
+import type { GetStorage } from '@/data/protocols';
 
 export interface EntryFormWithFeedbackProps {
   validator: FormValidator<EntryFormData>;
   addEntry: AddEntry;
-  tokenStorage: TokenStorage;
+  getStorage: GetStorage;
 }
 
 export function EntryFormWithFeedback({
   validator,
   addEntry,
-  tokenStorage,
+  getStorage,
 }: EntryFormWithFeedbackProps) {
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
@@ -30,7 +30,7 @@ export function EntryFormWithFeedback({
 
     startTransition(async () => {
       try {
-        await addEntryAction(data, addEntry, tokenStorage);
+        await addEntryAction(data, addEntry, getStorage);
         setFeedback({
           type: 'success',
           message: 'Entrada adicionada com sucesso!',

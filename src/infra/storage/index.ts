@@ -1,1 +1,1 @@
-export * from './local-token-storage';
+export * from './local-storage-adapter';

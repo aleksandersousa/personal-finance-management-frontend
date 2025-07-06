@@ -6,24 +6,24 @@ import { LoginFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
 import { loginAction } from '@/presentation/actions';
 import type { Authentication } from '@/domain/usecases';
-import type { TokenStorage } from '@/data/protocols';
+import type { SetStorage } from '@/data/protocols';
 
 export interface LoginFormWithFeedbackProps {
   validator: FormValidator<LoginFormData>;
   authentication: Authentication;
-  tokenStorage: TokenStorage;
+  setStorage: SetStorage;
 }
 
 export const LoginFormWithFeedback: React.FC<LoginFormWithFeedbackProps> = ({
   validator,
   authentication,
-  tokenStorage,
+  setStorage,
 }) => {
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (data: LoginFormData) => {
     startTransition(async () => {
-      await loginAction(data, authentication, tokenStorage);
+      await loginAction(data, authentication, setStorage);
     });
   };
 

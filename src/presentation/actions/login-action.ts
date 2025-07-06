@@ -3,12 +3,12 @@
 import { LoginFormData } from '@/infra/validation';
 import { AuthenticationParams, type Authentication } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
-import type { TokenStorage } from '@/data';
+import type { SetStorage } from '@/data/protocols';
 
 export async function loginAction(
   data: LoginFormData,
   authentication: Authentication,
-  tokenStorage: TokenStorage
+  setStorage: SetStorage
 ): Promise<void> {
   const params: AuthenticationParams = {
     email: data.email,
@@ -19,13 +19,12 @@ export async function loginAction(
   try {
     const result = await authentication.auth(params);
 
-    // Store tokens using the new setTokens method
-    tokenStorage.setTokens(result.tokens);
+    setStorage.set('user', result.user);
+    setStorage.set('tokens', result.tokens);
 
-    // Redirect to dashboard
     redirect('/dashboard');
   } catch (error) {
     console.error('Login error:', error);
-    throw error; // Re-throw so component can handle the error
+    throw error;
   }
 }

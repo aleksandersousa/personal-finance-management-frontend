@@ -4,7 +4,7 @@ import { EntryFormData } from '@/infra/validation';
 import { addEntryAction } from '@/presentation/actions';
 import { FormValidator } from '@/presentation/protocols';
 import type { AddEntry } from '@/domain/usecases';
-import type { TokenStorage } from '@/data/protocols/storage/token-storage';
+import type { GetStorage } from '@/data/protocols';
 
 // Mock the Server Action
 jest.mock('@/presentation/actions/add-entry-action', () => ({
@@ -54,13 +54,8 @@ const mockAddEntry: jest.Mocked<AddEntry> = {
   add: jest.fn(),
 };
 
-const mockTokenStorage: jest.Mocked<TokenStorage> = {
-  setAccessToken: jest.fn(),
-  getAccessToken: jest.fn(() => 'mock-access-token'),
-  setRefreshToken: jest.fn(),
-  getRefreshToken: jest.fn(),
-  setTokens: jest.fn(),
-  clearTokens: jest.fn(),
+const mockGetStorage: jest.Mocked<GetStorage> = {
+  get: jest.fn(),
 };
 
 describe('EntryFormWithFeedback', () => {
@@ -81,7 +76,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 
@@ -96,7 +91,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 
@@ -111,7 +106,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 
@@ -134,7 +129,7 @@ describe('EntryFormWithFeedback', () => {
         isFixed: false,
       },
       mockAddEntry,
-      mockTokenStorage
+      mockGetStorage
     );
   });
 
@@ -145,7 +140,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 
@@ -168,7 +163,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 
@@ -189,7 +184,7 @@ describe('EntryFormWithFeedback', () => {
       <EntryFormWithFeedback
         validator={mockValidator}
         addEntry={mockAddEntry}
-        tokenStorage={mockTokenStorage}
+        getStorage={mockGetStorage}
       />
     );
 

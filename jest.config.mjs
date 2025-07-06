@@ -49,6 +49,21 @@ const customJestConfig = {
     '<rootDir>/node_modules/',
     '<rootDir>/tests/e2e/',
   ],
+  // Adicionar configurações específicas para Next.js 15
+  transformIgnorePatterns: ['node_modules/(?!(next|@next)/)'],
+  // Mock de módulos específicos do Next.js
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/components/(.*)$': '<rootDir>/src/presentation/components/$1',
+    '^@/domain/(.*)$': '<rootDir>/src/domain/$1',
+    '^@/data/(.*)$': '<rootDir>/src/data/$1',
+    '^@/infra/(.*)$': '<rootDir>/src/infra/$1',
+    '^@/main/(.*)$': '<rootDir>/src/main/$1',
+    // Mock de módulos específicos do Next.js
+    '^next/cache$': '<rootDir>/tests/presentation/mocks/next-cache.ts',
+    '^next/navigation$':
+      '<rootDir>/tests/presentation/mocks/next-navigation.ts',
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

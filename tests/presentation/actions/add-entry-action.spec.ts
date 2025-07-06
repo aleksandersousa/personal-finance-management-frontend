@@ -1,7 +1,7 @@
 import { addEntryAction } from '@/presentation/actions';
 import { EntryFormData } from '@/infra/validation';
 import { AddEntry, AddEntryParams } from '@/domain/usecases';
-import type { TokenStorage } from '@/data/protocols';
+import type { GetStorage } from '@/data/protocols';
 
 // Mock Next.js functions
 jest.mock('next/navigation', () => ({
@@ -21,13 +21,17 @@ const mockAddEntry: jest.Mocked<AddEntry> = {
   add: jest.fn(),
 };
 
-const mockTokenStorage: jest.Mocked<TokenStorage> = {
-  setAccessToken: jest.fn(),
-  getAccessToken: jest.fn(() => 'mock-access-token'),
-  setRefreshToken: jest.fn(),
-  getRefreshToken: jest.fn(),
-  setTokens: jest.fn(),
-  clearTokens: jest.fn(),
+const mockGetStorage: jest.Mocked<GetStorage> = {
+  get: jest.fn((key: string) => {
+    if (key === 'user') {
+      return {
+        id: 'mock-user-id',
+        email: 'test@example.com',
+        name: 'Test User',
+      };
+    }
+    return null;
+  }),
 };
 
 describe('addEntryAction', () => {
@@ -74,7 +78,7 @@ describe('addEntryAction', () => {
       updatedAt: new Date('2024-01-01'),
     });
 
-    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    await addEntryAction(entryData, mockAddEntry, mockGetStorage);
 
     expect(mockAddEntry.add).toHaveBeenCalledWith(expectedParams);
   });
@@ -103,7 +107,7 @@ describe('addEntryAction', () => {
       updatedAt: new Date('2024-01-01'),
     });
 
-    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    await addEntryAction(entryData, mockAddEntry, mockGetStorage);
 
     expect(mockAddEntry.add).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -136,7 +140,7 @@ describe('addEntryAction', () => {
       updatedAt: new Date('2024-01-01'),
     });
 
-    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    await addEntryAction(entryData, mockAddEntry, mockGetStorage);
 
     expect(mockRevalidateTag).toHaveBeenCalledWith('entries');
     expect(mockRevalidateTag).toHaveBeenCalledWith('entries-mock-user-id');
@@ -166,7 +170,7 @@ describe('addEntryAction', () => {
       updatedAt: new Date('2024-01-01'),
     });
 
-    await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    await addEntryAction(entryData, mockAddEntry, mockGetStorage);
 
     expect(mockRedirect).toHaveBeenCalledWith('/entries');
   });
@@ -185,7 +189,7 @@ describe('addEntryAction', () => {
     const addEntryError = new Error('Failed to add entry');
     mockAddEntry.add.mockRejectedValueOnce(addEntryError);
 
-    const promise = addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+    const promise = addEntryAction(entryData, mockAddEntry, mockGetStorage);
 
     await expect(promise).rejects.toThrow('Failed to add entry');
     expect(consoleSpy).toHaveBeenCalledWith('Add entry error:', addEntryError);
@@ -206,7 +210,7 @@ describe('addEntryAction', () => {
     mockAddEntry.add.mockRejectedValueOnce(new Error('Network error'));
 
     try {
-      await addEntryAction(entryData, mockAddEntry, mockTokenStorage);
+      await addEntryAction(entryData, mockAddEntry, mockGetStorage);
     } catch {
       // Expected to throw
     }
@@ -225,15 +229,14 @@ describe('addEntryAction', () => {
       isFixed: false,
     };
 
-    const mockTokenStorageWithoutToken: jest.Mocked<TokenStorage> = {
-      ...mockTokenStorage,
-      getAccessToken: jest.fn(() => null),
+    const mockGetStorageWithoutUser: jest.Mocked<GetStorage> = {
+      get: jest.fn().mockReturnValue(null),
     };
 
     const promise = addEntryAction(
       entryData,
       mockAddEntry,
-      mockTokenStorageWithoutToken
+      mockGetStorageWithoutUser
     );
 
     await expect(promise).rejects.toThrow('Usuário não autenticado');
