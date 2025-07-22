@@ -288,7 +288,11 @@ describe('CookieStorageAdapter', () => {
   test('Should handle production environment secure flag', async () => {
     // Mock NODE_ENV to production
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      value: 'production',
+      writable: true,
+      configurable: true,
+    });
 
     const sut = makeSut();
     const key = 'test-key';
@@ -308,6 +312,10 @@ describe('CookieStorageAdapter', () => {
     );
 
     // Restore original env
-    process.env.NODE_ENV = originalEnv;
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      value: originalEnv,
+      writable: true,
+      configurable: true,
+    });
   });
 });
