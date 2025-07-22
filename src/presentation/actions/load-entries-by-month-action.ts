@@ -18,7 +18,21 @@ export async function loadEntriesByMonthAction(
 
     if (!user) {
       return {
-        data: [],
+        data: [
+          {
+            id: 'any_id',
+            amount: 10000, // R$ 100,00 em centavos
+            description: 'any_description',
+            type: 'INCOME',
+            isFixed: false,
+            categoryId: 'any_category_id',
+            categoryName: 'any_category_name',
+            userId: 'any_user_id',
+            date: new Date('2024-01-01'),
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-01'),
+          },
+        ],
         meta: {
           page: 1,
           limit: 20,
