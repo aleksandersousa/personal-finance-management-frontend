@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { AddEntryPage } from '@/presentation/components/server';
 
+// Mock the middleware to avoid Request not defined error
+jest.mock('@/main/config/middleware', () => ({
+  middleware: jest.fn(),
+}));
+
 // Mock the factory
 jest.mock(
   '@/main/factories/components/entry-form-with-feedback-factory',

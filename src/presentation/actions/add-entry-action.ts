@@ -15,6 +15,10 @@ export async function addEntryAction(
   try {
     const user = await getCurrentUser(getStorage);
 
+    if (!user) {
+      throw new Error('Usuário não autenticado');
+    }
+
     const params: AddEntryParams = {
       description: data.description,
       amount: Math.round(data.amount * 100),

@@ -3,12 +3,12 @@
 import { LoginFormWithFeedback } from '@/presentation/components';
 import { makeLoginFormValidator } from '@/main/factories/validation';
 import { makeRemoteAuthentication } from '../usecases';
-import { makeLocalStorageAdapter } from '@/main';
+import { makeCookieStorageAdapter } from '@/main';
 
 export function LoginFormWithFeedbackFactory() {
   const validator = makeLoginFormValidator();
   const authentication = makeRemoteAuthentication();
-  const setStorage = makeLocalStorageAdapter();
+  const setStorage = makeCookieStorageAdapter();
 
   return (
     <LoginFormWithFeedback
