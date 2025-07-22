@@ -36,7 +36,7 @@ describe('EntryListItem', () => {
 
     expect(screen.getByText('Salário')).toBeInTheDocument();
     expect(screen.getByText(/Trabalho/)).toBeInTheDocument();
-    expect(screen.getByText(/1\/14\/2024/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/15\/2024/)).toBeInTheDocument();
     expect(screen.getByText('+ R$ 5000.00')).toBeInTheDocument();
   });
 
@@ -45,7 +45,7 @@ describe('EntryListItem', () => {
 
     expect(screen.getByText('Aluguel')).toBeInTheDocument();
     expect(screen.getByText(/Moradia/)).toBeInTheDocument();
-    expect(screen.getByText(/1\/9\/2024/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/10\/2024/)).toBeInTheDocument();
     expect(screen.getByText('- R$ 1500.00')).toBeInTheDocument();
   });
 
@@ -94,7 +94,7 @@ describe('EntryListItem', () => {
     render(<EntryListItem entry={entryWithSpecificDate} />);
 
     expect(screen.getByText(/Trabalho/)).toBeInTheDocument();
-    expect(screen.getByText(/12\/24\/2024/)).toBeInTheDocument();
+    expect(screen.getByText(/12\/25\/2024/)).toBeInTheDocument();
   });
 
   it('should render all entry information correctly', () => {
@@ -103,7 +103,7 @@ describe('EntryListItem', () => {
     // Verifica se todos os elementos estão presentes
     expect(screen.getByText('Salário')).toBeInTheDocument();
     expect(screen.getByText(/Trabalho/)).toBeInTheDocument();
-    expect(screen.getByText(/1\/14\/2024/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/15\/2024/)).toBeInTheDocument();
     expect(screen.getByText('+ R$ 5000.00')).toBeInTheDocument();
   });
 
@@ -116,7 +116,7 @@ describe('EntryListItem', () => {
     render(<EntryListItem entry={entryWithDifferentCategory} />);
 
     expect(screen.getByText(/Freelance/)).toBeInTheDocument();
-    expect(screen.getByText(/1\/14\/2024/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/15\/2024/)).toBeInTheDocument();
   });
 
   it('should handle different descriptions', () => {
