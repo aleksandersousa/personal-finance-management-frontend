@@ -2,22 +2,23 @@ import { EditEntryPage } from '@/presentation/components/server';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditEntryPageRoute({ params }: PageProps) {
   try {
-    // Validar se o ID é válido
-    if (!params.id || params.id.trim() === '') {
+    const { id } = await params;
+
+    if (!id || id.trim() === '') {
       notFound();
     }
 
     // Para este MVP, vamos simular o carregamento da entrada
     // Em uma implementação real, haveria um caso de uso LoadEntryById
     const mockEntry = {
-      id: params.id,
+      id,
       description: 'Salário Janeiro 2024',
       amount: 450000, // R$ 4500.00 em centavos
       type: 'INCOME' as const,
@@ -38,8 +39,9 @@ export default async function EditEntryPageRoute({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
   return {
-    title: `Editar Entrada ${params.id} - Financial Manager`,
+    title: `Editar Entrada ${id} - Financial Manager`,
     description: 'Edite os dados da sua entrada financeira',
   };
 }
