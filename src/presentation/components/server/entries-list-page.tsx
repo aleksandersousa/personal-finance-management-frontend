@@ -1,9 +1,9 @@
 import React from 'react';
-import { EntryListItem } from '../ui/entry-list-item';
-import { Pagination } from '../client/pagination';
+import { EntryListItem } from '../ui';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
 import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
+import { Pagination } from '../client';
 
 type Props = {
   searchParams: Record<string, string>;

@@ -9,7 +9,17 @@ jest.mock('next/navigation', () => ({
   redirect: jest.fn(),
 }));
 
+// Mock next/headers
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() =>
+    Promise.resolve({
+      set: jest.fn(),
+    })
+  ),
+}));
+
 const mockRedirect = jest.mocked(jest.requireMock('next/navigation').redirect);
+const mockCookies = jest.mocked(jest.requireMock('next/headers').cookies);
 
 const mockAuthentication: jest.Mocked<Authentication> = {
   auth: jest.fn(),
@@ -20,9 +30,18 @@ const mockSetStorage: jest.Mocked<SetStorage> = {
 };
 
 describe('loginAction', () => {
+  let mockCookieStore: {
+    set: jest.Mock;
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation();
+
+    mockCookieStore = {
+      set: jest.fn(),
+    };
+    mockCookies.mockReturnValue(Promise.resolve(mockCookieStore));
   });
 
   afterEach(() => {
@@ -94,7 +113,7 @@ describe('loginAction', () => {
     expect(mockAuthentication.auth).toHaveBeenCalledWith(expectedParams);
   });
 
-  it('should call setStorage.set with correct tokens', async () => {
+  it('should set cookies with correct values', async () => {
     const loginData: LoginFormData = {
       email: 'test@example.com',
       password: 'password123',
@@ -118,6 +137,7 @@ describe('loginAction', () => {
 
     await loginAction(loginData, mockAuthentication, mockSetStorage);
 
+    expect(mockSetStorage.set).toHaveBeenCalledWith('user', authResult.user);
     expect(mockSetStorage.set).toHaveBeenCalledWith(
       'tokens',
       authResult.tokens
@@ -164,10 +184,10 @@ describe('loginAction', () => {
 
     await expect(promise).rejects.toThrow('Invalid credentials');
     expect(consoleSpy).toHaveBeenCalledWith('Login error:', authError);
-    expect(mockSetStorage.set).not.toHaveBeenCalled();
+    expect(mockCookieStore.set).not.toHaveBeenCalled();
   });
 
-  it('should handle authentication error without calling setStorage', async () => {
+  it('should handle authentication error without calling cookies', async () => {
     const loginData: LoginFormData = {
       email: 'test@example.com',
       password: 'wrongpassword',
@@ -181,6 +201,6 @@ describe('loginAction', () => {
       // Expected to throw
     }
 
-    expect(mockSetStorage.set).not.toHaveBeenCalled();
+    expect(mockCookieStore.set).not.toHaveBeenCalled();
   });
 });
