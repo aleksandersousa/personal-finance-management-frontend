@@ -25,9 +25,50 @@ afterAll(() => {
   console.error = originalError;
 });
 
-// Mock do fetch
+// Mock do fetch e APIs web necessárias
 global.fetch = jest.fn();
 
+// Polyfill para Request/Response (necessário para fetch)
+global.Request = class Request {
+  constructor(input, init = {}) {
+    this.url = input;
+    this.method = init.method || 'GET';
+    this.headers = init.headers || {};
+    this.body = init.body;
+  }
+};
+
+global.Response = class Response {
+  constructor(body, init = {}) {
+    this.body = body;
+    this.status = init.status || 200;
+    this.statusText = init.statusText || 'OK';
+    this.headers = new Map(Object.entries(init.headers || {}));
+    this.ok = this.status >= 200 && this.status < 300;
+  }
+
+  async json() {
+    return JSON.parse(this.body);
+  }
+
+  async text() {
+    return this.body;
+  }
+};
+
+global.Headers = class Headers {
+  constructor(init = {}) {
+    this.map = new Map(Object.entries(init));
+  }
+
+  get(name) {
+    return this.map.get(name.toLowerCase());
+  }
+
+  set(name, value) {
+    this.map.set(name.toLowerCase(), value);
+  }
+};
 // Mock do ResizeObserver
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
