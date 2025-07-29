@@ -1,6 +1,6 @@
 import React from 'react';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
-import { deleteEntryAction } from '@/presentation/actions';
+import { handleDeleteEntryAction } from '@/presentation/actions';
 import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import { EntryListItemWithModal } from '@/presentation/components/client';
@@ -13,12 +13,6 @@ type Props = {
 export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();
   const getStorage = makeCookieStorageAdapter();
-
-  // Wrapper para server action que pode ser passada como prop
-  const handleDelete = async (id: string, deleteAllOccurrences: boolean) => {
-    'use server';
-    await deleteEntryAction(id, deleteAllOccurrences);
-  };
 
   try {
     const result = await loadEntriesByMonthAction(
@@ -58,7 +52,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                     <EntryListItemWithModal
                       key={entry.id}
                       entry={entry}
-                      onDelete={handleDelete}
+                      onDelete={handleDeleteEntryAction}
                     />
                   ))}
                 </div>
