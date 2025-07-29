@@ -2,22 +2,20 @@
 
 import React, { useState, useTransition } from 'react';
 import { Button } from '@/presentation/components/ui';
-import { deleteEntryAction } from '@/presentation/actions';
 import { EntryModel } from '@/domain/models/entry';
-import type { DeleteEntry } from '@/domain/usecases';
 
 export interface DeleteEntryModalProps {
   entry: EntryModel;
   isOpen: boolean;
   onClose: () => void;
-  deleteEntry: DeleteEntry;
+  onDelete?: (id: string, deleteAllOccurrences: boolean) => Promise<void>;
 }
 
 export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
   entry,
   isOpen,
   onClose,
-  deleteEntry,
+  onDelete,
 }) => {
   const [deleteAllOccurrences, setDeleteAllOccurrences] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -27,11 +25,13 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
   }>({ type: null, message: '' });
 
   const handleConfirmDelete = () => {
+    if (!onDelete) return;
+
     setFeedback({ type: null, message: '' });
 
     startTransition(async () => {
       try {
-        await deleteEntryAction(entry.id, deleteAllOccurrences, deleteEntry);
+        await onDelete(entry.id, deleteAllOccurrences);
       } catch (error) {
         console.error('Error deleting entry:', error);
         setFeedback({
@@ -164,7 +164,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             variant='danger'
             className='flex-1'
             isLoading={isPending}
-            disabled={isPending}
+            disabled={isPending || !onDelete}
           >
             {isPending ? 'Excluindo...' : 'Excluir'}
           </Button>

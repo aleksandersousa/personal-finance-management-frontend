@@ -1,11 +1,9 @@
 import React from 'react';
-import { EntryListItem } from '../ui';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
-import {
-  makeRemoteLoadEntriesByMonth,
-  makeRemoteDeleteEntry,
-} from '@/main/factories/usecases';
+import { handleDeleteEntryAction } from '@/presentation/actions';
+import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
+import { EntryListItemWithModal } from '@/presentation/components/client';
 import { Pagination } from '../client';
 
 type Props = {
@@ -14,7 +12,6 @@ type Props = {
 
 export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();
-  const deleteEntry = makeRemoteDeleteEntry();
   const getStorage = makeCookieStorageAdapter();
 
   try {
@@ -52,10 +49,10 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
                 <div className='divide-y'>
                   {result.data.map(entry => (
-                    <EntryListItem
+                    <EntryListItemWithModal
                       key={entry.id}
                       entry={entry}
-                      deleteEntry={deleteEntry}
+                      onDelete={handleDeleteEntryAction}
                     />
                   ))}
                 </div>
