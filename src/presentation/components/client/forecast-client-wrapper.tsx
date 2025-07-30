@@ -353,10 +353,10 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
       {forecast && (
         <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
           {/* Cumulative Balance Chart */}
-          <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
+          <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
             <Chart
               data={chartData}
-              title='Saldo Acumulado'
+              title='Saldo acumulado'
               height={400}
               onPointHover={setSelectedPoint}
               formatValue={formatCurrency}
@@ -365,10 +365,10 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
           </div>
 
           {/* Monthly Balance Chart */}
-          <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm'>
+          <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
             <Chart
               data={balanceChartData}
-              title='Saldo Mensal'
+              title='Saldo mensal'
               height={400}
               formatValue={formatCurrency}
               color='#2563EB'
@@ -382,7 +382,7 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         <div className='bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
           <div className='px-6 py-4 border-b border-gray-200'>
             <h3 className='text-lg font-medium text-gray-900'>
-              Detalhes Mensais
+              Detalhes mensais
             </h3>
             <p className='text-sm text-gray-500'>
               Previsão gerada em{' '}
@@ -416,6 +416,7 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
                   </th>
                 </tr>
               </thead>
+
               <tbody className='bg-white divide-y divide-gray-200'>
                 {forecast.monthlyData.map((monthly, index) => (
                   <tr key={index} className='hover:bg-gray-50'>

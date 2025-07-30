@@ -53,22 +53,24 @@ export const Chart: React.FC<ChartProps> = ({
     return height - 40 - normalizedValue * (height - 80);
   };
 
-  const getXPosition = (index: number): number => {
+  const getXPosition = (index: number, containerWidth: number): number => {
     const padding = 40;
-    const chartWidth = 800 - padding * 2;
+    const chartWidth = containerWidth - padding * 2;
     return padding + index * (chartWidth / (data.length - 1 || 1));
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative w-full ${className}`}>
       {title && (
         <h3 className='text-lg font-semibold mb-4 text-gray-900'>{title}</h3>
       )}
 
       <svg
-        width='800'
+        width='100%'
         height={height}
-        className='border border-gray-200 rounded-lg bg-white'
+        viewBox={`0 0 800 ${height}`}
+        preserveAspectRatio='xMidYMid meet'
+        className='border border-gray-200 rounded-lg bg-white w-full max-w-full'
         onMouseMove={handleMouseMove}
         onMouseLeave={() => handlePointHover(null)}
       >
@@ -112,7 +114,7 @@ export const Chart: React.FC<ChartProps> = ({
             points={data
               .map(
                 (point, index) =>
-                  `${getXPosition(index)},${getYPosition(point.value)}`
+                  `${getXPosition(index, 800)},${getYPosition(point.value)}`
               )
               .join(' ')}
           />
@@ -122,7 +124,7 @@ export const Chart: React.FC<ChartProps> = ({
         {data.map((point, index) => (
           <circle
             key={index}
-            cx={getXPosition(index)}
+            cx={getXPosition(index, 800)}
             cy={getYPosition(point.value)}
             r={hoveredPoint === point ? 8 : 6}
             fill={color}
@@ -138,7 +140,7 @@ export const Chart: React.FC<ChartProps> = ({
         {data.map((point, index) => (
           <text
             key={`label-${index}`}
-            x={getXPosition(index)}
+            x={getXPosition(index, 800)}
             y={height - 10}
             textAnchor='middle'
             className='text-xs fill-gray-600'
