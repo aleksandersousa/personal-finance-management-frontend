@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './card';
 
 export interface SummaryCardProps {
   title: string;
@@ -94,37 +95,40 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   };
 
   return (
-    <div
-      className={`rounded-xl border p-6 transition-all duration-300 hover:shadow-md ${getCardStyles()}`}
+    <Card
+      className={`transition-all duration-300 hover:shadow-md ${getCardStyles()}`}
     >
-      {/* Header */}
-      <div className='flex items-center justify-between mb-4'>
-        <h3 className='text-sm font-medium text-slate-700'>{title}</h3>
+      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+        <CardTitle className='text-sm font-medium text-slate-700'>
+          {title}
+        </CardTitle>
         {icon && <div className='p-2 rounded-lg bg-white/50'>{icon}</div>}
-      </div>
+      </CardHeader>
 
-      {/* Value */}
-      <div className='mb-3'>
-        <div className={`text-2xl font-bold ${getValueColor()}`}>
-          {type === 'expense' && value > 0 ? '-' : ''}
-          {formatCurrency(value)}
-        </div>
-      </div>
-
-      {/* Comparison */}
-      {comparison && (
-        <div className='flex items-center text-sm'>
-          <div
-            className={`flex items-center space-x-1 ${getChangeColor(comparison.change)}`}
-          >
-            {getChangeIcon(comparison.change)}
-            <span className='font-medium'>
-              {Math.abs(comparison.change).toFixed(1)}%
-            </span>
+      <CardContent>
+        {/* Value */}
+        <div className='mb-3'>
+          <div className={`text-2xl font-bold ${getValueColor()}`}>
+            {type === 'expense' && value > 0 ? '-' : ''}
+            {formatCurrency(value)}
           </div>
-          <span className='text-slate-500 ml-2'>vs. mês anterior</span>
         </div>
-      )}
-    </div>
+
+        {/* Comparison */}
+        {comparison && (
+          <div className='flex items-center text-sm'>
+            <div
+              className={`flex items-center space-x-1 ${getChangeColor(comparison.change)}`}
+            >
+              {getChangeIcon(comparison.change)}
+              <span className='font-medium'>
+                {Math.abs(comparison.change).toFixed(1)}%
+              </span>
+            </div>
+            <span className='text-muted-foreground ml-2'>vs. mês anterior</span>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };

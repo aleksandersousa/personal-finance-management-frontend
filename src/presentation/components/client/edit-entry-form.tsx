@@ -161,22 +161,20 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
         <Select
           label='Tipo'
           value={formData.type}
-          onChange={e => handleInputChange('type', e.target.value)}
+          onValueChange={value => handleInputChange('type', value)}
           options={typeOptions}
           placeholder='Selecione o tipo'
           error={errors.type?.[0]}
-          required
           disabled={isLoading}
         />
 
         <Select
           label='Categoria'
           value={formData.categoryId}
-          onChange={e => handleInputChange('categoryId', e.target.value)}
+          onValueChange={value => handleInputChange('categoryId', value)}
           options={categoryOptions}
           placeholder='Selecione a categoria'
           error={errors.categoryId?.[0]}
-          required
           disabled={isLoading}
         />
 
