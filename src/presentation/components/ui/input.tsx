@@ -1,56 +1,80 @@
-import React, { useId } from 'react';
+import * as React from 'react';
+import { useId } from 'react';
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+import { cn } from '@/lib/utils';
+
+export interface InputProps extends React.ComponentProps<'input'> {
   label?: string;
   error?: string;
   helperText?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+function Input({
+  className,
+  type,
   label,
   error,
   helperText,
-  className = '',
   id,
   ...props
-}) => {
+}: InputProps) {
   const generatedId = useId();
   const inputId = id || generatedId;
 
-  const baseClasses =
-    'block w-full px-3 py-2 border rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm';
-  const normalClasses =
-    'border-slate-300 focus:ring-cyan-400 focus:border-cyan-400';
-  const errorClasses =
-    'border-pink-400 focus:ring-pink-400 focus:border-pink-400';
+  const inputClasses = cn(
+    'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+    'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+    error
+      ? 'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-destructive'
+      : 'focus-visible:border-ring focus-visible:ring-ring/50',
+    className
+  );
 
-  const inputClasses = `${baseClasses} ${error ? errorClasses : normalClasses} ${className}`;
+  if (label || error || helperText) {
+    return (
+      <div className='space-y-1'>
+        {label && (
+          <label
+            htmlFor={inputId}
+            className='block text-sm font-medium text-foreground'
+          >
+            {label}
+          </label>
+        )}
+
+        <input
+          id={inputId}
+          type={type}
+          data-slot='input'
+          className={inputClasses}
+          aria-invalid={error ? true : undefined}
+          {...props}
+        />
+
+        {error && (
+          <p className='text-sm text-destructive' id={`${inputId}-error`}>
+            {error}
+          </p>
+        )}
+
+        {helperText && !error && (
+          <p className='text-sm text-muted-foreground' id={`${inputId}-helper`}>
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div className='space-y-1'>
-      {label && (
-        <label
-          htmlFor={inputId}
-          className='block text-sm font-medium text-slate-700'
-        >
-          {label}
-        </label>
-      )}
-
-      <input id={inputId} className={inputClasses} {...props} />
-
-      {error && (
-        <p className='text-sm text-pink-600' id={`${inputId}-error`}>
-          {error}
-        </p>
-      )}
-
-      {helperText && !error && (
-        <p className='text-sm text-slate-500' id={`${inputId}-helper`}>
-          {helperText}
-        </p>
-      )}
-    </div>
+    <input
+      id={inputId}
+      type={type}
+      data-slot='input'
+      className={inputClasses}
+      {...props}
+    />
   );
-};
+}
+
+export { Input };

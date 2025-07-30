@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from './button';
-import { Select } from './select';
+import { Button, Select } from '@/presentation/components/ui';
 
 export interface ForecastControlsProps {
   period: 3 | 6 | 12;
@@ -49,8 +48,8 @@ export const ForecastControls: React.FC<ForecastControlsProps> = ({
           </label>
           <Select
             value={period.toString()}
-            onChange={e =>
-              onPeriodChange(parseInt(e.target.value) as 3 | 6 | 12)
+            onValueChange={value =>
+              onPeriodChange(parseInt(value) as 3 | 6 | 12)
             }
             options={periodOptions}
             className='w-full'
@@ -64,8 +63,8 @@ export const ForecastControls: React.FC<ForecastControlsProps> = ({
           </label>
           <Select
             value={confidenceThreshold}
-            onChange={e =>
-              onConfidenceChange(e.target.value as 'HIGH' | 'MEDIUM' | 'LOW')
+            onValueChange={value =>
+              onConfidenceChange(value as 'HIGH' | 'MEDIUM' | 'LOW')
             }
             options={confidenceOptions}
             className='w-full'
