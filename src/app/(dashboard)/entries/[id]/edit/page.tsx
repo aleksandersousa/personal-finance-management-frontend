@@ -1,4 +1,4 @@
-import { EditEntryPage } from '@/presentation/components/server';
+import { EditEntryPage } from '@/presentation/pages';
 import { notFound } from 'next/navigation';
 
 interface PageProps {

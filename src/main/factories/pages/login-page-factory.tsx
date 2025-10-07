@@ -1,4 +1,4 @@
-import { LoginPage } from '@/presentation/components';
+import { LoginPage } from '@/presentation/pages';
 
 export function makeLoginPage() {
   return <LoginPage />;

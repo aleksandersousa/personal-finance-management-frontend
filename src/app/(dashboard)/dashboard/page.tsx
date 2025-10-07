@@ -1,4 +1,4 @@
-import { DashboardPage } from '@/presentation/components/server';
+import { DashboardPage } from '@/presentation/pages';
 import {
   loadMonthlySummaryAction,
   loadCashFlowForecastAction,

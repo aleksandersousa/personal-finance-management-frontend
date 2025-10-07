@@ -1,4 +1,4 @@
-import { EntriesListPage } from '@/presentation/components/server/entries-list-page';
+import { EntriesListPage } from '@/presentation/pages';
 
 type Props = {
   searchParams: Record<string, string>;

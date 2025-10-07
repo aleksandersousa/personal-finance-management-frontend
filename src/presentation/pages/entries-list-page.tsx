@@ -4,7 +4,7 @@ import {
   handleDeleteEntryAction,
 } from '@/presentation/actions';
 import { EntryListItemWithModal } from '@/presentation/components/client';
-import { Pagination } from '../client';
+import { Pagination } from '../components/client';
 
 type Props = {
   searchParams: Record<string, string>;

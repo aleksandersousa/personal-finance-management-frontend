@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { LoginPage } from '@/presentation/components/server';
+import { LoginPage } from '@/presentation/pages';
 
 // Mock the factory
 jest.mock(

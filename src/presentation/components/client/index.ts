@@ -6,4 +6,3 @@ export * from './edit-entry-form';
 export * from './edit-entry-form-with-feedback';
 export * from './delete-entry-modal';
 export * from './entry-list-item-with-modal';
-export * from './forecast-client-wrapper';

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { AddEntryPage } from '@/presentation/components/server';
+import { AddEntryPage } from '@/presentation/pages';
 
 // Mock the middleware to avoid Request not defined error
 jest.mock('@/main/config/middleware', () => ({
