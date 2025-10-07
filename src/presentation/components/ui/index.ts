@@ -14,3 +14,6 @@ export * from './forecast-controls';
 export * from './entry-list-item';
 export * from './summary-card';
 export * from './category-breakdown';
+export * from './forecast-insights';
+export * from './forecast-summary-card';
+export * from './monthly-projections-chart';
