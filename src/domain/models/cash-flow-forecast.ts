@@ -1,41 +1,37 @@
-export interface CashFlowForecast {
-  id: string;
-  userId: string;
-  forecastPeriod: ForecastPeriod;
-  monthlyData: MonthlyForecastData[];
-  generatedAt: Date;
-  basedOnDataUntil: Date;
+// Models matching API DTOs
+export interface CashFlowForecastModel {
+  forecastPeriod: ForecastPeriodModel;
+  currentBalance: number; // em centavos
+  monthlyProjections: MonthlyProjectionModel[];
+  summary: ForecastSummaryModel;
+  insights: ForecastInsightsModel;
 }
 
-export interface MonthlyForecastData {
-  month: Date;
-  projectedIncome: number; // Em centavos
-  projectedExpenses: number; // Em centavos
-  projectedBalance: number; // Em centavos
-  cumulativeBalance: number; // Em centavos
-  fixedIncomes: ForecastEntry[];
-  fixedExpenses: ForecastEntry[];
-  projectedVariableIncomes: number; // Em centavos
-  projectedVariableExpenses: number; // Em centavos
-  confidence: ConfidenceLevel;
+export interface ForecastPeriodModel {
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  monthsCount: number;
 }
 
-export interface ForecastEntry {
-  id: string;
-  description: string;
-  amount: number; // Em centavos
-  type: 'INCOME' | 'EXPENSE';
-  categoryId: string;
-  categoryName: string;
-  isFixed: true; // Apenas entradas fixas aparecem na previsão
+export interface MonthlyProjectionModel {
+  month: string; // YYYY-MM
+  projectedIncome: number; // em centavos
+  projectedExpenses: number; // em centavos
+  netFlow: number; // em centavos
+  cumulativeBalance: number; // em centavos
+  confidence: 'high' | 'medium' | 'low';
 }
 
-export type ForecastPeriod = 3 | 6 | 12; // Meses
+export interface ForecastSummaryModel {
+  totalProjectedIncome: number; // em centavos
+  totalProjectedExpenses: number; // em centavos
+  totalNetFlow: number; // em centavos
+  finalBalance: number; // em centavos
+  averageMonthlyFlow: number; // em centavos
+}
 
-export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW';
-
-export interface ForecastFilters {
-  period: ForecastPeriod;
-  includeVariableProjections: boolean;
-  confidenceThreshold: ConfidenceLevel;
+export interface ForecastInsightsModel {
+  trend: 'positive' | 'negative' | 'stable';
+  riskLevel: 'low' | 'medium' | 'high';
+  recommendations: string[];
 }
