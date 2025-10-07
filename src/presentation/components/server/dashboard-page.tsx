@@ -1,12 +1,26 @@
 import React from 'react';
-import { SummaryCard, CategoryBreakdown } from '@/presentation/components/ui';
-import { MonthlySummaryModel } from '@/domain/models/monthly-summary';
+import {
+  SummaryCard,
+  CategoryBreakdown,
+  ForecastInsights,
+  ForecastSummaryCard,
+  MonthlyProjectionsChart,
+} from '@/presentation/components/ui';
+import {
+  MonthlySummaryModel,
+  CashFlowForecastModel,
+  CategoryBreakdownItemModel,
+} from '@/domain/models';
 
 export interface DashboardPageProps {
   summary: MonthlySummaryModel;
+  forecast?: CashFlowForecastModel;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
+export const DashboardPage: React.FC<DashboardPageProps> = ({
+  summary,
+  forecast,
+}) => {
   const formatMonth = (monthStr: string) => {
     const [year, month] = monthStr.split('-');
     const monthNames = [
@@ -75,6 +89,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
     </svg>
   );
 
+  // Convert categoryBreakdown to legacy format if it exists
+  const categories: CategoryBreakdownItemModel[] =
+    summary.categoryBreakdown || [];
+
   return (
     <div className='min-h-screen bg-slate-50 py-8'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -92,51 +110,185 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
           <SummaryCard
             title='Receitas'
-            value={summary.totalIncome}
+            value={summary.summary.totalIncome}
             type='income'
             icon={incomeIcon}
-            comparison={
-              summary.comparison
-                ? {
-                    previousValue: 0, // Não usado no cálculo visual
-                    change: summary.comparison.incomeChange,
-                  }
-                : undefined
-            }
+            comparison={{
+              previousValue: 0,
+              change: summary.comparisonWithPrevious.percentageChanges.income,
+            }}
           />
 
           <SummaryCard
             title='Despesas'
-            value={summary.totalExpenses}
+            value={summary.summary.totalExpenses}
             type='expense'
             icon={expenseIcon}
-            comparison={
-              summary.comparison
-                ? {
-                    previousValue: 0, // Não usado no cálculo visual
-                    change: summary.comparison.expenseChange,
-                  }
-                : undefined
-            }
+            comparison={{
+              previousValue: 0,
+              change: summary.comparisonWithPrevious.percentageChanges.expense,
+            }}
           />
 
           <SummaryCard
             title='Saldo'
-            value={summary.balance}
+            value={summary.summary.balance}
             type='balance'
             icon={balanceIcon}
-            comparison={
-              summary.comparison
-                ? {
-                    previousValue: 0, // Não usado no cálculo visual
-                    change: summary.comparison.balanceChange,
-                  }
-                : undefined
-            }
+            comparison={{
+              previousValue: 0,
+              change: summary.comparisonWithPrevious.percentageChanges.balance,
+            }}
           />
         </div>
 
-        {/* Statistics Cards */}
+        {/* Detailed Statistics Cards */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+          {/* Fixed Income */}
+          <div className='bg-white rounded-xl border border-slate-200 p-6'>
+            <div className='flex items-center justify-between mb-2'>
+              <div>
+                <p className='text-sm font-medium text-slate-700'>
+                  Receitas Fixas
+                </p>
+                <p className='text-xl font-bold text-green-600'>
+                  {(summary.summary.fixedIncome / 100).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </p>
+              </div>
+              <div className='p-3 rounded-lg bg-green-50'>
+                <svg
+                  className='w-6 h-6 text-green-600'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
+                  />
+                </svg>
+              </div>
+            </div>
+            <p className='text-xs text-slate-500'>
+              {summary.summary.entriesCount.income} entrada(s)
+            </p>
+          </div>
+
+          {/* Dynamic Income */}
+          <div className='bg-white rounded-xl border border-slate-200 p-6'>
+            <div className='flex items-center justify-between mb-2'>
+              <div>
+                <p className='text-sm font-medium text-slate-700'>
+                  Receitas Variáveis
+                </p>
+                <p className='text-xl font-bold text-green-500'>
+                  {(summary.summary.dynamicIncome / 100).toLocaleString(
+                    'pt-BR',
+                    {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }
+                  )}
+                </p>
+              </div>
+              <div className='p-3 rounded-lg bg-green-50'>
+                <svg
+                  className='w-6 h-6 text-green-500'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Fixed Expenses */}
+          <div className='bg-white rounded-xl border border-slate-200 p-6'>
+            <div className='flex items-center justify-between mb-2'>
+              <div>
+                <p className='text-sm font-medium text-slate-700'>
+                  Despesas Fixas
+                </p>
+                <p className='text-xl font-bold text-red-600'>
+                  {(summary.summary.fixedExpenses / 100).toLocaleString(
+                    'pt-BR',
+                    {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }
+                  )}
+                </p>
+              </div>
+              <div className='p-3 rounded-lg bg-red-50'>
+                <svg
+                  className='w-6 h-6 text-red-600'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
+                  />
+                </svg>
+              </div>
+            </div>
+            <p className='text-xs text-slate-500'>
+              {summary.summary.entriesCount.expenses} entrada(s)
+            </p>
+          </div>
+
+          {/* Dynamic Expenses */}
+          <div className='bg-white rounded-xl border border-slate-200 p-6'>
+            <div className='flex items-center justify-between mb-2'>
+              <div>
+                <p className='text-sm font-medium text-slate-700'>
+                  Despesas Variáveis
+                </p>
+                <p className='text-xl font-bold text-red-500'>
+                  {(summary.summary.dynamicExpenses / 100).toLocaleString(
+                    'pt-BR',
+                    {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }
+                  )}
+                </p>
+              </div>
+              <div className='p-3 rounded-lg bg-red-50'>
+                <svg
+                  className='w-6 h-6 text-red-500'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6'
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Stats */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
           <div className='bg-white rounded-xl border border-slate-200 p-6'>
             <div className='flex items-center justify-between'>
@@ -145,7 +297,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
                   Total de Entradas
                 </p>
                 <p className='text-2xl font-bold text-slate-900'>
-                  {summary.entriesCount}
+                  {summary.summary.entriesCount.total}
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-slate-100'>
@@ -173,7 +325,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
                   Categorias Ativas
                 </p>
                 <p className='text-2xl font-bold text-slate-900'>
-                  {summary.categories.length}
+                  {categories.length}
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-slate-100'>
@@ -202,11 +354,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
                 </p>
                 <p
                   className={`text-2xl font-bold ${
-                    summary.balance >= 0 ? 'text-green-600' : 'text-red-600'
+                    summary.summary.balance >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
                   }`}
                 >
-                  {summary.totalIncome > 0
-                    ? `${((summary.balance / summary.totalIncome) * 100).toFixed(1)}%`
+                  {summary.summary.totalIncome > 0
+                    ? `${((summary.summary.balance / summary.summary.totalIncome) * 100).toFixed(1)}%`
                     : '0%'}
                 </p>
               </div>
@@ -230,19 +384,57 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ summary }) => {
         </div>
 
         {/* Category Breakdowns */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8'>
-          <CategoryBreakdown
-            categories={summary.categories}
-            type='INCOME'
-            title='Receitas por Categoria'
-          />
+        {categories.length > 0 && (
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8'>
+            <CategoryBreakdown
+              categories={categories}
+              type='INCOME'
+              title='Receitas por Categoria'
+            />
 
-          <CategoryBreakdown
-            categories={summary.categories}
-            type='EXPENSE'
-            title='Despesas por Categoria'
-          />
-        </div>
+            <CategoryBreakdown
+              categories={categories}
+              type='EXPENSE'
+              title='Despesas por Categoria'
+            />
+          </div>
+        )}
+
+        {/* Forecast Section */}
+        {forecast && (
+          <>
+            <div className='mb-6'>
+              <h2 className='text-2xl font-bold text-slate-900'>
+                Previsão de Fluxo de Caixa
+              </h2>
+              <p className='text-slate-600 mt-1'>
+                Projeção para os próximos {forecast.forecastPeriod.monthsCount}{' '}
+                meses
+              </p>
+            </div>
+
+            {/* Forecast Summary */}
+            <div className='mb-8'>
+              <ForecastSummaryCard
+                summary={forecast.summary}
+                monthsCount={forecast.forecastPeriod.monthsCount}
+              />
+            </div>
+
+            {/* Insights and Projections */}
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8'>
+              <div className='lg:col-span-1'>
+                <ForecastInsights insights={forecast.insights} />
+              </div>
+
+              <div className='lg:col-span-2'>
+                <MonthlyProjectionsChart
+                  projections={forecast.monthlyProjections}
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Quick Actions */}
         <div className='bg-white rounded-xl border border-slate-200 p-6'>
