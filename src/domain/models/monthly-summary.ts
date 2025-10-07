@@ -1,24 +1,40 @@
 export interface MonthlySummaryModel {
   month: string; // YYYY-MM
+  summary: MonthlySummaryDataModel;
+  categoryBreakdown?: CategoryBreakdownItemModel[];
+  comparisonWithPrevious: PreviousMonthComparisonModel;
+}
+
+export interface MonthlySummaryDataModel {
   totalIncome: number; // em centavos
   totalExpenses: number; // em centavos
   balance: number; // em centavos
-  entriesCount: number;
-  categories: CategorySummaryModel[];
-  comparison?: ComparisonModel;
+  fixedIncome: number; // em centavos
+  dynamicIncome: number; // em centavos
+  fixedExpenses: number; // em centavos
+  dynamicExpenses: number; // em centavos
+  entriesCount: {
+    total: number;
+    income: number;
+    expenses: number;
+  };
 }
 
-export interface CategorySummaryModel {
+export interface CategoryBreakdownItemModel {
   categoryId: string;
   categoryName: string;
+  type: 'INCOME' | 'EXPENSE';
   total: number; // em centavos
   count: number;
-  type: 'INCOME' | 'EXPENSE';
 }
 
-export interface ComparisonModel {
-  previousMonth: string; // YYYY-MM
-  incomeChange: number; // percentual de mudança
-  expenseChange: number; // percentual de mudança
-  balanceChange: number; // percentual de mudança
+export interface PreviousMonthComparisonModel {
+  incomeChange: number; // valor absoluto
+  expenseChange: number; // valor absoluto
+  balanceChange: number; // valor absoluto
+  percentageChanges: {
+    income: number;
+    expense: number;
+    balance: number;
+  };
 }
