@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './card';
+import { TrendUpIcon, TrendDownIcon } from '@phosphor-icons/react/dist/ssr';
 
 export interface SummaryCardProps {
   title: string;
@@ -64,33 +65,9 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   const getChangeIcon = (change: number) => {
     const isPositive = change > 0;
     return isPositive ? (
-      <svg
-        className='w-4 h-4'
-        fill='none'
-        stroke='currentColor'
-        viewBox='0 0 24 24'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={2}
-          d='M7 17l9.2-9.2M17 17V7H7'
-        />
-      </svg>
+      <TrendUpIcon className='w-4 h-4' weight='bold' />
     ) : (
-      <svg
-        className='w-4 h-4'
-        fill='none'
-        stroke='currentColor'
-        viewBox='0 0 24 24'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={2}
-          d='M17 7l-9.2 9.2M7 7v10h10'
-        />
-      </svg>
+      <TrendDownIcon className='w-4 h-4' weight='bold' />
     );
   };
 

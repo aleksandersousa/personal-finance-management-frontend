@@ -1,12 +1,50 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { CashFlowForecast, ForecastFilters } from '@/domain/models';
 import {
   Chart,
   ChartDataPoint,
   ForecastControls,
 } from '@/presentation/components/ui';
+import { XCircleIcon, ChartBarIcon } from '@phosphor-icons/react/dist/ssr';
+
+export interface ForecastFilters {
+  period: 3 | 6 | 12;
+  includeVariableProjections: boolean;
+  confidenceThreshold: 'HIGH' | 'MEDIUM' | 'LOW';
+}
+
+export interface CashFlowForecast {
+  id: string;
+  userId: string;
+  forecastPeriod: number;
+  monthlyData: MonthlyForecastData[];
+  generatedAt: Date;
+  basedOnDataUntil: Date;
+}
+
+export interface MonthlyForecastData {
+  month: Date;
+  projectedIncome: number;
+  projectedExpenses: number;
+  projectedBalance: number;
+  cumulativeBalance: number;
+  fixedIncomes: ForecastEntry[];
+  fixedExpenses: ForecastEntry[];
+  projectedVariableIncomes: number;
+  projectedVariableExpenses: number;
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW';
+}
+
+export interface ForecastEntry {
+  id: string;
+  description: string;
+  amount: number;
+  type: 'INCOME' | 'EXPENSE';
+  categoryId: string;
+  categoryName: string;
+  isFixed: true;
+}
 
 export interface ForecastClientWrapperProps {
   initialForecast: CashFlowForecast | null;
@@ -14,81 +52,6 @@ export interface ForecastClientWrapperProps {
   initialFilters: ForecastFilters;
 }
 
-// Mock data for demonstration
-const createMockForecast = (filters: ForecastFilters): CashFlowForecast => {
-  const months = [];
-  const today = new Date();
-  let cumulativeBalance = 250000; // R$ 2500.00 starting balance
-
-  for (let i = 0; i < filters.period; i++) {
-    const monthDate = new Date(
-      today.getFullYear(),
-      today.getMonth() + i + 1,
-      1
-    );
-    const baseIncome = 400000; // R$ 4000.00
-    const baseExpenses = 300000; // R$ 3000.00
-
-    // Add some variation based on month
-    const variation =
-      Math.sin(i * 0.5) * 50000 + (Math.random() * 20000 - 10000);
-
-    const projectedIncome =
-      baseIncome + (filters.includeVariableProjections ? variation : 0);
-    const projectedExpenses =
-      baseExpenses + (filters.includeVariableProjections ? variation * 0.3 : 0);
-    const projectedBalance = projectedIncome - projectedExpenses;
-    cumulativeBalance += projectedBalance;
-
-    months.push({
-      month: monthDate,
-      projectedIncome: Math.round(projectedIncome),
-      projectedExpenses: Math.round(projectedExpenses),
-      projectedBalance: Math.round(projectedBalance),
-      cumulativeBalance: Math.round(cumulativeBalance),
-      fixedIncomes: [
-        {
-          id: `income-${i}`,
-          description: 'Salário',
-          amount: 400000,
-          type: 'INCOME' as const,
-          categoryId: 'cat-salary',
-          categoryName: 'Salário',
-          isFixed: true as const,
-        },
-      ],
-      fixedExpenses: [
-        {
-          id: `expense-${i}`,
-          description: 'Aluguel',
-          amount: 150000,
-          type: 'EXPENSE' as const,
-          categoryId: 'cat-rent',
-          categoryName: 'Moradia',
-          isFixed: true as const,
-        },
-      ],
-      projectedVariableIncomes: filters.includeVariableProjections
-        ? Math.round(variation > 0 ? variation : 0)
-        : 0,
-      projectedVariableExpenses: filters.includeVariableProjections
-        ? Math.round(variation * 0.3 > 0 ? variation * 0.3 : 0)
-        : 0,
-      confidence: filters.confidenceThreshold,
-    });
-  }
-
-  return {
-    id: 'mock-forecast-' + Date.now(),
-    userId: 'mock-user',
-    forecastPeriod: filters.period,
-    monthlyData: months,
-    generatedAt: new Date(),
-    basedOnDataUntil: new Date(),
-  };
-};
-
-// Client-side API call function
 const fetchForecast = async (
   userId: string,
   filters: ForecastFilters
@@ -145,7 +108,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
   const [filters, setFilters] = useState<ForecastFilters>(initialFilters);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isUsingMockData, setIsUsingMockData] = useState(false);
   const [, setSelectedPoint] = useState<ChartDataPoint | null>(null);
 
   const loadForecast = useCallback(
@@ -157,7 +119,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         const result = await fetchForecast(userId, newFilters);
         setForecast(result);
         setFilters(newFilters);
-        setIsUsingMockData(false);
       } catch (err) {
         console.error('Error loading forecast:', err);
         // Check if it's a network/API error
@@ -173,63 +134,33 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
     [userId]
   );
 
-  const loadMockData = useCallback((newFilters: ForecastFilters) => {
-    setIsLoading(true);
-    setError(null);
-
-    // Simulate loading time
-    setTimeout(() => {
-      const mockForecast = createMockForecast(newFilters);
-      setForecast(mockForecast);
-      setFilters(newFilters);
-      setIsUsingMockData(true);
-      setIsLoading(false);
-    }, 500);
-  }, []);
-
   const handlePeriodChange = useCallback(
     (period: 3 | 6 | 12) => {
       const newFilters = { ...filters, period };
-      if (isUsingMockData) {
-        loadMockData(newFilters);
-      } else {
-        loadForecast(newFilters);
-      }
+      loadForecast(newFilters);
     },
-    [filters, loadForecast, loadMockData, isUsingMockData]
+    [filters, loadForecast]
   );
 
   const handleIncludeVariableChange = useCallback(
     (includeVariableProjections: boolean) => {
       const newFilters = { ...filters, includeVariableProjections };
-      if (isUsingMockData) {
-        loadMockData(newFilters);
-      } else {
-        loadForecast(newFilters);
-      }
+      loadForecast(newFilters);
     },
-    [filters, loadForecast, loadMockData, isUsingMockData]
+    [filters, loadForecast]
   );
 
   const handleConfidenceChange = useCallback(
     (confidenceThreshold: 'HIGH' | 'MEDIUM' | 'LOW') => {
       const newFilters = { ...filters, confidenceThreshold };
-      if (isUsingMockData) {
-        loadMockData(newFilters);
-      } else {
-        loadForecast(newFilters);
-      }
+      loadForecast(newFilters);
     },
-    [filters, loadForecast, loadMockData, isUsingMockData]
+    [filters, loadForecast]
   );
 
   const handleRefresh = useCallback(() => {
-    if (isUsingMockData) {
-      loadMockData(filters);
-    } else {
-      loadForecast(filters);
-    }
-  }, [filters, loadForecast, loadMockData, isUsingMockData]);
+    loadForecast(filters);
+  }, [filters, loadForecast]);
 
   const formatCurrency = (value: number): string => {
     return `R$ ${(value / 100).toLocaleString('pt-BR', {
@@ -244,7 +175,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
     });
   };
 
-  // Transform forecast data to chart data
   const chartData: ChartDataPoint[] =
     forecast?.monthlyData.map(monthly => ({
       label: formatDate(monthly.month),
@@ -276,34 +206,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
 
   return (
     <div className='space-y-6'>
-      {/* Mock Data Banner */}
-      {isUsingMockData && (
-        <div className='bg-blue-50 border border-blue-200 rounded-md p-4'>
-          <div className='flex'>
-            <div className='flex-shrink-0'>
-              <svg
-                className='h-5 w-5 text-blue-400'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z'
-                  clipRule='evenodd'
-                />
-              </svg>
-            </div>
-            <div className='ml-3'>
-              <p className='text-sm text-blue-800'>
-                📊 Exibindo dados de demonstração. Esta é uma prévia da
-                funcionalidade de previsão de fluxo de caixa.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Controls */}
       <ForecastControls
         period={filters.period}
         includeVariableProjections={filters.includeVariableProjections}
@@ -315,29 +217,18 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         isLoading={isLoading}
       />
 
-      {/* Error State */}
       {error && (
         <div className='bg-red-50 border border-red-200 rounded-md p-4'>
           <div className='flex'>
             <div className='flex-shrink-0'>
-              <svg
-                className='h-5 w-5 text-red-400'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
-                  clipRule='evenodd'
-                />
-              </svg>
+              <XCircleIcon className='h-5 w-5 text-red-400' weight='fill' />
             </div>
             <div className='ml-3 flex-1'>
               <p className='text-sm text-red-800'>{error}</p>
               {error.includes('API não disponível') && (
                 <div className='mt-3'>
                   <button
-                    onClick={() => loadMockData(filters)}
+                    onClick={() => loadForecast(filters)}
                     className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
                   >
                     📊 Ver demonstração com dados de exemplo
@@ -349,10 +240,8 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         </div>
       )}
 
-      {/* Charts */}
       {forecast && (
         <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
-          {/* Cumulative Balance Chart */}
           <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
             <Chart
               data={chartData}
@@ -364,7 +253,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
             />
           </div>
 
-          {/* Monthly Balance Chart */}
           <div className='bg-white p-6 rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
             <Chart
               data={balanceChartData}
@@ -377,7 +265,6 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         </div>
       )}
 
-      {/* Monthly Details */}
       {forecast && (
         <div className='bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden'>
           <div className='px-6 py-4 border-b border-gray-200'>
@@ -472,22 +359,12 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
         </div>
       )}
 
-      {/* Empty State */}
       {!forecast && !isLoading && !error && (
         <div className='text-center py-12'>
-          <svg
+          <ChartBarIcon
             className='mx-auto h-12 w-12 text-gray-400'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
-            />
-          </svg>
+            weight='thin'
+          />
           <h3 className='mt-2 text-sm font-medium text-gray-900'>
             Nenhuma previsão disponível
           </h3>
@@ -496,7 +373,7 @@ export const ForecastClientWrapper: React.FC<ForecastClientWrapperProps> = ({
           </p>
           <div className='mt-4'>
             <button
-              onClick={() => loadMockData(filters)}
+              onClick={() => handleRefresh()}
               className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
             >
               📊 Ver demonstração

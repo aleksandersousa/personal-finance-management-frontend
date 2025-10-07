@@ -11,6 +11,17 @@ import {
   CashFlowForecastModel,
   CategoryBreakdownItemModel,
 } from '@/domain/models';
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CurrencyDollarIcon,
+  TrendUpIcon,
+  TrendDownIcon,
+  ClipboardTextIcon,
+  TagIcon,
+  ChartBarIcon,
+  PlusIcon,
+} from '@phosphor-icons/react/dist/ssr';
 
 export interface DashboardPageProps {
   summary: MonthlySummaryModel;
@@ -40,55 +51,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     return `${monthNames[parseInt(month) - 1]} ${year}`;
   };
 
-  // Ícones para os cartões
-  const incomeIcon = (
-    <svg
-      className='w-6 h-6 text-green-600'
-      fill='none'
-      stroke='currentColor'
-      viewBox='0 0 24 24'
-    >
-      <path
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth={2}
-        d='M7 11l5-5m0 0l5 5m-5-5v12'
-      />
-    </svg>
-  );
-
-  const expenseIcon = (
-    <svg
-      className='w-6 h-6 text-red-600'
-      fill='none'
-      stroke='currentColor'
-      viewBox='0 0 24 24'
-    >
-      <path
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth={2}
-        d='M17 13l-5 5m0 0l-5-5m5 5V6'
-      />
-    </svg>
-  );
-
-  const balanceIcon = (
-    <svg
-      className='w-6 h-6 text-cyan-600'
-      fill='none'
-      stroke='currentColor'
-      viewBox='0 0 24 24'
-    >
-      <path
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth={2}
-        d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
-      />
-    </svg>
-  );
-
   // Convert categoryBreakdown to legacy format if it exists
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown || [];
@@ -112,7 +74,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             title='Receitas'
             value={summary.summary.totalIncome}
             type='income'
-            icon={incomeIcon}
+            icon={
+              <ArrowUpIcon className='w-6 h-6 text-green-600' weight='bold' />
+            }
             comparison={{
               previousValue: 0,
               change: summary.comparisonWithPrevious.percentageChanges.income,
@@ -123,7 +87,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             title='Despesas'
             value={summary.summary.totalExpenses}
             type='expense'
-            icon={expenseIcon}
+            icon={
+              <ArrowDownIcon className='w-6 h-6 text-red-600' weight='bold' />
+            }
             comparison={{
               previousValue: 0,
               change: summary.comparisonWithPrevious.percentageChanges.expense,
@@ -134,7 +100,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             title='Saldo'
             value={summary.summary.balance}
             type='balance'
-            icon={balanceIcon}
+            icon={
+              <CurrencyDollarIcon
+                className='w-6 h-6 text-cyan-600'
+                weight='bold'
+              />
+            }
             comparison={{
               previousValue: 0,
               change: summary.comparisonWithPrevious.percentageChanges.balance,
@@ -159,19 +130,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-green-50'>
-                <svg
+                <CurrencyDollarIcon
                   className='w-6 h-6 text-green-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
-                  />
-                </svg>
+                  weight='bold'
+                />
               </div>
             </div>
             <p className='text-xs text-slate-500'>
@@ -197,19 +159,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-green-50'>
-                <svg
-                  className='w-6 h-6 text-green-500'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-                  />
-                </svg>
+                <TrendUpIcon className='w-6 h-6 text-green-500' weight='bold' />
               </div>
             </div>
           </div>
@@ -232,19 +182,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-red-50'>
-                <svg
+                <CurrencyDollarIcon
                   className='w-6 h-6 text-red-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
-                  />
-                </svg>
+                  weight='bold'
+                />
               </div>
             </div>
             <p className='text-xs text-slate-500'>
@@ -270,19 +211,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-red-50'>
-                <svg
-                  className='w-6 h-6 text-red-500'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6'
-                  />
-                </svg>
+                <TrendDownIcon className='w-6 h-6 text-red-500' weight='bold' />
               </div>
             </div>
           </div>
@@ -301,19 +230,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-slate-100'>
-                <svg
+                <ClipboardTextIcon
                   className='w-6 h-6 text-slate-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-                  />
-                </svg>
+                  weight='bold'
+                />
               </div>
             </div>
           </div>
@@ -329,19 +249,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-slate-100'>
-                <svg
-                  className='w-6 h-6 text-slate-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'
-                  />
-                </svg>
+                <TagIcon className='w-6 h-6 text-slate-600' weight='bold' />
               </div>
             </div>
           </div>
@@ -365,19 +273,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </p>
               </div>
               <div className='p-3 rounded-lg bg-slate-100'>
-                <svg
-                  className='w-6 h-6 text-slate-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-                  />
-                </svg>
+                <TrendUpIcon className='w-6 h-6 text-slate-600' weight='bold' />
               </div>
             </div>
           </div>
@@ -446,19 +342,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               href='/entries/add'
               className='flex items-center justify-center px-4 py-3 bg-cyan-50 text-cyan-700 rounded-lg hover:bg-cyan-100 transition-colors'
             >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M12 4v16m8-8H4'
-                />
-              </svg>
+              <PlusIcon className='w-5 h-5 mr-2' weight='bold' />
               Nova Entrada
             </a>
 
@@ -466,19 +350,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               href='/entries'
               className='flex items-center justify-center px-4 py-3 bg-slate-50 text-slate-700 rounded-lg hover:bg-slate-100 transition-colors'
             >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-                />
-              </svg>
+              <ClipboardTextIcon className='w-5 h-5 mr-2' weight='bold' />
               Ver Entradas
             </a>
 
@@ -486,19 +358,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               href='/categories'
               className='flex items-center justify-center px-4 py-3 bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition-colors'
             >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'
-                />
-              </svg>
+              <TagIcon className='w-5 h-5 mr-2' weight='bold' />
               Categorias
             </a>
 
@@ -506,19 +366,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               href='/reports'
               className='flex items-center justify-center px-4 py-3 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors'
             >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
-                />
-              </svg>
+              <ChartBarIcon className='w-5 h-5 mr-2' weight='bold' />
               Relatórios
             </a>
           </div>

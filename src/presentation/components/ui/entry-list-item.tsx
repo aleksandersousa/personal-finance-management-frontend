@@ -5,6 +5,7 @@ import { EntryModel } from '@/domain/models';
 import { Card } from './card';
 import { Badge } from './badge';
 import { Button } from './button';
+import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react/dist/ssr';
 
 interface EntryListItemProps {
   entry: EntryModel;
@@ -86,19 +87,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                 data-testid='edit-button'
                 className='h-8 w-8'
               >
-                <svg
-                  className='w-4 h-4'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
-                  />
-                </svg>
+                <PencilSimpleIcon className='w-4 h-4' weight='bold' />
               </Button>
 
               {onDelete && (
@@ -110,19 +99,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                   data-testid='delete-button'
                   className='h-8 w-8 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400'
                 >
-                  <svg
-                    className='w-4 h-4'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-                    />
-                  </svg>
+                  <TrashIcon className='w-4 h-4' weight='bold' />
                 </Button>
               )}
             </div>

@@ -1,5 +1,12 @@
 import React from 'react';
 import { ForecastInsightsModel } from '@/domain/models';
+import {
+  MinusIcon,
+  CheckCircleIcon,
+  WarningIcon,
+  TrendDownIcon,
+  TrendUpIcon,
+} from '@phosphor-icons/react/dist/ssr';
 
 export interface ForecastInsightsProps {
   insights: ForecastInsightsModel;
@@ -11,53 +18,11 @@ export const ForecastInsights: React.FC<ForecastInsightsProps> = ({
   const getTrendIcon = (trend: 'positive' | 'negative' | 'stable') => {
     switch (trend) {
       case 'positive':
-        return (
-          <svg
-            className='w-6 h-6 text-green-600'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-            />
-          </svg>
-        );
+        return <TrendUpIcon className='w-6 h-6 text-green-600' weight='bold' />;
       case 'negative':
-        return (
-          <svg
-            className='w-6 h-6 text-red-600'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6'
-            />
-          </svg>
-        );
+        return <TrendDownIcon className='w-6 h-6 text-red-600' weight='bold' />;
       case 'stable':
-        return (
-          <svg
-            className='w-6 h-6 text-blue-600'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M5 12h14'
-            />
-          </svg>
-        );
+        return <MinusIcon className='w-6 h-6 text-blue-600' weight='bold' />;
     }
   };
 
@@ -132,19 +97,7 @@ export const ForecastInsights: React.FC<ForecastInsightsProps> = ({
             <span className='text-sm font-medium text-slate-700'>
               Nível de Risco
             </span>
-            <svg
-              className='w-6 h-6 text-slate-600'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
-              />
-            </svg>
+            <WarningIcon className='w-6 h-6 text-slate-600' weight='bold' />
           </div>
           <span
             className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getRiskColor(insights.riskLevel)}`}
@@ -163,19 +116,10 @@ export const ForecastInsights: React.FC<ForecastInsightsProps> = ({
           <ul className='space-y-2'>
             {insights.recommendations.map((recommendation, index) => (
               <li key={index} className='flex items-start'>
-                <svg
+                <CheckCircleIcon
                   className='w-5 h-5 text-cyan-600 mr-2 mt-0.5 flex-shrink-0'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-                  />
-                </svg>
+                  weight='bold'
+                />
                 <span className='text-sm text-slate-700'>{recommendation}</span>
               </li>
             ))}
