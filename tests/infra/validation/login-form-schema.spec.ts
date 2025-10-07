@@ -5,7 +5,6 @@ describe('LoginFormSchema', () => {
     const validData = {
       email: 'test@example.com',
       password: 'validPassword123',
-      rememberMe: true,
     };
 
     const result = loginFormSchema.safeParse(validData);
@@ -13,20 +12,6 @@ describe('LoginFormSchema', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).toEqual(validData);
-    }
-  });
-
-  it('should validate without rememberMe field', () => {
-    const validData = {
-      email: 'test@example.com',
-      password: 'validPassword123',
-    };
-
-    const result = loginFormSchema.safeParse(validData);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.rememberMe).toBeUndefined();
     }
   });
 
@@ -111,21 +96,6 @@ describe('LoginFormSchema', () => {
           }),
         ])
       );
-    }
-  });
-
-  it('should validate with rememberMe as false', () => {
-    const validData = {
-      email: 'test@example.com',
-      password: 'validPassword123',
-      rememberMe: false,
-    };
-
-    const result = loginFormSchema.safeParse(validData);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.rememberMe).toBe(false);
     }
   });
 });

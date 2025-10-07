@@ -1,7 +1,7 @@
 import { SetStorage, GetStorage } from '@/data/protocols/storage';
 
 export class LocalStorageAdapter implements SetStorage, GetStorage {
-  set(key: string, value: object | null | undefined): void {
+  async set(key: string, value: object | null | undefined): Promise<void> {
     if (value !== null && value !== undefined) {
       localStorage.setItem(key, JSON.stringify(value));
     } else {
@@ -9,7 +9,7 @@ export class LocalStorageAdapter implements SetStorage, GetStorage {
     }
   }
 
-  get(key: string): unknown {
+  async get(key: string): Promise<unknown> {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : null;
   }

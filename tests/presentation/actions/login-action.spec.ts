@@ -52,7 +52,6 @@ describe('loginAction', () => {
     const loginData: LoginFormData = {
       email: 'test@example.com',
       password: 'password123',
-      rememberMe: true,
     };
 
     const authResult = {
@@ -73,39 +72,6 @@ describe('loginAction', () => {
     const expectedParams: AuthenticationParams = {
       email: 'test@example.com',
       password: 'password123',
-      rememberMe: true,
-    };
-
-    await loginAction(loginData, mockAuthentication, mockSetStorage);
-
-    expect(mockAuthentication.auth).toHaveBeenCalledWith(expectedParams);
-  });
-
-  it('should set rememberMe to false when not provided', async () => {
-    const loginData: LoginFormData = {
-      email: 'test@example.com',
-      password: 'password123',
-    };
-
-    const authResult = {
-      user: {
-        id: 'user-123',
-        name: 'John Doe',
-        email: 'test@example.com',
-      },
-      tokens: {
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        expiresIn: 3600,
-      } as AuthTokens,
-    };
-
-    mockAuthentication.auth.mockResolvedValueOnce(authResult);
-
-    const expectedParams: AuthenticationParams = {
-      email: 'test@example.com',
-      password: 'password123',
-      rememberMe: false,
     };
 
     await loginAction(loginData, mockAuthentication, mockSetStorage);
@@ -117,7 +83,6 @@ describe('loginAction', () => {
     const loginData: LoginFormData = {
       email: 'test@example.com',
       password: 'password123',
-      rememberMe: true,
     };
 
     const authResult = {

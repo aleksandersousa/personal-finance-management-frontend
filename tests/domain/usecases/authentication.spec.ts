@@ -5,7 +5,6 @@ describe('Authentication Use Case', () => {
     const validParams: AuthenticationParams = {
       email: 'test@example.com',
       password: 'validPassword123',
-      rememberMe: true,
     };
 
     // Validar que todos os campos obrigatórios estão presentes
@@ -13,7 +12,6 @@ describe('Authentication Use Case', () => {
     expect(validParams.email).toContain('@');
     expect(validParams.password).toBeDefined();
     expect(validParams.password.length).toBeGreaterThanOrEqual(8);
-    expect(typeof validParams.rememberMe).toBe('boolean');
   });
 
   it('should validate AuthenticationModel structure', () => {
@@ -41,21 +39,5 @@ describe('Authentication Use Case', () => {
     expect(validModel.tokens.refreshToken).toBeDefined();
     expect(validModel.tokens.expiresIn).toBeDefined();
     expect(typeof validModel.tokens.expiresIn).toBe('number');
-  });
-
-  it('should allow optional rememberMe field', () => {
-    const paramsWithoutRememberMe: AuthenticationParams = {
-      email: 'test@example.com',
-      password: 'validPassword123',
-    };
-
-    const paramsWithRememberMe: AuthenticationParams = {
-      email: 'test@example.com',
-      password: 'validPassword123',
-      rememberMe: false,
-    };
-
-    expect(paramsWithoutRememberMe.rememberMe).toBeUndefined();
-    expect(paramsWithRememberMe.rememberMe).toBe(false);
   });
 });

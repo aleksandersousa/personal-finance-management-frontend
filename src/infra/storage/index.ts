@@ -1,2 +1,2 @@
 export * from './local-storage-adapter';
-export * from './cookie-storage-adapter';
+// next-cookie-storage-adapter is server-only - import directly when needed

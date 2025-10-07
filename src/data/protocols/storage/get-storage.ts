@@ -1,3 +1,3 @@
 export interface GetStorage {
-  get: (key: string) => unknown;
+  get: (key: string) => Promise<unknown>;
 }

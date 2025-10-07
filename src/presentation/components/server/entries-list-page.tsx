@@ -1,8 +1,8 @@
 import React from 'react';
-import { loadEntriesByMonthAction } from '@/presentation/actions';
-import { handleDeleteEntryAction } from '@/presentation/actions';
-import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases';
-import { makeCookieStorageAdapter } from '@/main/factories/storage';
+import {
+  loadEntriesByMonthAction,
+  handleDeleteEntryAction,
+} from '@/presentation/actions';
 import { EntryListItemWithModal } from '@/presentation/components/client';
 import { Pagination } from '../client';
 
@@ -11,15 +11,8 @@ type Props = {
 };
 
 export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
-  const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();
-  const getStorage = makeCookieStorageAdapter();
-
   try {
-    const result = await loadEntriesByMonthAction(
-      searchParams,
-      loadEntriesByMonth,
-      getStorage
-    );
+    const result = await loadEntriesByMonthAction(searchParams);
 
     return (
       <div className='min-h-screen bg-slate-50 py-8'>

@@ -1,27 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Button, Input } from '@/presentation/components/ui';
 import { FormValidator } from '@/presentation/protocols';
 import { LoginFormData } from '@/infra/validation';
+import { loginAction } from '@/presentation/actions';
 
 export interface LoginFormProps {
   validator: FormValidator<LoginFormData>;
-  onSubmit: (data: LoginFormData) => Promise<void>;
-  isLoading?: boolean;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
-  validator,
-  onSubmit,
-  isLoading = false,
-}) => {
+export const LoginForm: React.FC<LoginFormProps> = ({ validator }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
-
+  const [isLoading, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +24,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const dataToValidate = {
       email: formData.email,
       password: formData.password,
-      rememberMe: formData.rememberMe,
     };
 
     const result = validator.validate(dataToValidate);
@@ -40,25 +33,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       return;
     }
 
-    try {
-      await onSubmit(result.data!);
-      setFormData({
-        email: '',
-        password: '',
-        rememberMe: false,
-      });
-      setErrors({});
-    } catch {
-      setErrors({
-        general: ['Erro ao fazer login. Verifique suas credenciais.'],
-      });
-    }
+    startTransition(async () => {
+      try {
+        await loginAction(result.data!);
+        setFormData({
+          email: '',
+          password: '',
+        });
+        setErrors({});
+      } catch {
+        setErrors({
+          general: ['Erro ao fazer login. Verifique suas credenciais.'],
+        });
+      }
+    });
   };
 
   const handleInputChange =
     (field: keyof typeof formData) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = field === 'rememberMe' ? e.target.checked : e.target.value;
+      const value = e.target.value;
       setFormData(prev => ({
         ...prev,
         [field]: value,
@@ -99,23 +93,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         disabled={isLoading}
         required
       />
-
-      <div className='flex items-center'>
-        <input
-          id='rememberMe'
-          type='checkbox'
-          className='h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
-          checked={formData.rememberMe}
-          disabled={isLoading}
-          onChange={handleInputChange('rememberMe')}
-        />
-        <label
-          htmlFor='rememberMe'
-          className='ml-2 block text-sm text-gray-900'
-        >
-          Lembrar-me
-        </label>
-      </div>
 
       <Button
         type='submit'

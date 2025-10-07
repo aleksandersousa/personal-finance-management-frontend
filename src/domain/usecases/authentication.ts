@@ -7,7 +7,6 @@ export interface Authentication {
 export interface AuthenticationParams {
   email: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export interface AuthenticationModel {

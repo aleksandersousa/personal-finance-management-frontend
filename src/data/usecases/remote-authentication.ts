@@ -12,16 +12,14 @@ export class RemoteAuthentication implements Authentication {
   ) {}
 
   async auth(params: AuthenticationParams): Promise<AuthenticationModel> {
-    const { email, password, rememberMe } = params;
+    const { email, password } = params;
 
-    const response = await this.httpClient.post<unknown>(this.url, {
+    const response = await this.httpClient.post<AuthenticationModel>(this.url, {
       email,
       password,
-      rememberMe: rememberMe || false,
     });
 
-    const { user, tokens } = response as AuthenticationModel;
-
+    const { user, tokens } = response;
     return { user, tokens };
   }
 }

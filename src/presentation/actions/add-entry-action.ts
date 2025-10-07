@@ -1,18 +1,17 @@
 'use server';
 
 import { EntryFormData } from '@/infra/validation';
-import { AddEntryParams, type AddEntry } from '@/domain/usecases';
+import { AddEntryParams } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
-import { GetStorage } from '@/data/protocols/storage';
 import { getCurrentUser } from '../helpers';
+import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
+import { makeRemoteAddEntryServer } from '@/main/factories/usecases/server';
 
-export async function addEntryAction(
-  data: EntryFormData,
-  addEntry: AddEntry,
-  getStorage: GetStorage
-): Promise<void> {
+export async function addEntryAction(data: EntryFormData): Promise<void> {
   try {
+    const getStorage = new NextCookiesStorageAdapter();
+    const addEntry = makeRemoteAddEntryServer();
     const user = await getCurrentUser(getStorage);
 
     if (!user) {

@@ -2,8 +2,8 @@ import {
   LoadEntriesByMonth,
   LoadEntriesByMonthParams,
   LoadEntriesByMonthResult,
-} from '@/domain/usecases/load-entries-by-month';
-import { HttpClient } from '@/data/protocols/http/http-client';
+} from '@/domain/usecases';
+import { HttpClient } from '@/data/protocols/http';
 
 export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
   constructor(
@@ -22,8 +22,9 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
       ...(type ? { type } : {}),
       ...(categoryId ? { categoryId } : {}),
     }).toString();
-    const response = await this.httpClient.get<unknown>(`${this.url}?${query}`);
-    // O backend já retorna o formato correto
-    return response as LoadEntriesByMonthResult;
+    const response = await this.httpClient.get<LoadEntriesByMonthResult>(
+      `${this.url}?${query}`
+    );
+    return response;
   }
 }

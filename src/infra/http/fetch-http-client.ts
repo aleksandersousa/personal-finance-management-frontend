@@ -23,6 +23,7 @@ export class FetchHttpClient implements HttpClient {
     data?: unknown,
     config?: RequestInit
   ): Promise<T> {
+    console.log('POST', url);
     const response = await fetch(url, {
       method: 'POST',
       headers: {

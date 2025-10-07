@@ -25,7 +25,6 @@ describe('RemoteAuthentication', () => {
     const params: AuthenticationParams = {
       email: 'test@example.com',
       password: 'validPassword123',
-      rememberMe: true,
     };
 
     const mockResponse = {
@@ -48,7 +47,6 @@ describe('RemoteAuthentication', () => {
     expect(mockHttpClient.post).toHaveBeenCalledWith(url, {
       email: params.email,
       password: params.password,
-      rememberMe: params.rememberMe,
     });
   });
 
@@ -56,7 +54,6 @@ describe('RemoteAuthentication', () => {
     const params: AuthenticationParams = {
       email: 'test@example.com',
       password: 'validPassword123',
-      rememberMe: false,
     };
 
     const mockResponse = {
@@ -87,36 +84,6 @@ describe('RemoteAuthentication', () => {
         refreshToken: 'valid-refresh-token',
         expiresIn: 900,
       },
-    });
-  });
-
-  it('should set rememberMe to false when not provided', async () => {
-    const params: AuthenticationParams = {
-      email: 'test@example.com',
-      password: 'validPassword123',
-    };
-
-    const mockResponse = {
-      user: {
-        id: 'user-123',
-        name: 'John Doe',
-        email: 'test@example.com',
-      },
-      tokens: {
-        accessToken: 'valid-access-token',
-        refreshToken: 'valid-refresh-token',
-        expiresIn: 900,
-      },
-    };
-
-    mockHttpClient.post.mockResolvedValueOnce(mockResponse);
-
-    await sut.auth(params);
-
-    expect(mockHttpClient.post).toHaveBeenCalledWith(url, {
-      email: params.email,
-      password: params.password,
-      rememberMe: false,
     });
   });
 

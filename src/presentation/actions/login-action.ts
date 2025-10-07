@@ -1,26 +1,25 @@
 'use server';
 
 import { LoginFormData } from '@/infra/validation';
-import { AuthenticationParams, type Authentication } from '@/domain/usecases';
+import { AuthenticationParams } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
-import type { SetStorage } from '@/data/protocols';
+import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
+import { makeRemoteAuthentication } from '@/main/factories/usecases';
 
-export async function loginAction(
-  data: LoginFormData,
-  authentication: Authentication,
-  setStorage: SetStorage
-): Promise<void> {
+export async function loginAction(data: LoginFormData): Promise<void> {
   const params: AuthenticationParams = {
     email: data.email,
     password: data.password,
-    rememberMe: data.rememberMe || false,
   };
+
+  const authentication = makeRemoteAuthentication();
+  const setStorage = new NextCookiesStorageAdapter();
 
   try {
     const result = await authentication.auth(params);
 
-    setStorage.set('user', result.user);
-    setStorage.set('tokens', result.tokens);
+    await setStorage.set('user', result.user);
+    await setStorage.set('tokens', result.tokens);
 
     redirect('/dashboard');
   } catch (error) {

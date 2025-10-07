@@ -8,8 +8,8 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     private readonly httpClient: HttpClient
   ) {}
 
-  private addAuthorizationHeader(config?: unknown): unknown {
-    const tokens = this.getStorage.get('tokens') as AuthTokens;
+  private async addAuthorizationHeader(config?: unknown): Promise<unknown> {
+    const tokens = (await this.getStorage.get('tokens')) as AuthTokens;
 
     if (tokens?.accessToken) {
       const configObj = config as Record<string, unknown> | undefined;
@@ -26,7 +26,7 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
   }
 
   async get<T = unknown>(url: string, config?: unknown): Promise<T> {
-    const configWithAuth = this.addAuthorizationHeader(config);
+    const configWithAuth = await this.addAuthorizationHeader(config);
     return this.httpClient.get<T>(url, configWithAuth);
   }
 
@@ -35,7 +35,7 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     data?: unknown,
     config?: unknown
   ): Promise<T> {
-    const configWithAuth = this.addAuthorizationHeader(config);
+    const configWithAuth = await this.addAuthorizationHeader(config);
     return this.httpClient.post<T>(url, data, configWithAuth);
   }
 
@@ -44,12 +44,12 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     data?: unknown,
     config?: unknown
   ): Promise<T> {
-    const configWithAuth = this.addAuthorizationHeader(config);
+    const configWithAuth = await this.addAuthorizationHeader(config);
     return this.httpClient.put<T>(url, data, configWithAuth);
   }
 
   async delete<T = unknown>(url: string, config?: unknown): Promise<T> {
-    const configWithAuth = this.addAuthorizationHeader(config);
+    const configWithAuth = await this.addAuthorizationHeader(config);
     return this.httpClient.delete<T>(url, configWithAuth);
   }
 }

@@ -58,7 +58,6 @@ describe('Login Flow', () => {
       expect(interception.request.body).to.deep.include({
         email: 'john@example.com',
         password: 'validPassword123',
-        rememberMe: true,
       });
     });
 

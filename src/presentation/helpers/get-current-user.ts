@@ -4,7 +4,7 @@ import type { UserModel } from '@/domain/models';
 export async function getCurrentUser(
   getStorage: GetStorage
 ): Promise<UserModel | null> {
-  const user = getStorage.get('user') as UserModel;
+  const user = (await getStorage.get('user')) as UserModel;
 
   if (!user) {
     return null;

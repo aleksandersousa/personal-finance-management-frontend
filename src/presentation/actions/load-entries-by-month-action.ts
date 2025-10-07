@@ -3,43 +3,20 @@
 import {
   LoadEntriesByMonthParams,
   LoadEntriesByMonthResult,
-  type LoadEntriesByMonth,
 } from '@/domain/usecases/load-entries-by-month';
-import { GetStorage } from '@/data/protocols/storage';
 import { getCurrentUser } from '../helpers';
+import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
+import { makeRemoteLoadEntriesByMonthServer } from '@/main/factories/usecases/server';
 
 export async function loadEntriesByMonthAction(
-  searchParams: Record<string, string>,
-  loadEntriesByMonth: LoadEntriesByMonth,
-  getStorage: GetStorage
+  searchParams: Record<string, string>
 ): Promise<LoadEntriesByMonthResult> {
   try {
+    const getStorage = new NextCookiesStorageAdapter();
     const user = await getCurrentUser(getStorage);
 
     if (!user) {
-      return {
-        data: [
-          {
-            id: 'any_id',
-            amount: 10000, // R$ 100,00 em centavos
-            description: 'any_description',
-            type: 'INCOME',
-            isFixed: false,
-            categoryId: 'any_category_id',
-            categoryName: 'any_category_name',
-            userId: 'any_user_id',
-            date: new Date('2024-01-01'),
-            createdAt: new Date('2024-01-01'),
-            updatedAt: new Date('2024-01-01'),
-          },
-        ],
-        meta: {
-          page: 1,
-          limit: 20,
-          total: 0,
-          totalPages: 0,
-        },
-      };
+      throw new Error('User not found');
     }
 
     // Extrair parâmetros da query string
@@ -58,6 +35,7 @@ export async function loadEntriesByMonthAction(
       ...(categoryId && { categoryId }),
     };
 
+    const loadEntriesByMonth = makeRemoteLoadEntriesByMonthServer();
     const result = await loadEntriesByMonth.load(params);
 
     return result;

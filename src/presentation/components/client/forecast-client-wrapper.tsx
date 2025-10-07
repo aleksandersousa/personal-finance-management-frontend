@@ -99,7 +99,7 @@ const fetchForecast = async (
     confidenceThreshold: filters.confidenceThreshold,
   });
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
   const response = await fetch(
     `${apiUrl}/users/${userId}/cash-flow-forecast?${queryParams.toString()}`
   );
