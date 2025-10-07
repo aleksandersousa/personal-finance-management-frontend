@@ -1,9 +1,10 @@
 import { RemoteLoadMonthlySummary } from '@/data/usecases';
 import { LoadMonthlySummary } from '@/domain/usecases';
-import { makeFetchHttpClient, makeApiUrl } from '@/main/factories/http';
+import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
+import { makeApiUrl } from '@/main/factories/http';
 
 export function makeRemoteLoadMonthlySummary(): LoadMonthlySummary {
-  const httpClient = makeFetchHttpClient();
+  const httpClient = makeAuthorizedServerHttpClient();
   const url = makeApiUrl('');
   return new RemoteLoadMonthlySummary(url, httpClient);
 }
