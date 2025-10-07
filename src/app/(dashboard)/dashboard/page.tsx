@@ -1,15 +1,20 @@
 import { DashboardPage } from '@/presentation/components/server';
+import {
+  loadMonthlySummaryAction,
+  loadCashFlowForecastAction,
+} from '@/presentation/actions';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
   searchParams: Promise<{
     month?: string;
+    forecastMonths?: string;
   }>;
 }
 
 export default async function DashboardPageRoute({ searchParams }: PageProps) {
   try {
-    const { month } = await searchParams;
+    const { month, forecastMonths } = await searchParams;
 
     // Se não especificado, usar mês atual
     const currentDate = new Date();
@@ -17,52 +22,32 @@ export default async function DashboardPageRoute({ searchParams }: PageProps) {
       month ||
       `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
 
-    // Criar mock de dados para o MVP
-    const mockSummary = {
-      month: currentMonth,
-      totalIncome: 450000, // R$ 4500.00 em centavos
-      totalExpenses: 275000, // R$ 2750.00 em centavos
-      balance: 175000, // R$ 1750.00 em centavos
-      entriesCount: 12,
-      categories: [
-        {
-          categoryId: '1',
-          categoryName: 'Salário',
-          total: 450000,
-          count: 1,
-          type: 'INCOME' as const,
-        },
-        {
-          categoryId: '2',
-          categoryName: 'Alimentação',
-          total: 120000,
-          count: 8,
-          type: 'EXPENSE' as const,
-        },
-        {
-          categoryId: '3',
-          categoryName: 'Transporte',
-          total: 85000,
-          count: 4,
-          type: 'EXPENSE' as const,
-        },
-        {
-          categoryId: '4',
-          categoryName: 'Lazer',
-          total: 70000,
-          count: 3,
-          type: 'EXPENSE' as const,
-        },
-      ],
-      comparison: {
-        previousMonth: `${currentDate.getFullYear()}-${String(currentDate.getMonth()).padStart(2, '0')}`,
-        incomeChange: 5.2, // +5.2%
-        expenseChange: -3.1, // -3.1% (diminuição é boa)
-        balanceChange: 15.8, // +15.8%
-      },
-    };
+    // Número de meses para previsão (padrão: 6)
+    const forecastMonthsCount = forecastMonths
+      ? Math.min(Math.max(parseInt(forecastMonths, 10), 1), 12)
+      : 6;
 
-    return <DashboardPage summary={mockSummary} />;
+    // Carregar dados do resumo mensal e previsão em paralelo
+    const [summary, forecast] = await Promise.allSettled([
+      loadMonthlySummaryAction(currentMonth, true),
+      loadCashFlowForecastAction(forecastMonthsCount, true, false),
+    ]);
+
+    // Verificar se conseguimos carregar o summary (obrigatório)
+    if (summary.status === 'rejected') {
+      console.error('Failed to load summary:', summary.reason);
+      notFound();
+    }
+
+    // Forecast é opcional - se falhar, continua sem ele
+    const forecastData =
+      forecast.status === 'fulfilled' ? forecast.value : undefined;
+
+    if (forecast.status === 'rejected') {
+      console.warn('Failed to load forecast:', forecast.reason);
+    }
+
+    return <DashboardPage summary={summary.value} forecast={forecastData} />;
   } catch (error) {
     console.error('Error loading dashboard:', error);
     notFound();
