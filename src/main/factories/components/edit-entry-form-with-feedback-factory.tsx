@@ -2,7 +2,7 @@
 
 import { EditEntryFormWithFeedback } from '@/presentation/components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
-import { makeRemoteUpdateEntry } from '@/main/factories/usecases';
+import { makeRemoteUpdateEntry } from '@/main/factories/usecases/update-entry-factory';
 import { EntryModel } from '@/domain/models/entry';
 
 export interface EditEntryFormWithFeedbackFactoryProps {

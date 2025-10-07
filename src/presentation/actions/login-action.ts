@@ -4,7 +4,7 @@ import { LoginFormData } from '@/infra/validation';
 import { AuthenticationParams } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
 import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
-import { makeRemoteAuthentication } from '@/main/factories/usecases';
+import { makeRemoteAuthentication } from '@/main/factories/usecases/authentication-factory';
 
 export async function loginAction(data: LoginFormData): Promise<void> {
   const params: AuthenticationParams = {

@@ -6,7 +6,7 @@ import {
 } from '@/domain/usecases/load-entries-by-month';
 import { getCurrentUser } from '../helpers';
 import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
-import { makeRemoteLoadEntriesByMonthServer } from '@/main/factories/usecases/server';
+import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases/load-entries-by-month-factory';
 
 export async function loadEntriesByMonthAction(
   searchParams: Record<string, string>
@@ -35,7 +35,7 @@ export async function loadEntriesByMonthAction(
       ...(categoryId && { categoryId }),
     };
 
-    const loadEntriesByMonth = makeRemoteLoadEntriesByMonthServer();
+    const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();
     const result = await loadEntriesByMonth.load(params);
 
     return result;

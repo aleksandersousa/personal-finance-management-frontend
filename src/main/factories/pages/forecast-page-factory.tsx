@@ -1,5 +1,5 @@
 import { ForecastPage } from '@/presentation/components/server';
-import { makeRemoteLoadCashFlowForecast } from '@/main/factories/usecases';
+import { makeRemoteLoadCashFlowForecast } from '@/main/factories/usecases/load-cash-flow-forecast-factory';
 import { ForecastFilters } from '@/domain/models';
 
 export interface MakeForecastPageProps {

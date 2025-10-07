@@ -1,10 +1,11 @@
 import { RemoteLoadEntriesByMonth } from '@/data/usecases';
 import { LoadEntriesByMonth } from '@/domain/usecases';
 import { makeApiUrl } from '@/main/factories/http';
-import { makeAuthorizeHttpClientDecorator } from '../decorators';
+import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
 
 export function makeRemoteLoadEntriesByMonth(): LoadEntriesByMonth {
-  const httpClient = makeAuthorizeHttpClientDecorator();
-  const url = makeApiUrl('/entries');
-  return new RemoteLoadEntriesByMonth(url, httpClient);
+  return new RemoteLoadEntriesByMonth(
+    makeApiUrl('/entries'),
+    makeAuthorizedServerHttpClient()
+  );
 }

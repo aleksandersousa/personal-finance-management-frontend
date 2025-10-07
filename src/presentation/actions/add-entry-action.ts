@@ -6,12 +6,12 @@ import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
 import { getCurrentUser } from '../helpers';
 import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
-import { makeRemoteAddEntryServer } from '@/main/factories/usecases/server';
+import { makeRemoteAddEntry } from '@/main/factories/usecases/add-entry-factory';
 
 export async function addEntryAction(data: EntryFormData): Promise<void> {
   try {
     const getStorage = new NextCookiesStorageAdapter();
-    const addEntry = makeRemoteAddEntryServer();
+    const addEntry = makeRemoteAddEntry();
     const user = await getCurrentUser(getStorage);
 
     if (!user) {
