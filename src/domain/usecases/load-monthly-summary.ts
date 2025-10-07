@@ -6,5 +6,6 @@ export interface LoadMonthlySummary {
 
 export interface LoadMonthlySummaryParams {
   month: string; // YYYY-MM
-  includeComparison?: boolean; // Incluir comparação com mês anterior
+  includeCategories?: boolean; // Incluir breakdown de categorias
+  userId: string; // User ID para autenticação
 }
