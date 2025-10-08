@@ -4,7 +4,7 @@ export const categoryFormSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').max(100, 'Nome muito longo'),
   description: z.string().max(255, 'Descrição muito longa').optional(),
   type: z.enum(['INCOME', 'EXPENSE'], {
-    message: 'Tipo deve ser INCOME ou EXPENSE',
+    message: 'Tipo deve ser Receita ou Despesa',
   }),
   color: z
     .string()
