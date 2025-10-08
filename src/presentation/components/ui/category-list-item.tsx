@@ -41,10 +41,10 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = ({
       <div className='flex items-center justify-between p-4'>
         <div className='flex items-center space-x-3 flex-1'>
           <div
-            className='w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg'
+            className='w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg p-6'
             style={{ backgroundColor: category.color }}
           >
-            {category.icon}
+            <span>{category.icon}</span>
           </div>
 
           <div className='flex-1'>
