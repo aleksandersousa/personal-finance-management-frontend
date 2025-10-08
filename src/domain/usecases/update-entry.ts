@@ -9,7 +9,7 @@ export interface UpdateEntryParams {
   description: string;
   amount: number; // Em centavos
   type: 'INCOME' | 'EXPENSE';
-  categoryId: string;
+  categoryId?: string;
   date: Date;
   isFixed: boolean;
 }
