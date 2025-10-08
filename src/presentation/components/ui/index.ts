@@ -16,4 +16,6 @@ export * from './summary-card';
 export * from './category-breakdown';
 export * from './forecast-insights';
 export * from './forecast-summary-card';
+export * from './consolidated-forecast-card';
 export * from './monthly-projections-chart';
+export * from './interactive-monthly-projections-chart';
