@@ -18,6 +18,17 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   try {
     const result = await loadEntriesByMonthAction(searchParams);
 
+    // Check if there are active filters
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const hasActiveFilters = Boolean(
+      (searchParams.month && searchParams.month !== currentMonth) ||
+        (searchParams.type && searchParams.type !== 'all') ||
+        (searchParams.category && searchParams.category !== 'all') ||
+        (searchParams.sort && searchParams.sort !== 'date') ||
+        (searchParams.order && searchParams.order !== 'desc') ||
+        (searchParams.search && searchParams.search.trim() !== '')
+    );
+
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
         <EntriesCache entries={result.data} />
@@ -32,6 +43,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 }
                 totalResults={result.data.length}
                 showHeader={result.data.length > 0}
+                hasActiveFilters={hasActiveFilters}
               />
               {result.data.length === 0 ? (
                 <div className='text-center text-gray-400 py-8'>

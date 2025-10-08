@@ -12,17 +12,20 @@ interface EntriesFiltersProps {
   currentMonth: string;
   totalResults: number;
   showHeader?: boolean;
+  hasActiveFilters?: boolean;
 }
 
 export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   currentMonth,
   totalResults,
   showHeader = true,
+  hasActiveFilters: externalHasActiveFilters = false,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [filters, setFilters] = useState({
+    month: searchParams.get('month') || currentMonth,
     type: searchParams.get('type') || 'all',
     category: searchParams.get('category') || 'all',
     sort: searchParams.get('sort') || 'date',
@@ -31,6 +34,43 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   });
 
   const [showFilters, setShowFilters] = useState(false);
+
+  // Generate month options for the last 12 months
+  const generateMonthOptions = () => {
+    const options = [];
+    const currentDate = new Date();
+
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        1
+      );
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const value = `${year}-${month}`;
+
+      const monthNames = [
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril',
+        'Maio',
+        'Junho',
+        'Julho',
+        'Agosto',
+        'Setembro',
+        'Outubro',
+        'Novembro',
+        'Dezembro',
+      ];
+
+      const label = `${monthNames[date.getMonth()]} ${year}`;
+      options.push({ value, label });
+    }
+
+    return options;
+  };
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -54,6 +94,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   const clearFilters = () => {
     const clearedFilters = {
+      month: currentMonth,
       type: 'all',
       category: 'all',
       sort: 'date',
@@ -65,13 +106,17 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   };
 
   const hasActiveFilters =
+    filters.month !== currentMonth ||
     filters.type !== 'all' ||
     filters.category !== 'all' ||
     filters.sort !== 'date' ||
     filters.order !== 'desc' ||
     filters.search !== '';
 
-  if (!showHeader) {
+  // Show header if there are results OR if there are active filters
+  const shouldShowHeader = showHeader || externalHasActiveFilters;
+
+  if (!shouldShowHeader) {
     return null;
   }
 
@@ -112,22 +157,23 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
       {/* Filters Panel */}
       {showFilters && (
         <div className='border-t border-slate-200 pt-4'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            {/* Search */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
+            {/* Month Filter */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Buscar
+                Mês
               </label>
-              <div className='relative'>
-                <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400' />
-                <input
-                  type='text'
-                  value={filters.search}
-                  onChange={e => handleFilterChange('search', e.target.value)}
-                  placeholder='Descrição...'
-                  className='w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-                />
-              </div>
+              <select
+                value={filters.month}
+                onChange={e => handleFilterChange('month', e.target.value)}
+                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              >
+                {generateMonthOptions().map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Type Filter */}
@@ -175,6 +221,23 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                 <option value='desc'>Decrescente</option>
                 <option value='asc'>Crescente</option>
               </select>
+            </div>
+          </div>
+
+          {/* Search Field - Full Width */}
+          <div className='mb-4'>
+            <label className='block text-sm font-medium text-slate-700 mb-1'>
+              Buscar
+            </label>
+            <div className='relative'>
+              <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400' />
+              <input
+                type='text'
+                value={filters.search}
+                onChange={e => handleFilterChange('search', e.target.value)}
+                placeholder='Descrição...'
+                className='w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              />
             </div>
           </div>
 
