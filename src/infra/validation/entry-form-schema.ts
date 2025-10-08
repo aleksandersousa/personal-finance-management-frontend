@@ -10,9 +10,9 @@ export const entryFormSchema = z.object({
     .positive('Valor deve ser positivo')
     .max(999999.99, 'Valor muito alto'),
   type: z.enum(['INCOME', 'EXPENSE'], {
-    message: 'Tipo deve ser INCOME ou EXPENSE',
+    message: 'Tipo deve ser Receita ou Despesa',
   }),
-  categoryId: z.string().min(1, 'Categoria é obrigatória'),
+  categoryId: z.string().optional(),
   date: z.date({
     message: 'Data inválida',
   }),
