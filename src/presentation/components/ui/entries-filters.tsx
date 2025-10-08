@@ -76,7 +76,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   }
 
   return (
-    <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 mb-6'>
+    <div className='mb-6'>
       {/* Header */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
         <div>
