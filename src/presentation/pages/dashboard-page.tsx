@@ -4,6 +4,7 @@ import {
   CategoryBreakdown,
   ConsolidatedForecastCard,
   InteractiveMonthlyProjectionsChart,
+  DashboardFilters,
 } from '@/presentation/components';
 import {
   MonthlySummaryModel,
@@ -19,11 +20,15 @@ import {
 export interface DashboardPageProps {
   summary: MonthlySummaryModel;
   forecast?: CashFlowForecastModel;
+  currentMonth: string;
+  currentForecastMonths: number;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   summary,
   forecast,
+  currentMonth,
+  currentForecastMonths,
 }) => {
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown || [];
@@ -31,6 +36,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full flex justify-center'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
+        {/* Filtros */}
+        <DashboardFilters
+          currentMonth={currentMonth}
+          currentForecastMonths={currentForecastMonths}
+        />
+
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
           <SummaryCard
             title='Saldo'

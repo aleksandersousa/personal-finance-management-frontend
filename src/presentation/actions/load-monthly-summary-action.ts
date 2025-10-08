@@ -3,8 +3,9 @@
 import { LoadMonthlySummaryParams } from '@/domain/usecases/load-monthly-summary';
 import { MonthlySummaryModel } from '@/domain/models';
 import { getCurrentUser } from '../helpers';
-import { makeRemoteLoadMonthlySummary } from '@/main/factories/usecases/load-monthly-summary-factory';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { makeRemoteLoadMonthlySummary } from '@/main/factories/usecases/load-monthly-summary-factory';
+import { logoutAction } from './logout-action';
 
 export async function loadMonthlySummaryAction(
   month: string,
@@ -15,7 +16,9 @@ export async function loadMonthlySummaryAction(
     const user = await getCurrentUser(getStorage);
 
     if (!user) {
-      throw new Error('User not found');
+      console.warn('User not found, redirecting to logout');
+      await logoutAction();
+      return {} as MonthlySummaryModel;
     }
 
     const params: LoadMonthlySummaryParams = {
@@ -28,8 +31,9 @@ export async function loadMonthlySummaryAction(
     const result = await loadMonthlySummary.load(params);
 
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Load monthly summary error:', error);
-    throw error;
+    await logoutAction();
+    return {} as MonthlySummaryModel;
   }
 }

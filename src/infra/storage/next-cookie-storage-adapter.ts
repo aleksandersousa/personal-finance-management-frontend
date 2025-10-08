@@ -18,7 +18,7 @@ export class NextCookiesStorageAdapter implements GetStorage, SetStorage {
       typeof value === 'string' ? value : JSON.stringify(value);
 
     (await cookies()).set(key, stringValue, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 30, // 30 dias

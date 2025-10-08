@@ -19,3 +19,4 @@ export * from './forecast-summary-card';
 export * from './consolidated-forecast-card';
 export * from './monthly-projections-chart';
 export * from './interactive-monthly-projections-chart';
+export * from './dashboard-filters';

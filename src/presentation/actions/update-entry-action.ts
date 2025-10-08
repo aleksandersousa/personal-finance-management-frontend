@@ -1,20 +1,28 @@
 'use server';
 
 import { EntryFormData } from '@/infra/validation';
-import { UpdateEntryParams, type UpdateEntry } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
+import { getCurrentUser } from '../helpers';
+import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { makeRemoteUpdateEntry } from '@/main/factories/usecases/update-entry-factory';
+import { logoutAction } from './logout-action';
 
 export async function updateEntryAction(
   id: string,
-  data: EntryFormData,
-  updateEntry: UpdateEntry
+  data: EntryFormData
 ): Promise<void> {
   try {
-    // Para o MVP, vamos usar um usuário mock
-    const mockUserId = 'mock-user-id';
+    const getStorage = makeNextCookiesStorageAdapter();
+    const user = await getCurrentUser(getStorage);
 
-    const params: UpdateEntryParams = {
+    if (!user) {
+      console.warn('User not found, redirecting to logout');
+      await logoutAction();
+      return;
+    }
+
+    const params = {
       id,
       description: data.description,
       amount: Math.round(data.amount * 100),
@@ -24,15 +32,16 @@ export async function updateEntryAction(
       isFixed: data.isFixed,
     };
 
+    const updateEntry = makeRemoteUpdateEntry();
     await updateEntry.update(params);
 
     revalidateTag('entries');
-    revalidateTag(`entries-${mockUserId}`);
+    revalidateTag(`entries-${user.id}`);
     revalidateTag(`entry-${id}`);
 
     redirect('/entries');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Update entry error:', error);
-    throw error;
+    await logoutAction();
   }
 }

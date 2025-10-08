@@ -5,21 +5,23 @@ import {
   LoadEntriesByMonthResult,
 } from '@/domain/usecases/load-entries-by-month';
 import { getCurrentUser } from '../helpers';
-import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
+import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteLoadEntriesByMonth } from '@/main/factories/usecases/load-entries-by-month-factory';
+import { logoutAction } from './logout-action';
 
 export async function loadEntriesByMonthAction(
   searchParams: Record<string, string>
 ): Promise<LoadEntriesByMonthResult> {
   try {
-    const getStorage = new NextCookiesStorageAdapter();
+    const getStorage = makeNextCookiesStorageAdapter();
     const user = await getCurrentUser(getStorage);
 
     if (!user) {
-      throw new Error('User not found');
+      console.warn('User not found, redirecting to logout');
+      await logoutAction();
+      return {} as LoadEntriesByMonthResult;
     }
 
-    // Extrair parâmetros da query string
     const month = searchParams.month || new Date().toISOString().slice(0, 7); // YYYY-MM
     const page = Number(searchParams.page) || 1;
     const limit = Number(searchParams.limit) || 20;
@@ -39,8 +41,9 @@ export async function loadEntriesByMonthAction(
     const result = await loadEntriesByMonth.load(params);
 
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Load entries by month error:', error);
-    throw error;
+    await logoutAction();
+    return {} as LoadEntriesByMonthResult;
   }
 }

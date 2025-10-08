@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   SunIcon,
@@ -15,12 +15,27 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { Button } from '@/presentation/components/ui/button';
+import { makeCookieStorageAdapter } from '@/main/factories/storage';
+import type { UserModel } from '@/domain';
+import { logoutAction } from '../actions/logout-action';
 
 export const TopBar: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const pathname = usePathname();
+  const getLocalStorage = makeCookieStorageAdapter();
 
-  // Hide top bar on auth pages
+  const [user, setUser] = useState<UserModel | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = (await getLocalStorage.get('user')) as UserModel;
+      if (user) {
+        setUser(user);
+      }
+    };
+    fetchUser();
+  }, []);
+
   if (pathname.startsWith('/login')) {
     return null;
   }
@@ -30,9 +45,13 @@ export const TopBar: React.FC = () => {
     // TODO: Implementar mudança de tema
   };
 
-  const handleSignOut = () => {
-    // TODO: Implementar logout
-    console.log('Sign out clicked');
+  const handleSignOut = async () => {
+    try {
+      await logoutAction();
+    } catch (error) {
+      console.error('Logout error:', error);
+      window.location.href = '/login';
+    }
   };
 
   return (
@@ -55,8 +74,10 @@ export const TopBar: React.FC = () => {
 
         <div className='flex items-center space-x-3'>
           <div className='hidden sm:block'>
-            <p className='text-sm font-medium text-slate-900'>Usuário</p>
-            <p className='text-xs text-slate-500'>usuario@email.com</p>
+            <p className='text-sm font-medium text-slate-900'>
+              {user?.name ?? ''}
+            </p>
+            <p className='text-xs text-slate-500'>{user?.email ?? ''}</p>
           </div>
 
           <DropdownMenu>
@@ -73,8 +94,10 @@ export const TopBar: React.FC = () => {
 
             <DropdownMenuContent align='start' className='w-56 mr-4'>
               <div className='px-3 py-2 border-b border-slate-100'>
-                <p className='text-sm font-medium text-slate-900'>Usuário</p>
-                <p className='text-xs text-slate-500'>usuario@email.com</p>
+                <p className='text-sm font-medium text-slate-900'>
+                  {user?.name ?? ''}
+                </p>
+                <p className='text-xs text-slate-500'>{user?.email ?? ''}</p>
               </div>
 
               <DropdownMenuItem

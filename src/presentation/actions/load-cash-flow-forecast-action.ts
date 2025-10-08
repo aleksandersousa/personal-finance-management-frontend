@@ -3,8 +3,9 @@
 import { LoadCashFlowForecastParams } from '@/domain/usecases/load-cash-flow-forecast';
 import { CashFlowForecastModel } from '@/domain/models';
 import { getCurrentUser } from '../helpers';
+import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
 import { makeRemoteLoadCashFlowForecast } from '@/main/factories/usecases/load-cash-flow-forecast-factory';
-import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { logoutAction } from './logout-action';
 
 export async function loadCashFlowForecastAction(
   months: number = 3,
@@ -12,11 +13,13 @@ export async function loadCashFlowForecastAction(
   includeRecurring: boolean = false
 ): Promise<CashFlowForecastModel> {
   try {
-    const getStorage = makeNextCookiesStorageAdapter();
+    const getStorage = new NextCookiesStorageAdapter();
     const user = await getCurrentUser(getStorage);
 
     if (!user) {
-      throw new Error('User not found');
+      console.warn('User not found, redirecting to logout');
+      await logoutAction();
+      return {} as CashFlowForecastModel;
     }
 
     const params: LoadCashFlowForecastParams = {
@@ -30,8 +33,9 @@ export async function loadCashFlowForecastAction(
     const result = await loadCashFlowForecast.load(params);
 
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Load cash flow forecast error:', error);
-    throw error;
+    await logoutAction();
+    return {} as CashFlowForecastModel;
   }
 }

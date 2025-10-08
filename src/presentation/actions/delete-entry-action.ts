@@ -2,27 +2,36 @@
 
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { getCurrentUser } from '../helpers';
+import { makeRemoteDeleteEntry } from '@/main/factories/usecases/delete-entry-factory';
+import { logoutAction } from './logout-action';
+import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 
 export async function deleteEntryAction(
   id: string,
   deleteAllOccurrences: boolean
 ): Promise<void> {
   try {
-    // Para o MVP, vamos simular a exclusão
-    // Em produção, isso seria substituído pela implementação real
-    console.log(`Deleting entry ${id}, deleteAll: ${deleteAllOccurrences}`);
+    const getStorage = makeNextCookiesStorageAdapter();
+    const user = await getCurrentUser(getStorage);
 
-    // Para o MVP, vamos usar um usuário mock
-    const mockUserId = 'mock-user-id';
+    if (!user) {
+      console.warn('User not found, redirecting to logout');
+      await logoutAction();
+      return;
+    }
+
+    const deleteEntry = makeRemoteDeleteEntry();
+    await deleteEntry.delete({ id, deleteAllOccurrences });
 
     revalidateTag('entries');
-    revalidateTag(`entries-${mockUserId}`);
+    revalidateTag(`entries-${user.id}`);
     revalidateTag(`entry-${id}`);
     revalidateTag('summary');
 
     redirect('/entries');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Delete entry error:', error);
-    throw error;
+    await logoutAction();
   }
 }
