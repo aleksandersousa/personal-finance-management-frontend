@@ -24,7 +24,10 @@ export function EntryFormWithFeedback({
 
     startTransition(async () => {
       try {
-        await addEntryAction(data);
+        await addEntryAction({
+          ...data,
+          categoryId: data.categoryId || undefined,
+        });
         setFeedback({
           type: 'success',
           message: 'Entrada adicionada com sucesso!',

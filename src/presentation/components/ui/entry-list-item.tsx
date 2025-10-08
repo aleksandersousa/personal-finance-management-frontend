@@ -6,6 +6,7 @@ import { Card } from './card';
 import { Badge } from './badge';
 import { Button } from './button';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react/dist/ssr';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 interface EntryListItemProps {
   entry: EntryModel;
@@ -20,20 +21,6 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   onEdit,
   showActions = true,
 }) => {
-  const formatDate = (date: Date | string) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-
-    // Verificar se a data é válida
-    if (isNaN(dateObj.getTime())) {
-      return 'Data inválida';
-    }
-
-    const month = dateObj.getUTCMonth() + 1;
-    const day = dateObj.getUTCDate();
-    const year = dateObj.getUTCFullYear();
-    return `${month}/${day}/${year}`;
-  };
-
   const handleEdit = () => {
     if (onEdit) {
       onEdit(entry.id);
@@ -64,7 +51,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
           <div className='font-medium text-foreground'>{entry.description}</div>
           <div className='text-sm text-muted-foreground mt-1 flex items-center gap-2'>
             <span>
-              {entry.categoryName} • {formatDate(entry.date)}
+              {entry.categoryName ?? 'Sem categoria'} • {formatDate(entry.date)}
             </span>
             {entry.isFixed && (
               <Badge variant='secondary' className='bg-primary/10 text-primary'>
@@ -80,8 +67,8 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
               entry.type === 'INCOME' ? 'text-green-600' : 'text-red-600'
             }`}
           >
-            {entry.type === 'INCOME' ? '+' : '-'} R${' '}
-            {(entry.amount / 100).toFixed(2)}
+            {entry.type === 'INCOME' ? '+' : '-'}
+            {formatCurrency(entry.amount)}
           </div>
 
           {showActions && (

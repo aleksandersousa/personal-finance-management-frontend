@@ -2,16 +2,15 @@
 
 import { EditEntryFormWithFeedback } from '@/presentation/components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
-import { EntryModel } from '@/domain/models/entry';
 
 export interface EditEntryFormWithFeedbackFactoryProps {
-  entry: EntryModel;
+  entryId: string;
 }
 
 export function EditEntryFormWithFeedbackFactory({
-  entry,
+  entryId,
 }: EditEntryFormWithFeedbackFactoryProps) {
   const validator = makeEntryFormValidator();
 
-  return <EditEntryFormWithFeedback entry={entry} validator={validator} />;
+  return <EditEntryFormWithFeedback entryId={entryId} validator={validator} />;
 }

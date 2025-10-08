@@ -1,12 +1,11 @@
 import React from 'react';
 import { EditEntryFormWithFeedbackFactory } from '@/main/factories/components';
-import { EntryModel } from '@/domain/models/entry';
 
 export interface EditEntryPageProps {
-  entry: EntryModel;
+  entryId: string;
 }
 
-export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entry }) => {
+export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
   return (
     <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
       <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
@@ -23,7 +22,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entry }) => {
 
           {/* Main Form Card */}
           <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-            <EditEntryFormWithFeedbackFactory entry={entry} />
+            <EditEntryFormWithFeedbackFactory entryId={entryId} />
           </div>
         </div>
       </div>

@@ -23,10 +23,9 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
       description: data.description,
       amount: Math.round(data.amount * 100),
       type: data.type,
-      categoryId: data.categoryId,
+      categoryId: data.categoryId || undefined,
       date: data.date,
       isFixed: data.isFixed,
-      userId: user.id,
     };
 
     const addEntry = makeRemoteAddEntry();

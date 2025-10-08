@@ -59,6 +59,14 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
     });
   }, []);
 
+  console.log(entry);
+
+  useEffect(() => {
+    if (entry.categoryId && categories.length > 0) {
+      handleInputChange('categoryId', entry.categoryId);
+    }
+  }, [categories, entry.categoryId]);
+
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,

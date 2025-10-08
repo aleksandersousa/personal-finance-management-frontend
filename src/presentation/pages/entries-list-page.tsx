@@ -8,6 +8,7 @@ import { Pagination } from '../components/client';
 import { EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
+import { EntriesCache } from '@/presentation/components/entries-cache';
 
 type Props = {
   searchParams: Record<string, string>;
@@ -19,6 +20,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+        <EntriesCache entries={result.data} />
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
             {/* Main Content */}

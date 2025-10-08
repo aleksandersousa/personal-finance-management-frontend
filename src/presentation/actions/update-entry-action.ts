@@ -42,6 +42,9 @@ export async function updateEntryAction(
     redirect('/entries');
   } catch (error: any) {
     console.error('Update entry error:', error);
-    await logoutAction();
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

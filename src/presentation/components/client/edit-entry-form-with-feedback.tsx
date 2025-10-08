@@ -1,33 +1,55 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { EditEntryForm } from './edit-entry-form';
 import { EntryFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
-import { updateEntryAction } from '@/presentation/actions';
+import {
+  updateEntryAction,
+  loadEntryByIdFromCache,
+} from '@/presentation/actions';
 import { EntryModel } from '@/domain/models/entry';
+import { PageLoading } from '@/presentation/components';
 
 export interface EditEntryFormWithFeedbackProps {
-  entry: EntryModel;
+  entryId: string;
   validator: FormValidator<EntryFormData>;
 }
 
 export function EditEntryFormWithFeedback({
-  entry,
+  entryId,
   validator,
 }: EditEntryFormWithFeedbackProps) {
+  const [entry, setEntry] = useState<EntryModel | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
 
+  useEffect(() => {
+    const loadEntry = async () => {
+      const cachedEntry = await loadEntryByIdFromCache(entryId);
+
+      if (cachedEntry) {
+        setEntry(cachedEntry);
+      }
+
+      setIsLoading(false);
+    };
+
+    loadEntry();
+  }, [entryId]);
+
   const handleSubmit = async (data: EntryFormData) => {
+    if (!entry) return;
+
     setFeedback({ type: null, message: '' });
 
     startTransition(async () => {
       try {
-        await updateEntryAction(entry.id, data);
+        await updateEntryAction(entryId, data);
 
         setFeedback({
           type: 'success',
@@ -42,6 +64,14 @@ export function EditEntryFormWithFeedback({
       }
     });
   };
+
+  if (isLoading) {
+    return <PageLoading text='Carregando entrada...' />;
+  }
+
+  if (!entry) {
+    return <div>Entrada não encontrada</div>;
+  }
 
   return (
     <div className='space-y-4'>
