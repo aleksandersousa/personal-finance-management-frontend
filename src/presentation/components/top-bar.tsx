@@ -43,7 +43,7 @@ export const TopBar: React.FC = () => {
             variant='ghost'
             size='sm'
             onClick={handleThemeToggle}
-            className='h-9 w-9 p-0 hover:bg-slate-100'
+            className='h-9 w-9 p-0 hover:bg-slate-100 cursor-pointer'
           >
             {isDarkMode ? (
               <SunIcon className='h-5 w-5 text-slate-600' weight='bold' />
