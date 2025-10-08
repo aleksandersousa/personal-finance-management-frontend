@@ -6,6 +6,7 @@ import {
 import { EntryListItemWithModal } from '@/presentation/components/client';
 import { Pagination } from '../components/client';
 import { EntriesFilters } from '@/presentation/components';
+import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
 
 type Props = {
@@ -20,27 +21,16 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            {/* Header */}
-            <div className='text-center mb-8'>
-              <h1 className='text-3xl font-bold text-slate-900 mb-2'>
-                Entradas do Mês
-              </h1>
-              <p className='text-slate-600'>
-                Visualize e gerencie todas as suas receitas e despesas
-              </p>
-            </div>
-
-            {/* Filters */}
-            <EntriesFilters
-              currentMonth={
-                searchParams.month || new Date().toISOString().slice(0, 7)
-              }
-              totalResults={result.data.length}
-              showHeader={result.data.length > 0}
-            />
-
             {/* Main Content */}
             <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+              {/* Filters */}
+              <EntriesFilters
+                currentMonth={
+                  searchParams.month || new Date().toISOString().slice(0, 7)
+                }
+                totalResults={result.data.length}
+                showHeader={result.data.length > 0}
+              />
               {result.data.length === 0 ? (
                 <div className='text-center text-gray-400 py-8'>
                   <div className='text-6xl mb-4'>📝</div>
@@ -72,7 +62,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                     ))}
                   </div>
 
-                  {result.meta.totalPages > 1 && (
+                  {result.meta && result.meta.totalPages > 1 && (
                     <div className='mt-6'>
                       <Pagination
                         currentPage={result.meta.page}
@@ -91,10 +81,20 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     console.error('Error loading entries:', error);
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
-        <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
-          <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-            <div className='text-center text-red-500 py-8'>
-              Erro ao carregar entradas. Tente novamente.
+        <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
+          <div className='w-full max-w-4xl box-border'>
+            <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+              <div className='flex flex-col items-center justify-center text-center py-12'>
+                <div className='text-6xl mb-6'>⚠️</div>
+                <h2 className='text-2xl font-bold text-red-600 mb-4'>
+                  Erro ao carregar entradas
+                </h2>
+                <p className='text-gray-600 mb-8 max-w-md'>
+                  Ocorreu um erro inesperado ao carregar suas entradas.
+                  Verifique sua conexão e tente novamente.
+                </p>
+                <ErrorReloadButton />
+              </div>
             </div>
           </div>
         </div>
