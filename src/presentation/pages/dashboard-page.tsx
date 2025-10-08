@@ -5,7 +5,7 @@ import {
   ForecastInsights,
   ForecastSummaryCard,
   MonthlyProjectionsChart,
-} from '@/presentation/components/ui';
+} from '@/presentation/components';
 import {
   MonthlySummaryModel,
   CashFlowForecastModel,
@@ -19,8 +19,6 @@ import {
   TrendDownIcon,
   ClipboardTextIcon,
   TagIcon,
-  ChartBarIcon,
-  PlusIcon,
 } from '@phosphor-icons/react/dist/ssr';
 
 export interface DashboardPageProps {
@@ -51,13 +49,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     return `${monthNames[parseInt(month) - 1]} ${year}`;
   };
 
-  // Convert categoryBreakdown to legacy format if it exists
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown || [];
 
   return (
-    <div className='min-h-screen bg-slate-50 py-8'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div className='bg-slate-50 py-8 pb-20 lg:pb-8 w-full flex justify-center'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
         {/* Header */}
         <div className='text-center mb-8'>
           <h1 className='text-3xl font-bold text-slate-900 mb-2'>
@@ -331,46 +328,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
           </>
         )}
-
-        {/* Quick Actions */}
-        <div className='bg-white rounded-xl border border-slate-200 p-6'>
-          <h3 className='text-lg font-semibold text-slate-900 mb-4'>
-            Ações Rápidas
-          </h3>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <a
-              href='/entries/add'
-              className='flex items-center justify-center px-4 py-3 bg-cyan-50 text-cyan-700 rounded-lg hover:bg-cyan-100 transition-colors'
-            >
-              <PlusIcon className='w-5 h-5 mr-2' weight='bold' />
-              Nova Entrada
-            </a>
-
-            <a
-              href='/entries'
-              className='flex items-center justify-center px-4 py-3 bg-slate-50 text-slate-700 rounded-lg hover:bg-slate-100 transition-colors'
-            >
-              <ClipboardTextIcon className='w-5 h-5 mr-2' weight='bold' />
-              Ver Entradas
-            </a>
-
-            <a
-              href='/categories'
-              className='flex items-center justify-center px-4 py-3 bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition-colors'
-            >
-              <TagIcon className='w-5 h-5 mr-2' weight='bold' />
-              Categorias
-            </a>
-
-            <a
-              href='/reports'
-              className='flex items-center justify-center px-4 py-3 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors'
-            >
-              <ChartBarIcon className='w-5 h-5 mr-2' weight='bold' />
-              Relatórios
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   );
