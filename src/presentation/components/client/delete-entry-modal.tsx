@@ -4,6 +4,7 @@ import React, { useState, useTransition } from 'react';
 import { Button } from '@/presentation/components/ui';
 import { EntryModel } from '@/domain/models/entry';
 import { TrashIcon, WarningIcon } from '@phosphor-icons/react/dist/ssr';
+import { formatDate } from '@/lib/utils';
 
 export interface DeleteEntryModalProps {
   entry: EntryModel;
@@ -54,8 +55,8 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white rounded-xl p-6 max-w-md w-full'>
+    <div className='fixed inset-0 bg-slate-900/20 flex items-center justify-center p-4 z-50'>
+      <div className='bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-slate-200'>
         {/* Header */}
         <div className='flex items-center mb-4'>
           <div className='flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center'>
@@ -77,7 +78,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
               {entry.description}
             </div>
             <div className='text-sm text-slate-500 mt-1'>
-              {entry.categoryName} • {entry.date.toLocaleDateString('pt-BR')}
+              {entry.categoryName} • {formatDate(entry.date)}
             </div>
             <div
               className={`text-sm font-semibold mt-1 ${
@@ -140,6 +141,15 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
         {/* Actions */}
         <div className='flex space-x-3'>
           <Button
+            onClick={handleClose}
+            variant='secondary'
+            className='flex-1'
+            disabled={isPending}
+          >
+            Cancelar
+          </Button>
+
+          <Button
             onClick={handleConfirmDelete}
             variant='danger'
             className='flex-1'
@@ -147,15 +157,6 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             disabled={isPending || !onDelete}
           >
             {isPending ? 'Excluindo...' : 'Excluir'}
-          </Button>
-
-          <Button
-            onClick={handleClose}
-            variant='secondary'
-            className='flex-1'
-            disabled={isPending}
-          >
-            Cancelar
           </Button>
         </div>
       </div>

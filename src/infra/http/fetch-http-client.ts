@@ -67,7 +67,6 @@ export class FetchHttpClient implements HttpClient {
         'Content-Type': 'application/json',
         ...config?.headers,
       },
-      ...config,
     });
 
     if (!response.ok) {

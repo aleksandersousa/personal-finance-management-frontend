@@ -7,6 +7,7 @@ import { Badge } from './badge';
 import { Button } from './button';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react/dist/ssr';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { redirect } from 'next/navigation';
 
 interface EntryListItemProps {
   entry: EntryModel;
@@ -25,8 +26,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
     if (onEdit) {
       onEdit(entry.id);
     } else {
-      // Fallback para navegação direta
-      window.location.href = `/entries/${entry.id}/edit`;
+      redirect(`/entries/${entry.id}/edit`);
     }
   };
 

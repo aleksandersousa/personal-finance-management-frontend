@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   loadEntriesByMonthAction,
-  handleDeleteEntryAction,
+  deleteEntryAction,
 } from '@/presentation/actions';
 import { EntryListItemWithModal } from '@/presentation/components/client';
 import { Pagination } from '../components/client';
@@ -59,7 +59,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                       <EntryListItemWithModal
                         key={entry.id}
                         entry={entry}
-                        onDelete={handleDeleteEntryAction}
+                        onDelete={deleteEntryAction}
                       />
                     ))}
                   </div>
