@@ -19,56 +19,13 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
       includeStats: true,
     });
 
-    // Check if there are active filters
+    // Check if there are active filters (only 'type' is supported by API)
     const hasActiveFilters = Boolean(
-      (searchParams.type && searchParams.type !== 'all') ||
-        (searchParams.sort && searchParams.sort !== 'name') ||
-        (searchParams.order && searchParams.order !== 'asc') ||
-        (searchParams.search && searchParams.search.trim() !== '')
+      searchParams.type && searchParams.type !== 'all'
     );
 
-    // Filter and sort categories based on search params
-    let filteredCategories = result.data;
-
-    // Apply search filter
-    if (searchParams.search) {
-      const searchTerm = searchParams.search.toLowerCase();
-      filteredCategories = filteredCategories.filter(
-        category =>
-          category.name.toLowerCase().includes(searchTerm) ||
-          (category.description &&
-            category.description.toLowerCase().includes(searchTerm))
-      );
-    }
-
-    // Apply sorting
-    const sortBy = searchParams.sort || 'name';
-    const order = searchParams.order || 'asc';
-
-    filteredCategories.sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortBy) {
-        case 'name':
-          comparison = a.name.localeCompare(b.name);
-          break;
-        case 'entries':
-          comparison = a.entriesCount - b.entriesCount;
-          break;
-        case 'amount':
-          comparison = a.totalAmount - b.totalAmount;
-          break;
-        case 'lastUsed':
-          const aDate = a.lastUsed ? new Date(a.lastUsed).getTime() : 0;
-          const bDate = b.lastUsed ? new Date(b.lastUsed).getTime() : 0;
-          comparison = aDate - bDate;
-          break;
-        default:
-          comparison = a.name.localeCompare(b.name);
-      }
-
-      return order === 'desc' ? -comparison : comparison;
-    });
+    // Filter categories based on supported search params
+    const filteredCategories = result.data;
 
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
