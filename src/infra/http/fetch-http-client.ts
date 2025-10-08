@@ -15,7 +15,7 @@ export class FetchHttpClient implements HttpClient {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.json() as T;
+    return (await response.json()) as T;
   }
 
   async post<T = unknown>(
@@ -29,15 +29,14 @@ export class FetchHttpClient implements HttpClient {
         'Content-Type': 'application/json',
         ...config?.headers,
       },
-      body: data,
-      ...config,
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.json() as T;
+    return (await response.json()) as T;
   }
 
   async put<T = unknown>(
@@ -51,15 +50,14 @@ export class FetchHttpClient implements HttpClient {
         'Content-Type': 'application/json',
         ...config?.headers,
       },
-      body: data,
-      ...config,
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.json() as T;
+    return (await response.json()) as T;
   }
 
   async delete<T = unknown>(url: string, config?: RequestInit): Promise<T> {
@@ -76,6 +74,6 @@ export class FetchHttpClient implements HttpClient {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.json() as T;
+    return (await response.json()) as T;
   }
 }
