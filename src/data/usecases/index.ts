@@ -6,3 +6,7 @@ export * from './remote-load-monthly-summary';
 export * from './remote-load-cash-flow-forecast';
 export * from './remote-refresh-token';
 export * from './remote-update-entry';
+export * from './remote-load-categories';
+export * from './remote-add-category';
+export * from './remote-update-category';
+export * from './remote-delete-category';
