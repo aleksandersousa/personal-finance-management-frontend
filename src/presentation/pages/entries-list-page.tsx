@@ -15,7 +15,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     const result = await loadEntriesByMonthAction(searchParams);
 
     return (
-      <div className='min-h-screen bg-slate-50 py-8 pb-20 lg:pb-8'>
+      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
         <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
           {/* Header */}
           <div className='text-center mb-8'>
@@ -82,7 +82,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   } catch (error) {
     console.error('Error loading entries:', error);
     return (
-      <div className='min-h-screen bg-slate-50 py-8 pb-20 lg:pb-8'>
+      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
         <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
             <div className='text-center text-red-500 py-8'>

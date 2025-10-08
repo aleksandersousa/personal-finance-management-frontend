@@ -3,7 +3,7 @@ import { EntryFormWithFeedbackFactory } from '@/main/factories/components';
 
 export const AddEntryPage: React.FC = () => {
   return (
-    <div className='min-h-screen bg-slate-50 py-8 pb-20 lg:pb-8'>
+    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
       <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
         {/* Header */}
         <div className='text-center mb-8'>

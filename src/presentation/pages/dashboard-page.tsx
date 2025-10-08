@@ -30,42 +30,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   summary,
   forecast,
 }) => {
-  const formatMonth = (monthStr: string) => {
-    const [year, month] = monthStr.split('-');
-    const monthNames = [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ];
-    return `${monthNames[parseInt(month) - 1]} ${year}`;
-  };
-
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown || [];
 
   return (
-    <div className='bg-slate-50 py-8 pb-20 lg:pb-8 w-full flex justify-center'>
+    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full flex justify-center'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
-        {/* Header */}
-        <div className='text-center mb-8'>
-          <h1 className='text-3xl font-bold text-slate-900 mb-2'>
-            Dashboard Financeiro
-          </h1>
-          <p className='text-slate-600'>
-            Resumo completo de {formatMonth(summary.month)}
-          </p>
-        </div>
-
-        {/* Summary Cards */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
           <SummaryCard
             title='Receitas'

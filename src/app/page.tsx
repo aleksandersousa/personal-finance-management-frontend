@@ -2,7 +2,7 @@ import { Button } from '@/presentation/components/ui/button';
 
 export default function Home() {
   return (
-    <div className='min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8'>
+    <div className='min-h-screen bg-slate-50 flex flex-col items-center justify-center pt-20 pb-8'>
       <div className='max-w-4xl mx-auto text-center'>
         <h1 className='text-4xl font-bold text-slate-900 mb-4'>
           Sistema de Gerenciamento Financeiro Pessoal
