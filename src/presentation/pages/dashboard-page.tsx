@@ -34,15 +34,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     summary.categoryBreakdown || [];
 
   return (
-    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full flex justify-center'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64'>
+    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen'>
+      <div className='px-4 sm:px-6 lg:px-8 lg:ml-64 box-border'>
         {/* Filtros */}
         <DashboardFilters
           currentMonth={currentMonth}
           currentForecastMonths={currentForecastMonths}
         />
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8'>
           <SummaryCard
             title='Saldo'
             value={summary.summary.balance}
@@ -96,7 +96,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
         {/* Category Breakdowns */}
         {categories.length > 0 && (
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8'>
+          <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8'>
             <CategoryBreakdown
               categories={categories}
               type='INCOME'
