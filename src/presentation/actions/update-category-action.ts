@@ -32,6 +32,9 @@ export async function updateCategoryAction(
     redirect('/categories');
   } catch (error: any) {
     console.error('Update category error:', error);
-    await logoutAction();
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }
