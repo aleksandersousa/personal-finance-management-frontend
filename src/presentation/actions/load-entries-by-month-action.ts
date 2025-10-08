@@ -43,7 +43,9 @@ export async function loadEntriesByMonthAction(
     return result;
   } catch (error: any) {
     console.error('Load entries by month error:', error);
-    await logoutAction();
-    return {} as LoadEntriesByMonthResult;
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

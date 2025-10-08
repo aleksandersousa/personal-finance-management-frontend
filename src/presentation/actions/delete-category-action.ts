@@ -25,6 +25,9 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     revalidateTag(`category-${id}`);
   } catch (error: any) {
     console.error('Delete category error:', error);
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
     throw error;
   }
 }

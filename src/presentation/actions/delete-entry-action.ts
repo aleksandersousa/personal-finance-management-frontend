@@ -32,6 +32,9 @@ export async function deleteEntryAction(
     redirect('/entries');
   } catch (error: any) {
     console.error('Delete entry error:', error);
-    await logoutAction();
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

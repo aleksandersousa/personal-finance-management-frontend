@@ -26,6 +26,9 @@ export async function loadCategoriesAction(
     return result;
   } catch (error: any) {
     console.error('Load categories error:', error);
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
     throw error;
   }
 }

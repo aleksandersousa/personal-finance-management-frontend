@@ -35,7 +35,9 @@ export async function loadCashFlowForecastAction(
     return result;
   } catch (error: any) {
     console.error('Load cash flow forecast error:', error);
-    await logoutAction();
-    return {} as CashFlowForecastModel;
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

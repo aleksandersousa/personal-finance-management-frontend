@@ -38,6 +38,9 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     redirect('/entries');
   } catch (error: any) {
     console.error('Add entry error:', error);
-    await logoutAction();
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

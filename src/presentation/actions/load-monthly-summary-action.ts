@@ -33,7 +33,9 @@ export async function loadMonthlySummaryAction(
     return result;
   } catch (error: any) {
     console.error('Load monthly summary error:', error);
-    await logoutAction();
-    return {} as MonthlySummaryModel;
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }

@@ -28,6 +28,9 @@ export async function addCategoryAction(data: CategoryFormData): Promise<void> {
     redirect('/categories');
   } catch (error: any) {
     console.error('Add category error:', error);
-    await logoutAction();
+    if (error.message.includes('401')) {
+      await logoutAction();
+    }
+    throw error;
   }
 }
