@@ -6,18 +6,15 @@ import { EntryFormData } from '@/infra/validation';
 import { FormValidator } from '@/presentation/protocols';
 import { updateEntryAction } from '@/presentation/actions';
 import { EntryModel } from '@/domain/models/entry';
-import type { UpdateEntry } from '@/domain/usecases';
 
 export interface EditEntryFormWithFeedbackProps {
   entry: EntryModel;
   validator: FormValidator<EntryFormData>;
-  updateEntry: UpdateEntry;
 }
 
 export function EditEntryFormWithFeedback({
   entry,
   validator,
-  updateEntry,
 }: EditEntryFormWithFeedbackProps) {
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
@@ -30,7 +27,7 @@ export function EditEntryFormWithFeedback({
 
     startTransition(async () => {
       try {
-        await updateEntryAction(entry.id, data, updateEntry);
+        await updateEntryAction(entry.id, data);
 
         setFeedback({
           type: 'success',
