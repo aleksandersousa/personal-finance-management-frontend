@@ -210,10 +210,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
       <Button
         type='submit'
-        isLoading={isLoading}
-        disabled={isLoading}
         className='w-full'
         size='lg'
+        isLoading={isLoading}
+        disabled={isLoading}
       >
         {isLoading ? 'Carregando...' : 'Adicionar Entrada'}
       </Button>
