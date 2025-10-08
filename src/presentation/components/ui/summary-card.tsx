@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './card';
 import { TrendUpIcon, TrendDownIcon } from '@phosphor-icons/react/dist/ssr';
+import { formatCurrency } from '@/lib/utils';
 
 export interface SummaryCardProps {
   title: string;
@@ -31,10 +32,6 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const formatCurrency = (amount: number) => {
-    return `R$ ${(Math.abs(amount) / 100).toFixed(2).replace('.', ',')}`;
-  };
 
   useEffect(() => {
     const checkIsMobile = () => {
