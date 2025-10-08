@@ -9,35 +9,20 @@ export class RemoteAddEntry implements AddEntry {
   ) {}
 
   async add(params: AddEntryParams): Promise<EntryModel> {
-    const response = await this.httpClient.post<unknown>(this.url, params);
-
-    // Type assertion with runtime validation would be ideal here
-    const apiResponse = response as {
-      id: string;
-      description: string;
-      amount: number;
-      type: 'INCOME' | 'EXPENSE';
-      categoryId: string;
-      categoryName?: string;
-      userId: string;
-      date: string;
-      isFixed: boolean;
-      createdAt: string;
-      updatedAt: string;
-    };
+    const response = await this.httpClient.post<EntryModel>(this.url, params);
 
     return {
-      id: apiResponse.id,
-      description: apiResponse.description,
-      amount: apiResponse.amount,
-      type: apiResponse.type,
-      categoryId: apiResponse.categoryId,
-      categoryName: apiResponse.categoryName || 'Unknown',
-      userId: apiResponse.userId,
-      date: new Date(apiResponse.date),
-      isFixed: apiResponse.isFixed,
-      createdAt: new Date(apiResponse.createdAt),
-      updatedAt: new Date(apiResponse.updatedAt),
+      id: response.id,
+      description: response.description,
+      amount: response.amount,
+      type: response.type,
+      categoryId: response.categoryId,
+      categoryName: response.categoryName || 'Desconhecida',
+      userId: response.userId,
+      isFixed: response.isFixed,
+      date: new Date(response.date),
+      createdAt: new Date(response.createdAt),
+      updatedAt: new Date(response.updatedAt),
     };
   }
 }
