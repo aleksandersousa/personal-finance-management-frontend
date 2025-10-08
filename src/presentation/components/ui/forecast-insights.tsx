@@ -71,7 +71,7 @@ export const ForecastInsights: React.FC<ForecastInsightsProps> = ({
   };
 
   return (
-    <div className='bg-white rounded-xl border border-slate-200 p-6 space-y-6'>
+    <div className='bg-white rounded-xl border border-slate-200 p-6 space-y-6 h-full'>
       <div>
         <h3 className='text-lg font-semibold text-slate-900 mb-4'>
           Insights Financeiros
