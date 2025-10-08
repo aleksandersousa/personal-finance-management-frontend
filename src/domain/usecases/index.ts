@@ -6,3 +6,7 @@ export * from './load-entries-by-month';
 export * from './load-monthly-summary';
 export * from './refresh-token';
 export * from './update-entry';
+export * from './load-categories';
+export * from './add-category';
+export * from './update-category';
+export * from './delete-category';
