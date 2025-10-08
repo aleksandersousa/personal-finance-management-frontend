@@ -3,11 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  PlusIcon,
-  ClipboardTextIcon,
-  TagIcon,
-} from '@phosphor-icons/react/dist/ssr';
+import { ClipboardTextIcon, TagIcon } from '@phosphor-icons/react/dist/ssr';
 import { CirclesFourIcon, SquaresFourIcon } from '@phosphor-icons/react';
 
 interface NavigationItem {
@@ -24,14 +20,6 @@ const navigationItems: NavigationItem[] = [
     href: '/dashboard',
     label: 'Dashboard',
     icon: <SquaresFourIcon className='w-5 h-5' />,
-    color: 'text-slate-700',
-    bgColor: 'bg-slate-50',
-    hoverColor: 'hover:bg-slate-100',
-  },
-  {
-    href: '/entries/add',
-    label: 'Nova Entrada',
-    icon: <PlusIcon className='w-5 h-5' />,
     color: 'text-slate-700',
     bgColor: 'bg-slate-50',
     hoverColor: 'hover:bg-slate-100',
@@ -88,7 +76,7 @@ export const NavigationDrawer: React.FC = () => {
 
       {/* Mobile Bottom Navigation */}
       <div className='lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 safe-area-pb'>
-        <div className='grid grid-cols-4 gap-1 p-2'>
+        <div className='grid grid-cols-3 gap-1 p-2'>
           {navigationItems.map(item => {
             const active = isActive(item.href);
             return (
