@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { EntryModel } from '@/domain/models';
 import { EntryListItem } from '@/presentation/components/ui';
 import { DeleteEntryModal } from './delete-entry-modal';
+import { redirect } from 'next/navigation';
 
 interface EntryListItemWithModalProps {
   entry: EntryModel;
@@ -17,7 +18,7 @@ export const EntryListItemWithModal: React.FC<EntryListItemWithModalProps> = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleEdit = (id: string) => {
-    window.location.href = `/entries/${id}/edit`;
+    redirect(`/entries/${id}/edit`);
   };
 
   const handleDeleteClick = async () => {
