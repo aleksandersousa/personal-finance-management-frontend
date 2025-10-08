@@ -11,18 +11,7 @@ const typeOptions = [
   { value: 'EXPENSE', label: 'Despesa' },
 ];
 
-const colorOptions = [
-  { value: '#3B82F6', label: 'Azul' },
-  { value: '#10B981', label: 'Verde' },
-  { value: '#F59E0B', label: 'Amarelo' },
-  { value: '#EF4444', label: 'Vermelho' },
-  { value: '#8B5CF6', label: 'Roxo' },
-  { value: '#F97316', label: 'Laranja' },
-  { value: '#06B6D4', label: 'Ciano' },
-  { value: '#84CC16', label: 'Lima' },
-  { value: '#EC4899', label: 'Rosa' },
-  { value: '#6B7280', label: 'Cinza' },
-];
+// Removed predefined color options in favor of a color picker
 
 const iconOptions = [
   { value: '💰', label: '💰 Dinheiro' },
@@ -61,7 +50,6 @@ export const EditCategoryForm: React.FC<EditCategoryFormProps> = ({
     description: '',
     type: '',
     color: '#3B82F6',
-    icon: '💰',
   });
 
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -79,7 +67,6 @@ export const EditCategoryForm: React.FC<EditCategoryFormProps> = ({
             description: category.description || '',
             type: category.type,
             color: category.color,
-            icon: category.icon,
           });
         }
       } catch (error) {
@@ -180,53 +167,33 @@ export const EditCategoryForm: React.FC<EditCategoryFormProps> = ({
         required
       />
 
-      <div className='space-y-2'>
+      <div>
         <label className='text-sm font-medium text-foreground'>Cor</label>
-        <div className='grid grid-cols-5 gap-2'>
-          {colorOptions.map(color => (
-            <button
-              key={color.value}
-              type='button'
-              onClick={() => handleInputChange('color', color.value)}
-              className={`w-10 h-10 rounded-lg border-2 transition-all ${
-                formData.color === color.value
-                  ? 'border-foreground ring-2 ring-primary'
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              style={{ backgroundColor: color.value }}
-              title={color.label}
-              disabled={isLoading}
-            />
-          ))}
+        <div className='flex items-center gap-3'>
+          <input
+            type='color'
+            value={formData.color}
+            onChange={e =>
+              handleInputChange('color', e.target.value.toUpperCase())
+            }
+            className='h-10 w-10 rounded border border-gray-300'
+            disabled={isLoading}
+            aria-label='Selecionar cor'
+          />
+          <Input
+            value={formData.color}
+            onChange={e => {
+              const raw = e.target.value.replace(/[^0-9a-fA-F#]/g, '');
+              const withoutHash = raw.startsWith('#') ? raw.slice(1) : raw;
+              const trimmed = withoutHash.slice(0, 6);
+              const hex = `#${trimmed}`;
+              handleInputChange('color', hex.toUpperCase());
+            }}
+            placeholder='#000000'
+            error={errors.color?.[0]}
+            disabled={isLoading}
+          />
         </div>
-        {errors.color?.[0] && (
-          <p className='text-sm text-red-600'>{errors.color[0]}</p>
-        )}
-      </div>
-
-      <div className='space-y-2'>
-        <label className='text-sm font-medium text-foreground'>Ícone</label>
-        <div className='grid grid-cols-8 gap-2'>
-          {iconOptions.map(icon => (
-            <button
-              key={icon.value}
-              type='button'
-              onClick={() => handleInputChange('icon', icon.value)}
-              className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center text-lg transition-all ${
-                formData.icon === icon.value
-                  ? 'border-foreground ring-2 ring-primary'
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              title={icon.label}
-              disabled={isLoading}
-            >
-              {icon.value}
-            </button>
-          ))}
-        </div>
-        {errors.icon?.[0] && (
-          <p className='text-sm text-red-600'>{errors.icon[0]}</p>
-        )}
       </div>
 
       <div className='flex justify-end space-x-3 pt-4'>
