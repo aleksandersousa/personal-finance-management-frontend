@@ -1,25 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import { Button, Input, Select } from '@/presentation/components/ui';
 import { FormValidator } from '@/presentation/protocols';
 import { EntryFormData } from '@/infra/validation';
 import { EntryModel } from '@/domain/models/entry';
+import type { CategoryWithStatsModel } from '@/domain/models/category';
+import { loadCategoriesAction } from '@/presentation/actions/load-categories-action';
+import { redirect } from 'next/navigation';
 
 const typeOptions = [
   { value: 'INCOME', label: 'Receita' },
   { value: 'EXPENSE', label: 'Despesa' },
-];
-
-const categoryOptions = [
-  { value: '1', label: 'Alimentação' },
-  { value: '2', label: 'Transporte' },
-  { value: '3', label: 'Lazer' },
-  { value: '4', label: 'Saúde' },
-  { value: '5', label: 'Educação' },
-  { value: '6', label: 'Salário' },
-  { value: '7', label: 'Freelance' },
-  { value: '8', label: 'Investimentos' },
 ];
 
 export interface EditEntryFormProps {
@@ -49,6 +41,23 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
   const [pendingSubmit, setPendingSubmit] = useState<EntryFormData | null>(
     null
   );
+  const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const result = await loadCategoriesAction({ includeStats: false });
+        setCategories(result.data);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        setCategories([]);
+      }
+    };
+
+    startTransition(() => {
+      loadCategories();
+    });
+  }, []);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
@@ -119,10 +128,20 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
     }
   };
 
+  const getFilteredCategories = () => {
+    if (!formData.type) return categories;
+    return categories.filter(category => category.type === formData.type);
+  };
+
   const handleCancelModal = () => {
     setShowFixedModal(false);
     setPendingSubmit(null);
   };
+
+  const categoryOptions = getFilteredCategories().map(category => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   return (
     <>
@@ -168,15 +187,23 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
           disabled={isLoading}
         />
 
-        <Select
-          label='Categoria'
-          value={formData.categoryId}
-          onValueChange={value => handleInputChange('categoryId', value)}
-          options={categoryOptions}
-          placeholder='Selecione a categoria'
-          error={errors.categoryId?.[0]}
-          disabled={isLoading}
-        />
+        {categoryOptions.length > 0 && (
+          <Select
+            label='Categoria'
+            value={formData.categoryId}
+            onValueChange={value => handleInputChange('categoryId', value)}
+            options={categoryOptions}
+            placeholder={
+              isLoading
+                ? 'Carregando categorias...'
+                : formData.type
+                  ? 'Selecione a categoria'
+                  : 'Selecione primeiro o tipo'
+            }
+            error={errors.categoryId?.[0]}
+            disabled={isLoading || !formData.type}
+          />
+        )}
 
         <Input
           label='Data'
@@ -207,6 +234,16 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
 
         <div className='flex space-x-4'>
           <Button
+            type='button'
+            variant='secondary'
+            onClick={() => redirect('/entries')}
+            disabled={isLoading}
+            className='flex-1'
+            size='lg'
+          >
+            Cancelar
+          </Button>
+          <Button
             type='submit'
             isLoading={isLoading}
             disabled={isLoading}
@@ -214,17 +251,6 @@ export const EditEntryForm: React.FC<EditEntryFormProps> = ({
             size='lg'
           >
             {isLoading ? 'Salvando...' : 'Salvar Alterações'}
-          </Button>
-
-          <Button
-            type='button'
-            variant='secondary'
-            onClick={() => window.history.back()}
-            disabled={isLoading}
-            className='flex-1'
-            size='lg'
-          >
-            Cancelar
           </Button>
         </div>
       </form>
