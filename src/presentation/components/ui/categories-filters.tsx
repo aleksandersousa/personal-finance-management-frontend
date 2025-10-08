@@ -2,11 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  MagnifyingGlassIcon,
-  FunnelIcon,
-  XIcon,
-} from '@phosphor-icons/react/dist/ssr';
+import { FunnelIcon, XIcon } from '@phosphor-icons/react/dist/ssr';
 
 interface CategoriesFiltersProps {
   totalResults: number;
@@ -20,18 +16,6 @@ const typeOptions = [
   { value: 'EXPENSE', label: 'Despesas' },
 ];
 
-const sortOptions = [
-  { value: 'name', label: 'Nome' },
-  { value: 'entries', label: 'Número de entradas' },
-  { value: 'amount', label: 'Valor total' },
-  { value: 'lastUsed', label: 'Último uso' },
-];
-
-const orderOptions = [
-  { value: 'asc', label: 'Crescente' },
-  { value: 'desc', label: 'Decrescente' },
-];
-
 export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
   totalResults,
   showHeader = true,
@@ -42,9 +26,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
 
   const [filters, setFilters] = useState({
     type: searchParams.get('type') || 'all',
-    sort: searchParams.get('sort') || 'name',
-    order: searchParams.get('order') || 'asc',
-    search: searchParams.get('search') || '',
   });
 
   const [showFilters, setShowFilters] = useState(false);
@@ -58,13 +39,12 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(searchParams);
 
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value && value !== 'all' && value !== '') {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
+    // Only support 'type' in the URL
+    if (newFilters.type && newFilters.type !== 'all') {
+      params.set('type', newFilters.type);
+    } else {
+      params.delete('type');
+    }
 
     router.push(`/categories?${params.toString()}`);
   };
@@ -72,19 +52,12 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
   const clearFilters = () => {
     const clearedFilters = {
       type: 'all',
-      sort: 'name',
-      order: 'asc',
-      search: '',
-    };
+    } as typeof filters;
     setFilters(clearedFilters);
     updateURL(clearedFilters);
   };
 
-  const hasActiveFilters =
-    filters.type !== 'all' ||
-    filters.sort !== 'name' ||
-    filters.order !== 'asc' ||
-    filters.search !== '';
+  const hasActiveFilters = filters.type !== 'all';
 
   // Show header if there are results OR if there are active filters
   const shouldShowHeader = showHeader || externalHasActiveFilters;
@@ -110,7 +83,7 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
         <div className='flex gap-2'>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className='inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors'
+            className='inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer'
           >
             <FunnelIcon className='w-4 h-4' />
             Filtros
@@ -133,25 +106,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
       {showFilters && (
         <div className='border-t border-slate-200 pt-4'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-            {/* Search Filter */}
-            <div className='lg:col-span-2'>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Buscar
-              </label>
-              <div className='relative'>
-                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-                  <MagnifyingGlassIcon className='h-4 w-4 text-slate-400' />
-                </div>
-                <input
-                  type='text'
-                  placeholder='Buscar por nome ou descrição...'
-                  value={filters.search}
-                  onChange={e => handleFilterChange('search', e.target.value)}
-                  className='block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm'
-                />
-              </div>
-            </div>
-
             {/* Type Filter */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
@@ -163,44 +117,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
                 className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
               >
                 {typeOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Sort Filter */}
-            <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Ordenar por
-              </label>
-              <select
-                value={filters.sort}
-                onChange={e => handleFilterChange('sort', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              >
-                {sortOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Order Filter */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-            <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Ordem
-              </label>
-              <select
-                value={filters.order}
-                onChange={e => handleFilterChange('order', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              >
-                {orderOptions.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
