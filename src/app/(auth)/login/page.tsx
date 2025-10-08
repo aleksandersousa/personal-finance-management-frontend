@@ -1,7 +1,13 @@
+import { Suspense } from 'react';
 import { makeLoginPage } from '@/main/factories/pages';
+import { PageLoading } from '@/presentation/components';
 
 export default function LoginPageRoute() {
-  return makeLoginPage();
+  return (
+    <Suspense fallback={<PageLoading text='Carregando login...' />}>
+      {makeLoginPage()}
+    </Suspense>
+  );
 }
 
 export const metadata = {

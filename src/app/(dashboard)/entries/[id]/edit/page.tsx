@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { EditEntryPage } from '@/presentation/pages';
+import { PageLoading } from '@/presentation/components';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -7,7 +9,7 @@ interface PageProps {
   }>;
 }
 
-export default async function EditEntryPageRoute({ params }: PageProps) {
+async function EditEntryContent({ params }: PageProps) {
   try {
     const { id } = await params;
 
@@ -36,6 +38,14 @@ export default async function EditEntryPageRoute({ params }: PageProps) {
     console.error('Error loading entry for edit:', error);
     notFound();
   }
+}
+
+export default function EditEntryPageRoute({ params }: PageProps) {
+  return (
+    <Suspense fallback={<PageLoading text='Carregando entrada...' />}>
+      <EditEntryContent params={params} />
+    </Suspense>
+  );
 }
 
 export async function generateMetadata({ params }: PageProps) {
