@@ -1,3 +1,4 @@
+export * from './remote-ai-chat';
 export * from './remote-add-entry';
 export * from './remote-authentication';
 export * from './remote-delete-entry';

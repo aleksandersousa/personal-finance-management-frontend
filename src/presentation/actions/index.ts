@@ -1,3 +1,4 @@
+export * from './ai-chat-action';
 export * from './add-entry-action';
 export * from './delete-entry-action';
 export * from './handle-delete-entry-action';

@@ -1,3 +1,4 @@
+export * from './ai-chat';
 export * from './add-entry';
 export * from './authentication';
 export * from './delete-entry';

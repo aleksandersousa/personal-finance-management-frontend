@@ -40,6 +40,14 @@ const navigationItems: NavigationItem[] = [
     bgColor: 'bg-slate-50',
     hoverColor: 'hover:bg-slate-100',
   },
+  {
+    href: '/ai',
+    label: 'Assistente AI',
+    icon: <CirclesFourIcon className='w-5 h-5' />,
+    color: 'text-slate-700',
+    bgColor: 'bg-slate-50',
+    hoverColor: 'hover:bg-slate-100',
+  },
 ];
 
 export const NavigationDrawer: React.FC = () => {

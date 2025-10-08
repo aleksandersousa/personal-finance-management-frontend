@@ -1,3 +1,4 @@
+export * from './ai-chat-page';
 export * from './add-entry-page';
 export * from './add-category-page';
 export * from './dashboard-page';
