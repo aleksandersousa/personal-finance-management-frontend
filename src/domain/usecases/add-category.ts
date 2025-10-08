@@ -9,5 +9,4 @@ export interface AddCategoryParams {
   description?: string;
   type: 'INCOME' | 'EXPENSE';
   color: string;
-  icon: string;
 }

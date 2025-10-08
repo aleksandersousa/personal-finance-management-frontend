@@ -13,10 +13,6 @@ export const categoryFormSchema = z.object({
       /^#[0-9A-Fa-f]{6}$/,
       'Cor deve estar no formato hexadecimal (#RRGGBB)'
     ),
-  icon: z
-    .string()
-    .min(1, 'Ícone é obrigatório')
-    .max(50, 'Nome do ícone muito longo'),
 });
 
 export type CategoryFormData = z.infer<typeof categoryFormSchema>;
