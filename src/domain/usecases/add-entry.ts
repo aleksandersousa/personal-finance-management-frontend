@@ -10,6 +10,5 @@ export type AddEntryParams = {
   type: 'INCOME' | 'EXPENSE';
   isFixed: boolean;
   categoryId?: string;
-  userId: string;
   date: Date;
 };
