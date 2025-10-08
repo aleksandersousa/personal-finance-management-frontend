@@ -20,10 +20,17 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   onEdit,
   showActions = true,
 }) => {
-  const formatDate = (date: Date) => {
-    const month = date.getUTCMonth() + 1;
-    const day = date.getUTCDate();
-    const year = date.getUTCFullYear();
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+
+    // Verificar se a data é válida
+    if (isNaN(dateObj.getTime())) {
+      return 'Data inválida';
+    }
+
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
     return `${month}/${day}/${year}`;
   };
 
