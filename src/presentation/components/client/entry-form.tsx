@@ -1,24 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { Button, Input, Select } from '@/presentation/components/ui';
 import { FormValidator } from '@/presentation/protocols';
 import { EntryFormData } from '@/infra/validation';
+import { loadCategoriesAction } from '@/presentation/actions';
+import { CategoryWithStatsModel } from '@/domain/models/category';
 
 const typeOptions = [
   { value: 'INCOME', label: 'Receita' },
   { value: 'EXPENSE', label: 'Despesa' },
-];
-
-const categoryOptions = [
-  { value: '1', label: 'Alimentação' },
-  { value: '2', label: 'Transporte' },
-  { value: '3', label: 'Lazer' },
-  { value: '4', label: 'Saúde' },
-  { value: '5', label: 'Educação' },
-  { value: '6', label: 'Salário' },
-  { value: '7', label: 'Freelance' },
-  { value: '8', label: 'Investimentos' },
 ];
 
 export interface EntryFormProps {
@@ -42,12 +33,49 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   });
 
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const result = await loadCategoriesAction({ includeStats: false });
+        setCategories(result.data);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        setCategories([]);
+      }
+    };
+
+    startTransition(() => {
+      loadCategories();
+    });
+  }, []);
+
+  const getFilteredCategories = () => {
+    if (!formData.type) return categories;
+    return categories.filter(category => category.type === formData.type);
+  };
+
+  const categoryOptions = getFilteredCategories().map(category => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value,
+      };
+
+      // Se o tipo mudou, limpar a categoria selecionada
+      if (field === 'type') {
+        newData.categoryId = '';
+      }
+
+      return newData;
+    });
 
     if (errors[field]) {
       setErrors(prev => ({
@@ -138,15 +166,23 @@ export const EntryForm: React.FC<EntryFormProps> = ({
         disabled={isLoading}
       />
 
-      <Select
-        label='Categoria'
-        value={formData.categoryId}
-        onValueChange={value => handleInputChange('categoryId', value)}
-        options={categoryOptions}
-        placeholder='Selecione a categoria'
-        error={errors.categoryId?.[0]}
-        disabled={isLoading}
-      />
+      {categoryOptions.length > 0 && (
+        <Select
+          label='Categoria'
+          value={formData.categoryId}
+          onValueChange={value => handleInputChange('categoryId', value)}
+          options={categoryOptions}
+          placeholder={
+            isPending
+              ? 'Carregando categorias...'
+              : formData.type
+                ? 'Selecione a categoria'
+                : 'Selecione primeiro o tipo'
+          }
+          error={errors.categoryId?.[0]}
+          disabled={isLoading || isPending || !formData.type}
+        />
+      )}
 
       <Input
         label='Data'
