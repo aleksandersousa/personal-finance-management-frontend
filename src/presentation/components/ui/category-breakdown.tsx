@@ -69,11 +69,17 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
       </div>
 
       <div className='space-y-4'>
-        {sortedCategories.map(category => {
+        {sortedCategories.map((category, index) => {
           const percentage = getPercentage(category.total);
 
           return (
-            <div key={category.categoryId} className='space-y-2'>
+            <div
+              key={
+                category.categoryId ??
+                `${type}-${category.categoryName}-${index}`
+              }
+              className='space-y-2'
+            >
               {/* Category header */}
               <div className='flex items-center justify-between'>
                 <div className='flex items-center space-x-2'>
