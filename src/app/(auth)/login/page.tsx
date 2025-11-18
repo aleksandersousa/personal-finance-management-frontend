@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import { makeLoginPage } from '@/main/factories/pages';
 import { PageLoading } from '@/presentation/components';
+import { LoginPage } from '@/presentation';
 
 export default function LoginPageRoute() {
   return (
     <Suspense fallback={<PageLoading text='Carregando login...' />}>
-      {makeLoginPage()}
+      <LoginPage />
     </Suspense>
   );
 }

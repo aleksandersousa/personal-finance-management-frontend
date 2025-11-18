@@ -36,7 +36,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen'>
       <div className='px-4 sm:px-6 lg:px-8 lg:ml-64 box-border'>
-        {/* Filtros */}
         <DashboardFilters
           currentMonth={currentMonth}
           currentForecastMonths={currentForecastMonths}
@@ -94,7 +93,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           />
         </div>
 
-        {/* Category Breakdowns */}
         {categories.length > 0 && (
           <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8'>
             <CategoryBreakdown
@@ -111,17 +109,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </div>
         )}
 
-        {/* Forecast Section */}
         {forecast && (
           <div className='space-y-6 mb-8'>
-            {/* Consolidated Forecast Card */}
             <ConsolidatedForecastCard
               summary={forecast.summary}
               insights={forecast.insights}
               monthsCount={forecast.forecastPeriod.monthsCount}
             />
 
-            {/* Interactive Monthly Projections Chart */}
             <InteractiveMonthlyProjectionsChart
               projections={forecast.monthlyProjections}
             />

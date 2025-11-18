@@ -8,7 +8,6 @@ export * from './edit-category-form';
 export * from './edit-category-form-with-feedback';
 export * from './category-list-item-with-modal';
 export * from './delete-category-modal';
-export * from './login-form';
 export * from './pagination';
 export * from './edit-entry-form';
 export * from './edit-entry-form-with-feedback';
