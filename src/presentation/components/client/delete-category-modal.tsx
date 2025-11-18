@@ -10,7 +10,7 @@ export interface DeleteCategoryModalProps {
   category: CategoryWithStatsModel;
   isOpen: boolean;
   onClose: () => void;
-  onDelete?: (id: string) => Promise<void>;
+  onDelete?: () => Promise<void>;
 }
 
 export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
@@ -32,7 +32,7 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
 
     startTransition(async () => {
       try {
-        await onDelete(category.id);
+        await onDelete();
       } catch (error) {
         console.error('Error deleting category:', error);
         setFeedback({
@@ -55,7 +55,6 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
   return (
     <div className='fixed inset-0 bg-slate-900/20 flex items-center justify-center p-4 z-50'>
       <div className='bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-slate-200'>
-        {/* Header */}
         <div className='flex items-center mb-4'>
           <div className='flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center'>
             <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
@@ -65,7 +64,6 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
           </h3>
         </div>
 
-        {/* Content */}
         <div className='mb-6'>
           <p className='text-slate-600 mb-4'>
             Você tem certeza que deseja excluir a categoria:
@@ -101,7 +99,6 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
             )}
           </div>
 
-          {/* Aviso sobre entradas associadas */}
           {category.entriesCount > 0 && (
             <div className='bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4'>
               <div className='flex items-start'>
@@ -132,14 +129,12 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
           </p>
         </div>
 
-        {/* Feedback de erro */}
         {feedback.type === 'error' && (
           <div className='mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
             {feedback.message}
           </div>
         )}
 
-        {/* Actions */}
         <div className='flex space-x-3'>
           <Button
             onClick={handleClose}

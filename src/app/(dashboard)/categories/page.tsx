@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { makeCategoriesListPage } from '@/main/factories/pages/categories-list-page-factory';
 import { PageLoading } from '@/presentation/components';
+import { CategoriesListPage } from '@/presentation/pages';
 
 type PageProps = {
   searchParams: Promise<Record<string, string>>;
@@ -8,7 +8,7 @@ type PageProps = {
 
 async function CategoriesContent({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
-  return makeCategoriesListPage({ searchParams: resolvedSearchParams });
+  return <CategoriesListPage searchParams={resolvedSearchParams} />;
 }
 
 export default function CategoriesPage({ searchParams }: PageProps) {

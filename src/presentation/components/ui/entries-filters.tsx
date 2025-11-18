@@ -7,6 +7,7 @@ import {
   FunnelIcon,
   XIcon,
 } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
 
 interface EntriesFiltersProps {
   currentMonth: string;
@@ -141,13 +142,13 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             )}
           </button>
 
-          <a
+          <Link
             href='/entries/add'
             className='inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 transition-colors'
           >
             <span className='text-lg'>+</span>
             Adicionar Entrada
-          </a>
+          </Link>
         </div>
       </div>
 

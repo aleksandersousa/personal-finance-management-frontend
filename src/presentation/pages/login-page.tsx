@@ -4,6 +4,7 @@ import React, { useMemo, useState, useTransition } from 'react';
 import { Button, Input } from '../components';
 import { makeLoginFormValidator } from '@/main/factories/validation';
 import { loginAction } from '../actions';
+import Link from 'next/link';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -117,12 +118,12 @@ export const LoginPage: React.FC = () => {
             </Button>
 
             <div className='text-center'>
-              <a
+              <Link
                 href='/register'
                 className='text-sm text-blue-600 hover:text-blue-500'
               >
                 Não tem conta? Cadastre-se
-              </a>
+              </Link>
             </div>
           </form>
         </div>

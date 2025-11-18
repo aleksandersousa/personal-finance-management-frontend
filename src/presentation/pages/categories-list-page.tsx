@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  loadCategoriesAction,
-  deleteCategoryAction,
-} from '@/presentation/actions';
-import { CategoryListItemWithModal } from '@/presentation/components/client';
-import { CategoriesFilters } from '@/presentation/components';
+import { loadCategoriesAction } from '@/presentation/actions';
+import { CategoriesFilters, CategoryListItem } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
 
@@ -19,26 +15,23 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
       includeStats: true,
     });
 
-    // Check if there are active filters (only 'type' is supported by API)
     const hasActiveFilters = Boolean(
       searchParams.type && searchParams.type !== 'all'
     );
 
-    // Filter categories based on supported search params
     const filteredCategories = result.data;
 
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            {/* Main Content */}
             <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-              {/* Filters */}
               <CategoriesFilters
                 totalResults={filteredCategories.length}
                 showHeader={filteredCategories.length > 0}
                 hasActiveFilters={hasActiveFilters}
               />
+
               {filteredCategories.length === 0 ? (
                 <div className='text-center text-gray-400 py-8'>
                   <div className='text-6xl mb-4'>📂</div>
@@ -62,10 +55,10 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 <>
                   <div className='divide-y'>
                     {filteredCategories.map(category => (
-                      <CategoryListItemWithModal
+                      <CategoryListItem
                         key={category.id}
                         category={category}
-                        onDelete={deleteCategoryAction}
+                        showActions={!category.isDefault}
                       />
                     ))}
                   </div>

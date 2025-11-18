@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FunnelIcon, XIcon } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
 
 interface CategoriesFiltersProps {
   totalResults: number;
@@ -39,7 +40,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(searchParams);
 
-    // Only support 'type' in the URL
     if (newFilters.type && newFilters.type !== 'all') {
       params.set('type', newFilters.type);
     } else {
@@ -59,7 +59,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
 
   const hasActiveFilters = filters.type !== 'all';
 
-  // Show header if there are results OR if there are active filters
   const shouldShowHeader = showHeader || externalHasActiveFilters;
 
   if (!shouldShowHeader) {
@@ -68,7 +67,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
 
   return (
     <div className='mb-6'>
-      {/* Header */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
         <div>
           <h2 className='text-xl font-bold text-slate-900'>Categorias</h2>
@@ -92,21 +90,19 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
             )}
           </button>
 
-          <a
+          <Link
             href='/categories/add'
             className='inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 transition-colors'
           >
             <span className='text-lg'>+</span>
             Nova Categoria
-          </a>
+          </Link>
         </div>
       </div>
 
-      {/* Filters Panel */}
       {showFilters && (
         <div className='border-t border-slate-200 pt-4'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-            {/* Type Filter */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Tipo
@@ -125,7 +121,6 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
             </div>
           </div>
 
-          {/* Clear Filters */}
           {hasActiveFilters && (
             <div className='flex justify-end'>
               <button
