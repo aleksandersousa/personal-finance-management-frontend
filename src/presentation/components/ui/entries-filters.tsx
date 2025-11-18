@@ -35,7 +35,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   const [showFilters, setShowFilters] = useState(false);
 
-  // Generate month options for the last 12 months
   const generateMonthOptions = () => {
     const options = [];
     const currentDate = new Date();
@@ -113,7 +112,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     filters.order !== 'desc' ||
     filters.search !== '';
 
-  // Show header if there are results OR if there are active filters
   const shouldShowHeader = showHeader || externalHasActiveFilters;
 
   if (!shouldShowHeader) {
@@ -122,7 +120,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   return (
     <div className='mb-6'>
-      {/* Header */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
         <div>
           <h2 className='text-xl font-bold text-slate-900'>Entradas do mês</h2>
@@ -154,11 +151,9 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
         </div>
       </div>
 
-      {/* Filters Panel */}
       {showFilters && (
         <div className='border-t border-slate-200 pt-4'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-            {/* Month Filter */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Mês
@@ -176,7 +171,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
               </select>
             </div>
 
-            {/* Type Filter */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Tipo
@@ -192,7 +186,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
               </select>
             </div>
 
-            {/* Sort Field */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Ordenar por
@@ -208,7 +201,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
               </select>
             </div>
 
-            {/* Sort Order */}
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Ordem
@@ -224,7 +216,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             </div>
           </div>
 
-          {/* Search Field - Full Width */}
           <div className='mb-4'>
             <label className='block text-sm font-medium text-slate-700 mb-1'>
               Buscar
@@ -241,7 +232,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             </div>
           </div>
 
-          {/* Clear Filters */}
           {hasActiveFilters && (
             <div className='mt-4 pt-4 border-t border-slate-200'>
               <button

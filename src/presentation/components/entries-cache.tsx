@@ -9,9 +9,7 @@ interface EntriesCacheProps {
 
 export const EntriesCache: React.FC<EntriesCacheProps> = ({ entries }) => {
   useEffect(() => {
-    // Salvar as entradas no localStorage para uso posterior
     localStorage.setItem('cached-entries', JSON.stringify(entries));
   }, [entries]);
-
-  return null; // Componente invisível
+  return null;
 };

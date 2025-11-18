@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { makeEntriesListPage } from '@/main/factories/pages/entries-list-page-factory';
 import { PageLoading } from '@/presentation/components';
+import { EntriesListPage } from '@/presentation/pages';
 
 type PageProps = {
   searchParams: Promise<Record<string, string>>;
@@ -8,7 +8,7 @@ type PageProps = {
 
 async function EntriesContent({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
-  return makeEntriesListPage({ searchParams: resolvedSearchParams });
+  return <EntriesListPage searchParams={resolvedSearchParams} />;
 }
 
 export default function EntriesPage({ searchParams }: PageProps) {

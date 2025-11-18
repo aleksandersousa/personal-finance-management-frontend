@@ -18,7 +18,8 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
   try {
     const result = await loadEntriesByMonthAction(searchParams);
 
-    // Check if there are active filters
+    const entries = result.data;
+
     const currentMonth = new Date().toISOString().slice(0, 7);
     const hasActiveFilters = Boolean(
       (searchParams.month && searchParams.month !== currentMonth) ||
@@ -28,24 +29,26 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
         (searchParams.order && searchParams.order !== 'desc') ||
         (searchParams.search && searchParams.search.trim() !== '')
     );
+    const contentInfo =
+      searchParams.type === 'INCOME' ? 'receitas' : 'despesas';
 
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
-        <EntriesCache entries={result.data} />
+        <EntriesCache entries={entries} />
+
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            {/* Main Content */}
             <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
-              {/* Filters */}
               <EntriesFilters
                 currentMonth={
                   searchParams.month || new Date().toISOString().slice(0, 7)
                 }
-                totalResults={result.data.length}
-                showHeader={result.data.length > 0}
+                totalResults={entries.length}
+                showHeader={entries.length > 0}
                 hasActiveFilters={hasActiveFilters}
               />
-              {result.data.length === 0 ? (
+
+              {entries.length === 0 ? (
                 <div className='text-center text-gray-400 py-8'>
                   <div className='text-6xl mb-4'>📝</div>
                   <h3 className='text-lg font-medium text-gray-900 mb-2'>
@@ -53,7 +56,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                   </h3>
                   <p className='text-gray-500 mb-6'>
                     {searchParams.type && searchParams.type !== 'all'
-                      ? `Não há ${searchParams.type === 'INCOME' ? 'receitas' : 'despesas'} para este mês.`
+                      ? `Não há ${contentInfo} para este mês.`
                       : 'Comece adicionando suas primeiras entradas financeiras.'}
                   </p>
                   <Link
@@ -67,7 +70,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
               ) : (
                 <>
                   <div className='divide-y'>
-                    {result.data.map(entry => (
+                    {entries.map(entry => (
                       <EntryListItemWithModal
                         key={entry.id}
                         entry={entry}

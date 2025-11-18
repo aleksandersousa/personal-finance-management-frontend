@@ -1,7 +1,5 @@
 export * from './ai-chat-container';
 export * from './ai-chat-form-with-feedback';
-export * from './entry-form';
-export * from './entry-form-with-feedback';
 export * from './category-form';
 export * from './category-form-with-feedback';
 export * from './edit-category-form';
