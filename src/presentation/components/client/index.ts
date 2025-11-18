@@ -7,7 +7,5 @@ export * from './edit-category-form-with-feedback';
 export * from './category-list-item-with-modal';
 export * from './delete-category-modal';
 export * from './pagination';
-export * from './edit-entry-form';
-export * from './edit-entry-form-with-feedback';
 export * from './delete-entry-modal';
 export * from './entry-list-item-with-modal';

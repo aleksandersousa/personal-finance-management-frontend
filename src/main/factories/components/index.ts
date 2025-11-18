@@ -1,3 +1,2 @@
-export * from './edit-entry-form-with-feedback-factory';
 export * from './category-form-with-feedback-factory';
 export * from './edit-category-form-with-feedback-factory';

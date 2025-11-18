@@ -5,11 +5,7 @@ import { Button, Input, Select } from '../components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
-
-const typeOptions = [
-  { value: 'INCOME', label: 'Receita' },
-  { value: 'EXPENSE', label: 'Despesa' },
-];
+import { typeOptions } from '@/domain/constants';
 
 export const AddEntryPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
