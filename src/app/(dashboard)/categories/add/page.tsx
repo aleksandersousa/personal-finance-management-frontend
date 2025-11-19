@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import { makeAddCategoryPage } from '@/main/factories/pages';
 import { PageLoading } from '@/presentation/components';
+import { AddCategoryPage } from '@/presentation/pages';
 
 export default function AddCategoryRoute() {
   return (
     <Suspense fallback={<PageLoading text='Carregando formulário...' />}>
-      {makeAddCategoryPage()}
+      <AddCategoryPage />
     </Suspense>
   );
 }
