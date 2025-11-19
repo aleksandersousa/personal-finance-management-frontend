@@ -10,7 +10,7 @@ export interface DeleteEntryModalProps {
   entry: EntryModel;
   isOpen: boolean;
   onClose: () => void;
-  onDelete?: (id: string, deleteAllOccurrences: boolean) => Promise<void>;
+  onDelete: (deleteAllOccurrences: boolean) => Promise<void>;
 }
 
 export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
@@ -33,7 +33,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 
     startTransition(async () => {
       try {
-        await onDelete(entry.id, deleteAllOccurrences);
+        await onDelete(deleteAllOccurrences);
       } catch (error) {
         console.error('Error deleting entry:', error);
         setFeedback({
@@ -57,7 +57,6 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
   return (
     <div className='fixed inset-0 bg-slate-900/20 flex items-center justify-center p-4 z-50'>
       <div className='bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-slate-200'>
-        {/* Header */}
         <div className='flex items-center mb-4'>
           <div className='flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center'>
             <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
@@ -67,7 +66,6 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           </h3>
         </div>
 
-        {/* Content */}
         <div className='mb-6'>
           <p className='text-slate-600 mb-4'>
             Você tem certeza que deseja excluir a entrada:
@@ -90,7 +88,6 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             </div>
           </div>
 
-          {/* Opção para entradas fixas */}
           {entry.isFixed && (
             <div className='bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4'>
               <div className='flex items-start'>
@@ -131,14 +128,12 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           </p>
         </div>
 
-        {/* Feedback de erro */}
         {feedback.type === 'error' && (
           <div className='mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
             {feedback.message}
           </div>
         )}
 
-        {/* Actions */}
         <div className='flex space-x-3'>
           <Button
             onClick={handleClose}

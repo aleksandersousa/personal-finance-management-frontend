@@ -11,7 +11,6 @@ export * from './sheet';
 export * from './table';
 export * from './chart';
 export * from './forecast-controls';
-export * from './entry-list-item';
 export * from './summary-card';
 export * from './category-breakdown';
 export * from './forecast-insights';

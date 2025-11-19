@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  loadEntriesByMonthAction,
-  deleteEntryAction,
-} from '@/presentation/actions';
-import { EntryListItemWithModal } from '@/presentation/components/client';
+import { loadEntriesByMonthAction } from '@/presentation/actions';
+import { EntryListItem } from '@/presentation/components/client';
 import { Pagination } from '../components/client';
 import { EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
@@ -71,11 +68,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 <>
                   <div className='divide-y'>
                     {entries.map(entry => (
-                      <EntryListItemWithModal
-                        key={entry.id}
-                        entry={entry}
-                        onDelete={deleteEntryAction}
-                      />
+                      <EntryListItem key={entry.id} entry={entry} />
                     ))}
                   </div>
 
