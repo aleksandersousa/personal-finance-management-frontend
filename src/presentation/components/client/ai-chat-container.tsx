@@ -15,7 +15,6 @@ export function AiChatContainer() {
   const handleSubmit = async (question: string) => {
     setFeedback({ type: null, message: '' });
 
-    // Add user message immediately
     const userMessage: AiChatMessage = {
       role: 'user',
       content: question,
@@ -55,7 +54,6 @@ export function AiChatContainer() {
 
   return (
     <div className='space-y-6'>
-      {/* Messages Display */}
       <div className='space-y-3 max-h-96 overflow-y-auto'>
         {messages.map((message, index) => (
           <div
@@ -78,7 +76,6 @@ export function AiChatContainer() {
         ))}
       </div>
 
-      {/* Feedback */}
       {feedback.type && (
         <div
           className={`p-4 rounded-lg ${
@@ -91,7 +88,6 @@ export function AiChatContainer() {
         </div>
       )}
 
-      {/* Chat Form */}
       <AiChatForm onSubmit={handleSubmit} isLoading={isPending} />
     </div>
   );

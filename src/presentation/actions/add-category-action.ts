@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
 import { getCurrentUser } from '../helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
-import { makeRemoteAddCategory } from '@/main/factories/usecases/add-category-factory';
+import { makeRemoteAddCategory } from '@/main/factories/usecases';
 import { logoutAction } from './logout-action';
 
 export async function addCategoryAction(data: CategoryFormData): Promise<void> {

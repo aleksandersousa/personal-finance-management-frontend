@@ -4,7 +4,7 @@ import { EntryFormData } from '@/infra/validation';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
 import { getCurrentUser } from '../helpers';
-import { makeRemoteAddEntry } from '@/main/factories/usecases/add-entry-factory';
+import { makeRemoteAddEntry } from '@/main/factories/usecases';
 import { logoutAction } from './logout-action';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 
