@@ -6,6 +6,7 @@ import { EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
 import { EntriesCache } from '@/presentation/components/entries-cache';
+import { isRedirectError } from '@/presentation/helpers';
 
 type Props = {
   searchParams: Record<string, string>;
@@ -88,6 +89,10 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
       </div>
     );
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Error loading entries:', error);
     return (
       <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
