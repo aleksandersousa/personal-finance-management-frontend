@@ -2,7 +2,7 @@
 
 import { LoadMonthlySummaryParams } from '@/domain/usecases/load-monthly-summary';
 import { MonthlySummaryModel } from '@/domain/models';
-import { getCurrentUser } from '../helpers';
+import { getCurrentUser, isRedirectError } from '../helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteLoadMonthlySummary } from '@/main/factories/usecases/load-monthly-summary-factory';
 import { logoutAction } from './logout-action';
@@ -32,6 +32,10 @@ export async function loadMonthlySummaryAction(
 
     return result;
   } catch (error: any) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Load monthly summary error:', error);
     if (error.message.includes('401')) {
       await logoutAction();

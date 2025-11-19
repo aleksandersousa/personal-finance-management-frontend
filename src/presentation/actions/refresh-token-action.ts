@@ -4,6 +4,7 @@ import { makeApiUrl } from '@/main/factories/http/api-url-factory';
 import { logoutAction } from './logout-action';
 import type { AuthTokens } from '@/domain';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { isRedirectError } from '../helpers';
 
 export async function refreshTokenAction(): Promise<AuthTokens | null> {
   try {
@@ -40,6 +41,10 @@ export async function refreshTokenAction(): Promise<AuthTokens | null> {
     console.log('Access token refreshed successfully');
     return newTokens;
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Refresh token error:', error);
     await logoutAction();
     return null;

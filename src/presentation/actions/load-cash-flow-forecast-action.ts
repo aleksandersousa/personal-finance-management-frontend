@@ -2,7 +2,7 @@
 
 import { LoadCashFlowForecastParams } from '@/domain/usecases/load-cash-flow-forecast';
 import { CashFlowForecastModel } from '@/domain/models';
-import { getCurrentUser } from '../helpers';
+import { getCurrentUser, isRedirectError } from '../helpers';
 import { NextCookiesStorageAdapter } from '@/infra/storage/next-cookie-storage-adapter';
 import { makeRemoteLoadCashFlowForecast } from '@/main/factories/usecases/load-cash-flow-forecast-factory';
 import { logoutAction } from './logout-action';
@@ -34,6 +34,10 @@ export async function loadCashFlowForecastAction(
 
     return result;
   } catch (error: any) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Load cash flow forecast error:', error);
     if (error.message.includes('401')) {
       await logoutAction();

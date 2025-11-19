@@ -2,7 +2,7 @@
 
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getCurrentUser } from '../helpers';
+import { getCurrentUser, isRedirectError } from '../helpers';
 import { makeRemoteDeleteEntry } from '@/main/factories/usecases/delete-entry-factory';
 import { logoutAction } from './logout-action';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
@@ -31,6 +31,10 @@ export async function deleteEntryAction(
 
     redirect('/entries');
   } catch (error: any) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Delete entry error:', error);
     if (error.message.includes('401')) {
       await logoutAction();

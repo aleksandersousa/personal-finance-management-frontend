@@ -3,7 +3,7 @@
 import { EntryFormData } from '@/infra/validation';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
-import { getCurrentUser } from '../helpers';
+import { getCurrentUser, isRedirectError } from '../helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteUpdateEntry } from '@/main/factories/usecases/update-entry-factory';
 import { logoutAction } from './logout-action';
@@ -41,6 +41,10 @@ export async function updateEntryAction(
 
     redirect('/entries');
   } catch (error: any) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Update entry error:', error);
     if (error.message.includes('401')) {
       await logoutAction();

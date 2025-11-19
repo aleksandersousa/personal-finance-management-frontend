@@ -3,7 +3,7 @@
 import { CategoryFormData } from '@/infra/validation';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
-import { getCurrentUser } from '../helpers';
+import { getCurrentUser, isRedirectError } from '../helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteAddCategory } from '@/main/factories/usecases';
 import { logoutAction } from './logout-action';
@@ -27,6 +27,10 @@ export async function addCategoryAction(data: CategoryFormData): Promise<void> {
 
     redirect('/categories');
   } catch (error: any) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Add category error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
