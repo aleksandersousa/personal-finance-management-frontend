@@ -10,5 +10,6 @@ export * from './load-categories-factory';
 export * from './load-entries-by-month-factory';
 export * from './load-monthly-summary-factory';
 export * from './refresh-token-factory';
+export * from './registration-factory';
 export * from './update-category-factory';
 export * from './update-entry-factory';

@@ -19,7 +19,6 @@ export class RemoteAuthentication implements Authentication {
       password,
     });
 
-    const { user, tokens } = response;
-    return { user, tokens };
+    return response;
   }
 }

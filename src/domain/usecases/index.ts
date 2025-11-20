@@ -6,6 +6,7 @@ export * from './load-cash-flow-forecast';
 export * from './load-entries-by-month';
 export * from './load-monthly-summary';
 export * from './refresh-token';
+export * from './registration';
 export * from './update-entry';
 export * from './load-categories';
 export * from './add-category';
