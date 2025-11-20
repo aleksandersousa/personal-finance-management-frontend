@@ -102,7 +102,7 @@ export const ConsolidatedForecastCard: React.FC<
           Previsão Financeira ({monthsCount} meses)
         </h3>
 
-        <div className='flex gap-1 bg-slate-100 rounded-lg p-1'>
+        <div className='flex gap-1 bg-slate-100 rounded-lg p-1 justify-center lg:justify-normal'>
           <button
             onClick={() => setActiveTab('summary')}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
