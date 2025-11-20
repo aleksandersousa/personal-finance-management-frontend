@@ -14,9 +14,7 @@ import {
   TrendUpIcon,
   ChartLineIcon,
   LightbulbIcon,
-  ChartBarIcon,
 } from '@phosphor-icons/react/dist/ssr';
-import { InteractiveMonthlyProjectionsChart } from './interactive-monthly-projections-chart';
 import { Card } from './card';
 
 export interface ConsolidatedForecastCardProps {
@@ -99,7 +97,6 @@ export const ConsolidatedForecastCard: React.FC<
 
   return (
     <Card className='p-6'>
-      {/* Header with Tabs */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
         <h3 className='text-lg font-bold text-slate-900'>
           Previsão Financeira ({monthsCount} meses)
@@ -128,24 +125,11 @@ export const ConsolidatedForecastCard: React.FC<
             <LightbulbIcon className='w-4 h-4' />
             <span>Insights</span>
           </button>
-          <button
-            onClick={() => setActiveTab('chart')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === 'chart'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-800'
-            }`}
-          >
-            <ChartBarIcon className='w-4 h-4' />
-            <span>Gráfico</span>
-          </button>
         </div>
       </div>
 
-      {/* Tab Content */}
       {activeTab === 'summary' && (
         <div className='space-y-4'>
-          {/* Main Metrics Grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
             <div className='bg-slate-50 rounded-lg p-4'>
               <p className='text-sm font-medium text-slate-600 mb-1'>
@@ -192,7 +176,6 @@ export const ConsolidatedForecastCard: React.FC<
             </div>
           </div>
 
-          {/* Average Monthly Flow */}
           <div className='bg-slate-50 rounded-lg p-4'>
             <div className='flex items-center justify-between'>
               <p className='text-sm font-medium text-slate-700'>
@@ -264,12 +247,6 @@ export const ConsolidatedForecastCard: React.FC<
               </ul>
             </div>
           )}
-        </div>
-      )}
-
-      {activeTab === 'chart' && (
-        <div className='mt-2'>
-          <InteractiveMonthlyProjectionsChart projections={projections} />
         </div>
       )}
     </Card>
