@@ -87,7 +87,6 @@ export const NavigationDrawer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Load collapsed state from localStorage
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState !== null) {
       setIsCollapsed(savedState === 'true');
