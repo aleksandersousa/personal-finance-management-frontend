@@ -106,6 +106,8 @@ export const NavigationDrawer: React.FC = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem('sidebarCollapsed', String(newState));
+    // Dispatch custom event for same-tab reactivity
+    window.dispatchEvent(new Event('sidebarToggle'));
   };
 
   const isActive = (href?: string) => {

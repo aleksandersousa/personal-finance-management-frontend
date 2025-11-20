@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import {
   SummaryCard,
   CategoryBreakdown,
@@ -16,6 +18,7 @@ import {
   ArrowDownIcon,
   CurrencyDollarIcon,
 } from '@phosphor-icons/react/dist/ssr';
+import { cn } from '@/lib/utils';
 
 export interface DashboardPageProps {
   summary: MonthlySummaryModel;
@@ -33,9 +36,41 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown || [];
 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState !== null) {
+      setIsCollapsed(savedState === 'true');
+    }
+
+    // Listen for sidebar state changes
+    const handleStorageChange = () => {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      if (savedState !== null) {
+        setIsCollapsed(savedState === 'true');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Custom event for same-tab changes
+    window.addEventListener('sidebarToggle', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('sidebarToggle', handleStorageChange);
+    };
+  }, []);
+
   return (
-    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen'>
-      <div className='px-4 sm:px-6 lg:px-8 lg:ml-64 box-border'>
+    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen overflow-x-hidden'>
+      <div
+        className={cn(
+          'px-4 sm:px-6 box-border transition-all duration-300',
+          isCollapsed ? 'lg:pl-[7rem] lg:pr-8' : 'lg:pl-[20rem] lg:pr-8'
+        )}
+      >
         <DashboardFilters
           currentMonth={currentMonth}
           currentForecastMonths={currentForecastMonths}
