@@ -26,23 +26,25 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   };
 
   const getProgressColor = () => {
-    return type === 'INCOME' ? 'bg-green-400' : 'bg-red-400';
+    return type === 'INCOME' ? 'bg-emerald-400' : 'bg-rose-400';
   };
 
   const getProgressBgColor = () => {
-    return type === 'INCOME' ? 'bg-green-100' : 'bg-red-100';
+    return type === 'INCOME' ? 'bg-emerald-50' : 'bg-rose-50';
   };
 
   if (filteredCategories.length === 0) {
     return (
-      <div className='bg-white rounded-xl border border-slate-200 p-6'>
+      <div className='bg-white rounded-xl border border-slate-200 p-6 shadow-md'>
         <h3 className='text-lg font-semibold text-slate-900 mb-4'>{title}</h3>
         <div className='text-center text-slate-500 py-8'>
           <ChartBarIcon
             className='w-12 h-12 mx-auto mb-4 text-slate-300'
             weight='thin'
           />
-          <p>Nenhuma {type === 'INCOME' ? 'receita' : 'despesa'} encontrada</p>
+          <p className='text-sm'>
+            Nenhuma {type === 'INCOME' ? 'receita' : 'despesa'} encontrada
+          </p>
         </div>
       </div>
     );
@@ -54,14 +56,14 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   );
 
   return (
-    <div className='bg-white rounded-xl border border-slate-200 p-6'>
+    <div className='bg-white rounded-xl border border-slate-200 p-6 shadow-md'>
       <div className='flex items-center justify-between mb-6'>
         <h3 className='text-lg font-semibold text-slate-900'>{title}</h3>
         <div
           className={`text-sm font-medium px-3 py-1 rounded-full ${
             type === 'INCOME'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
+              ? 'bg-emerald-50 text-emerald-700'
+              : 'bg-rose-50 text-rose-700'
           }`}
         >
           {formatCurrency(total)}
@@ -82,7 +84,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
             >
               {/* Category header */}
               <div className='flex items-center justify-between'>
-                <div className='flex items-center space-x-2'>
+                <div className='flex items-center gap-2'>
                   <span className='font-medium text-slate-900'>
                     {category.categoryName}
                   </span>
@@ -94,7 +96,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
                 <div className='text-right'>
                   <div
                     className={`font-semibold ${
-                      type === 'INCOME' ? 'text-green-600' : 'text-red-600'
+                      type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'
                     }`}
                   >
                     {formatCurrency(category.total)}

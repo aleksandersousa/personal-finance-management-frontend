@@ -5,7 +5,6 @@ import {
   SummaryCard,
   CategoryBreakdown,
   ConsolidatedForecastCard,
-  InteractiveMonthlyProjectionsChart,
   TopBar,
 } from '@/presentation/components';
 import {
@@ -64,99 +63,112 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   }, []);
 
   return (
-    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen overflow-x-hidden'>
-      <div
-        className={cn(
-          'px-4 sm:px-6 box-border transition-all duration-300',
-          isCollapsed ? 'lg:pl-[7rem] lg:pr-8' : 'lg:pl-[20rem] lg:pr-8'
-        )}
-      >
-        <TopBar
-          currentMonth={currentMonth}
-          currentForecastMonths={currentForecastMonths}
-        />
+    <div className='relative w-full min-h-screen overflow-x-hidden'>
+      {/* Subtle Background */}
+      <div className='fixed inset-0 bg-slate-50 -z-10' />
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8'>
-          <SummaryCard
-            title='Saldo'
-            value={summary.summary.balance}
-            type='balance'
-            icon={
-              <CurrencyDollarIcon
-                className='w-6 h-6 text-cyan-600'
-                weight='bold'
+      <div className='pt-20 pb-20 lg:pb-8'>
+        <div
+          className={cn(
+            'px-4 sm:px-6 lg:px-8 box-border transition-all duration-300',
+            isCollapsed ? 'lg:pl-[7rem] lg:pr-8' : 'lg:pl-[20rem] lg:pr-8'
+          )}
+        >
+          <TopBar
+            currentMonth={currentMonth}
+            currentForecastMonths={currentForecastMonths}
+          />
+
+          {/* Summary Cards */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700'>
+            <SummaryCard
+              title='Saldo'
+              value={summary.summary.balance}
+              type='balance'
+              icon={
+                <CurrencyDollarIcon
+                  className='w-6 h-6 text-slate-600'
+                  weight='bold'
+                />
+              }
+              comparison={{
+                previousValue: 0,
+                change:
+                  summary.comparisonWithPrevious.percentageChanges.balance,
+              }}
+            />
+            <SummaryCard
+              title='Receitas'
+              value={summary.summary.totalIncome}
+              type='income'
+              icon={
+                <ArrowUpIcon
+                  className='w-6 h-6 text-emerald-600'
+                  weight='bold'
+                />
+              }
+              comparison={{
+                previousValue: 0,
+                change: summary.comparisonWithPrevious.percentageChanges.income,
+              }}
+              details={{
+                fixed: summary.summary.fixedIncome,
+                variable: summary.summary.dynamicIncome,
+                entriesCount: summary.summary.entriesCount.income,
+              }}
+            />
+            <SummaryCard
+              title='Despesas'
+              value={summary.summary.totalExpenses}
+              type='expense'
+              icon={
+                <ArrowDownIcon
+                  className='w-6 h-6 text-rose-600'
+                  weight='bold'
+                />
+              }
+              comparison={{
+                previousValue: 0,
+                change:
+                  summary.comparisonWithPrevious.percentageChanges.expense,
+              }}
+              details={{
+                fixed: summary.summary.fixedExpenses,
+                variable: summary.summary.dynamicExpenses,
+                entriesCount: summary.summary.entriesCount.expenses,
+              }}
+            />
+          </div>
+
+          {/* Category Breakdown */}
+          {categories.length > 0 && (
+            <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150'>
+              <CategoryBreakdown
+                categories={categories}
+                type='INCOME'
+                title='Receitas por Categoria'
               />
-            }
-            comparison={{
-              previousValue: 0,
-              change: summary.comparisonWithPrevious.percentageChanges.balance,
-            }}
-          />
-          <SummaryCard
-            title='Receitas'
-            value={summary.summary.totalIncome}
-            type='income'
-            icon={
-              <ArrowUpIcon className='w-6 h-6 text-green-600' weight='bold' />
-            }
-            comparison={{
-              previousValue: 0,
-              change: summary.comparisonWithPrevious.percentageChanges.income,
-            }}
-            details={{
-              fixed: summary.summary.fixedIncome,
-              variable: summary.summary.dynamicIncome,
-              entriesCount: summary.summary.entriesCount.income,
-            }}
-          />
-          <SummaryCard
-            title='Despesas'
-            value={summary.summary.totalExpenses}
-            type='expense'
-            icon={
-              <ArrowDownIcon className='w-6 h-6 text-red-600' weight='bold' />
-            }
-            comparison={{
-              previousValue: 0,
-              change: summary.comparisonWithPrevious.percentageChanges.expense,
-            }}
-            details={{
-              fixed: summary.summary.fixedExpenses,
-              variable: summary.summary.dynamicExpenses,
-              entriesCount: summary.summary.entriesCount.expenses,
-            }}
-          />
+
+              <CategoryBreakdown
+                categories={categories}
+                type='EXPENSE'
+                title='Despesas por Categoria'
+              />
+            </div>
+          )}
+
+          {/* Forecast Section */}
+          {forecast && (
+            <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300'>
+              <ConsolidatedForecastCard
+                summary={forecast.summary}
+                insights={forecast.insights}
+                monthsCount={forecast.forecastPeriod.monthsCount}
+                projections={forecast.monthlyProjections}
+              />
+            </div>
+          )}
         </div>
-
-        {categories.length > 0 && (
-          <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8'>
-            <CategoryBreakdown
-              categories={categories}
-              type='INCOME'
-              title='Receitas por Categoria'
-            />
-
-            <CategoryBreakdown
-              categories={categories}
-              type='EXPENSE'
-              title='Despesas por Categoria'
-            />
-          </div>
-        )}
-
-        {forecast && (
-          <div className='space-y-6 mb-8'>
-            <ConsolidatedForecastCard
-              summary={forecast.summary}
-              insights={forecast.insights}
-              monthsCount={forecast.forecastPeriod.monthsCount}
-            />
-
-            <InteractiveMonthlyProjectionsChart
-              projections={forecast.monthlyProjections}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
