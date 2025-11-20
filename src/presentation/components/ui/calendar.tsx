@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { DayPicker, DayPickerProps } from 'react-day-picker';
 import { ptBR } from 'date-fns/locale';
 import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react/dist/ssr';
