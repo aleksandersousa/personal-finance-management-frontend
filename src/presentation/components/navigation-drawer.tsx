@@ -106,7 +106,6 @@ export const NavigationDrawer: React.FC = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem('sidebarCollapsed', String(newState));
-    // Dispatch custom event for same-tab reactivity
     window.dispatchEvent(new Event('sidebarToggle'));
   };
 
@@ -181,7 +180,7 @@ export const NavigationDrawer: React.FC = () => {
       {/* Desktop Sidebar - Fixed Left Drawer */}
       <aside
         className={cn(
-          'hidden lg:flex fixed left-0 top-0 h-full bg-white z-40 flex-col shadow-lg transition-all duration-300',
+          'hidden lg:flex fixed left-0 top-0 h-full bg-white z-50 flex-col shadow-lg transition-all duration-300',
           isCollapsed ? 'w-20' : 'w-72'
         )}
       >
