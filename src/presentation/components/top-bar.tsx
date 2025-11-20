@@ -18,19 +18,23 @@ import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import type { UserModel } from '@/domain';
 import { logoutAction } from '../actions/logout-action';
 import { DashboardFilters } from './ui';
+import { BellIcon, GearIcon } from '@phosphor-icons/react';
+import { useRouter } from 'next/navigation';
 
 export interface TopBarProps {
-  currentMonth: string;
-  currentForecastMonths: number;
+  currentMonth?: string;
+  currentForecastMonths?: number;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   currentMonth,
   currentForecastMonths,
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const getLocalStorage = makeCookieStorageAdapter();
 
+  const navigate = useRouter();
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [user, setUser] = useState<UserModel | null>(null);
 
   useEffect(() => {
@@ -53,19 +57,27 @@ export const TopBar: React.FC<TopBarProps> = ({
       await logoutAction();
     } catch (error) {
       console.error('Logout error:', error);
-      window.location.href = '/login';
+      navigate.push('/login');
     }
+  };
+
+  const handleSettings = () => {
+    navigate.push('/settings');
+  };
+
+  const handleNotifications = () => {
+    navigate.push('/notifications');
   };
 
   return (
     <header className='fixed top-0 left-0 right-0 z-40 bg-slate-50 lg:left-64'>
       <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
-        <div className='flex items-center space-x-2 mr-6'>
+        <div className='flex items-center space-x-2'>
           <Button
             variant='ghost'
             size='sm'
             onClick={handleThemeToggle}
-            className='relative h-10 px-6 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
+            className='relative rounded-xl py-3 px-2 bg-accent text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
           >
             {isDarkMode ? (
               <SunIcon className='h-5 w-5 text-white' weight='bold' />
@@ -75,12 +87,16 @@ export const TopBar: React.FC<TopBarProps> = ({
           </Button>
         </div>
 
-        <DashboardFilters
-          currentMonth={currentMonth}
-          currentForecastMonths={currentForecastMonths}
-        />
+        {currentMonth && currentForecastMonths && (
+          <div className='ml-4'>
+            <DashboardFilters
+              currentMonth={currentMonth}
+              currentForecastMonths={currentForecastMonths}
+            />
+          </div>
+        )}
 
-        <div className='ml-6 flex items-center space-x-3 lg:hidden'>
+        <div className='ml-4 flex items-center space-x-3 lg:hidden'>
           <div className='hidden sm:block'>
             <p className='text-sm font-medium text-slate-900'>
               {user?.name ?? ''}
@@ -94,19 +110,35 @@ export const TopBar: React.FC<TopBarProps> = ({
                 variant='ghost'
                 className='relative h-10 w-10 rounded-full p-0 hover:bg-slate-100'
               >
-                <div className='h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center'>
+                <div className='h-10 w-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center'>
                   <UserIcon className='h-6 w-6 text-white' weight='bold' />
                 </div>
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align='start' className='w-56 mr-4'>
+            <DropdownMenuContent align='start' className='w-48 mr-4'>
               <div className='px-3 py-2 border-b border-slate-100'>
                 <p className='text-sm font-medium text-slate-900'>
                   {user?.name ?? ''}
                 </p>
                 <p className='text-xs text-slate-500'>{user?.email ?? ''}</p>
               </div>
+
+              <DropdownMenuItem
+                onClick={handleSettings}
+                className='text-slate-900 focus:text-slate-900 focus:bg-slate-100 cursor-pointer'
+              >
+                <GearIcon className='mr-2 h-4 w-4' weight='bold' />
+                Configurações
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={handleNotifications}
+                className='text-slate-900 focus:text-slate-900 focus:bg-slate-100 cursor-pointer'
+              >
+                <BellIcon className='mr-2 h-4 w-4' weight='bold' />
+                Notificações
+              </DropdownMenuItem>
 
               <DropdownMenuItem
                 onClick={handleSignOut}

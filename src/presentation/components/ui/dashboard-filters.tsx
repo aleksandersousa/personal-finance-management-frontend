@@ -175,7 +175,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className='relative h-10 px-6 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
+        variant='ghost'
+        size='sm'
+        className='relative py-3 px-2 rounded-xl bg-accent text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
       >
         <FunnelIcon className='w-5 h-5' weight='bold' />
         {isFiltered && (
