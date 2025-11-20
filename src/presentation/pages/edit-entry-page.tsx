@@ -17,6 +17,7 @@ import {
   PageLoading,
   Select,
   DatePicker,
+  CheckboxWithLabel,
 } from '../components';
 import { redirect } from 'next/navigation';
 import { typeOptions } from '@/domain/constants';
@@ -304,24 +305,15 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                   placeholder='Selecione a data'
                 />
 
-                <div className='flex items-center space-x-2'>
-                  <input
-                    type='checkbox'
-                    id='isFixed'
-                    checked={formData.isFixed}
-                    onChange={e =>
-                      handleInputChange('isFixed', e.target.checked)
-                    }
-                    className='h-4 w-4 text-cyan-400 focus:ring-cyan-400 border-slate-300 rounded'
-                    disabled={isPendingUpdate}
-                  />
-                  <label
-                    htmlFor='isFixed'
-                    className='text-sm font-medium text-slate-700'
-                  >
-                    Entrada fixa (recorrente mensalmente)
-                  </label>
-                </div>
+                <CheckboxWithLabel
+                  id='isFixed'
+                  checked={formData.isFixed}
+                  onCheckedChange={checked =>
+                    handleInputChange('isFixed', checked as boolean)
+                  }
+                  disabled={isPendingUpdate}
+                  label='Entrada fixa (recorrente mensalmente)'
+                />
 
                 <div className='flex space-x-4'>
                   <Button

@@ -14,3 +14,4 @@ export * from './dialog';
 export * from './popover';
 export * from './calendar';
 export * from './date-picker';
+export * from './checkbox';
