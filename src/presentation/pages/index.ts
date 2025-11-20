@@ -7,3 +7,4 @@ export * from './edit-category-page';
 export * from './entries-list-page';
 export * from './categories-list-page';
 export * from './login-page';
+export * from './registration-page';

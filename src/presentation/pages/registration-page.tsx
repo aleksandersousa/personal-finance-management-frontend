@@ -2,25 +2,26 @@
 
 import React, { useMemo, useState, useTransition } from 'react';
 import { Button, Input } from '../components';
-import { makeLoginFormValidator } from '@/main/factories/validation';
-import { loginAction } from '../actions';
-import {
-  CurrencyCircleDollarIcon,
-  XCircleIcon,
-  LockIcon,
-  ArrowRightIcon,
-} from '@phosphor-icons/react';
+import { makeRegistrationFormValidator } from '@/main/factories/validation';
+import { registrationAction } from '../actions';
 import Link from 'next/link';
+import {
+  UserCirclePlusIcon,
+  XCircleIcon,
+  ArrowLeftIcon,
+  LockIcon,
+} from '@phosphor-icons/react';
 
-export const LoginPage: React.FC = () => {
+export const RegistrationPage: React.FC = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
   });
   const [isLoading, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-  const validator = useMemo(() => makeLoginFormValidator(), []);
+  const validator = useMemo(() => makeRegistrationFormValidator(), []);
 
   const handleInputChange =
     (field: keyof typeof formData) =>
@@ -43,6 +44,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
 
     const dataToValidate = {
+      name: formData.name,
       email: formData.email,
       password: formData.password,
     };
@@ -56,15 +58,16 @@ export const LoginPage: React.FC = () => {
 
     startTransition(async () => {
       try {
-        await loginAction(result.data!);
+        await registrationAction(result.data!);
         setFormData({
+          name: '',
           email: '',
           password: '',
         });
         setErrors({});
       } catch {
         setErrors({
-          general: ['Erro ao fazer login. Verifique suas credenciais.'],
+          general: ['Erro ao criar conta. Tente novamente.'],
         });
       }
     });
@@ -77,17 +80,17 @@ export const LoginPage: React.FC = () => {
 
       <div className='relative z-10 w-full max-w-md mx-auto'>
         <div className='text-center mb-8'>
-          <div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl shadow-xl mb-6'>
-            <CurrencyCircleDollarIcon
+          <div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-600 to-green-700 rounded-3xl shadow-xl mb-6'>
+            <UserCirclePlusIcon
               className='w-10 h-10 text-white'
               weight='bold'
             />
           </div>
           <h1 className='text-4xl font-bold text-gray-900 mb-3'>
-            Bem-vindo de volta
+            Crie sua conta
           </h1>
           <p className='text-base text-gray-600 font-medium'>
-            Acesse seu painel financeiro pessoal
+            Comece a gerenciar suas finanças hoje mesmo
           </p>
         </div>
 
@@ -102,6 +105,16 @@ export const LoginPage: React.FC = () => {
                 <span className='text-sm font-medium'>{errors.general[0]}</span>
               </div>
             )}
+
+            <Input
+              label='Nome completo'
+              type='text'
+              value={formData.name}
+              onChange={handleInputChange('name')}
+              error={errors.name?.[0]}
+              disabled={isLoading}
+              required
+            />
 
             <Input
               label='Email'
@@ -123,6 +136,10 @@ export const LoginPage: React.FC = () => {
               required
             />
 
+            <div className='text-xs text-gray-500 mt-2'>
+              A senha deve ter pelo menos 8 caracteres
+            </div>
+
             <Button
               type='submit'
               variant='primary'
@@ -131,7 +148,7 @@ export const LoginPage: React.FC = () => {
               isLoading={isLoading}
               disabled={isLoading}
             >
-              Entrar
+              Criar conta
             </Button>
 
             <div className='relative my-6'>
@@ -140,18 +157,18 @@ export const LoginPage: React.FC = () => {
               </div>
               <div className='relative flex justify-center text-sm'>
                 <span className='px-4 bg-white text-gray-500 font-medium'>
-                  Novo por aqui?
+                  Já tem uma conta?
                 </span>
               </div>
             </div>
 
             <div className='text-center'>
               <Link
-                href='/register'
+                href='/login'
                 className='inline-flex items-center justify-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200'
               >
-                Criar uma conta gratuita
-                <ArrowRightIcon className='ml-2 w-4 h-4' weight='bold' />
+                <ArrowLeftIcon className='mr-2 w-4 h-4' weight='bold' />
+                Voltar para o login
               </Link>
             </div>
           </form>
