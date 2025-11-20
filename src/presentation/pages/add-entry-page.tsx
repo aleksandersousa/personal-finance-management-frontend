@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import {
   Button,
+  Card,
   Input,
   Select,
   DatePicker,
@@ -12,6 +13,8 @@ import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
 import { typeOptions } from '@/domain/constants';
+import { redirect } from 'next/navigation';
+import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 
 export const AddEntryPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -25,7 +28,7 @@ export const AddEntryPage: React.FC = () => {
     isFixed: boolean;
   }>({
     description: '',
-    amount: '',
+    amount: '0,00',
     type: '',
     categoryId: '',
     date: new Date(),
@@ -105,7 +108,7 @@ export const AddEntryPage: React.FC = () => {
 
     const dataToValidate = {
       description: formData.description,
-      amount: parseFloat(formData.amount) || 0,
+      amount: parseCurrencyInput(formData.amount),
       type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
       date: formData.date,
@@ -129,7 +132,7 @@ export const AddEntryPage: React.FC = () => {
 
       setFormData({
         description: '',
-        amount: '',
+        amount: '0,00',
         type: '',
         categoryId: '',
         date: new Date(),
@@ -145,7 +148,7 @@ export const AddEntryPage: React.FC = () => {
   };
 
   return (
-    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen'>
+    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
       <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
         <div className='w-full max-w-2xl box-border'>
           <div className='text-center mb-8'>
@@ -158,7 +161,7 @@ export const AddEntryPage: React.FC = () => {
             </p>
           </div>
 
-          <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+          <Card className='rounded-3xl p-6 sm:p-8'>
             <form onSubmit={handleSubmit} className='space-y-6'>
               {errors.general && (
                 <div className='bg-pink-50 border border-pink-400 text-pink-700 px-4 py-3 rounded'>
@@ -180,11 +183,13 @@ export const AddEntryPage: React.FC = () => {
 
               <Input
                 label='Valor (R$)'
-                type='number'
-                step='0.01'
-                min='0'
+                type='text'
+                inputMode='numeric'
                 value={formData.amount}
-                onChange={e => handleInputChange('amount', e.target.value)}
+                onChange={e => {
+                  const formatted = formatCurrencyInput(e.target.value);
+                  handleInputChange('amount', formatted);
+                }}
                 placeholder='0,00'
                 error={errors.amount?.[0]}
                 required
@@ -192,6 +197,7 @@ export const AddEntryPage: React.FC = () => {
               />
 
               <Select
+                required
                 label='Tipo'
                 value={formData.type}
                 onValueChange={value => handleInputChange('type', value)}
@@ -243,17 +249,27 @@ export const AddEntryPage: React.FC = () => {
                 label='Entrada fixa (recorrente mensalmente)'
               />
 
-              <Button
-                type='submit'
-                className='w-full'
-                size='lg'
-                isLoading={isPendingSubmit}
-                disabled={isPendingSubmit}
-              >
-                {isPendingSubmit ? 'Carregando...' : 'Adicionar Entrada'}
-              </Button>
+              <div className='flex space-x-4'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={() => redirect('/entries')}
+                  disabled={isPendingSubmit}
+                  className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type='submit'
+                  isLoading={isPendingSubmit}
+                  disabled={isPendingSubmit}
+                  className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                >
+                  {isPendingSubmit ? 'Salvando...' : 'Adicionar Entrada'}
+                </Button>
+              </div>
             </form>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

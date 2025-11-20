@@ -21,6 +21,7 @@ import {
 } from '../components';
 import { redirect } from 'next/navigation';
 import { typeOptions } from '@/domain/constants';
+import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 
 export interface EditEntryPageProps {
   entryId: string;
@@ -92,7 +93,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     if (entry) {
       setFormData({
         description: entry.description,
-        amount: (entry.amount / 100).toString(),
+        amount: formatCurrencyInput((entry.amount / 100).toString()),
         type: entry.type,
         categoryId: entry.categoryId,
         date: new Date(entry.date),
@@ -154,7 +155,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
 
     const dataToValidate = {
       description: formData.description,
-      amount: parseFloat(formData.amount) || 0,
+      amount: parseCurrencyInput(formData.amount),
       type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
       date: formData.date,
@@ -253,11 +254,13 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
 
                 <Input
                   label='Valor (R$)'
-                  type='number'
-                  step='0.01'
-                  min='0'
+                  type='text'
+                  inputMode='numeric'
                   value={formData.amount}
-                  onChange={e => handleInputChange('amount', e.target.value)}
+                  onChange={e => {
+                    const formatted = formatCurrencyInput(e.target.value);
+                    handleInputChange('amount', formatted);
+                  }}
                   placeholder='0,00'
                   error={errors.amount?.[0]}
                   required
