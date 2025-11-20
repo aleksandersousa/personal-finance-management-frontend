@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import {
   SunIcon,
   MoonIcon,
@@ -21,7 +20,6 @@ import { logoutAction } from '../actions/logout-action';
 
 export const TopBar: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const pathname = usePathname();
   const getLocalStorage = makeCookieStorageAdapter();
 
   const [user, setUser] = useState<UserModel | null>(null);
@@ -35,10 +33,6 @@ export const TopBar: React.FC = () => {
     };
     fetchUser();
   }, []);
-
-  if (pathname.startsWith('/login')) {
-    return null;
-  }
 
   const handleThemeToggle = () => {
     setIsDarkMode(prev => !prev);

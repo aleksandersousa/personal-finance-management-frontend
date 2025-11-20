@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageLoading } from '@/presentation/components';
-import { LoginPage } from '@/presentation';
+import { LoginPage } from '@/presentation/pages';
 
 export default function LoginPageRoute() {
   return (

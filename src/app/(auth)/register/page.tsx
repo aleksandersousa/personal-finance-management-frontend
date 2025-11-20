@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageLoading } from '@/presentation/components';
-import { RegistrationPage } from '@/presentation';
+import { RegistrationPage } from '@/presentation/pages';
 
 export default function RegisterPageRoute() {
   return (
