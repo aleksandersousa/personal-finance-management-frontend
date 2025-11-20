@@ -12,3 +12,4 @@ export * from './add-category-action';
 export * from './update-category-action';
 export * from './delete-category-action';
 export * from './load-cash-flow-forecast-action';
+export * from './logout-action';

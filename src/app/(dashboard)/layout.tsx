@@ -1,4 +1,4 @@
-import { NavigationDrawer, TopBar } from '@/presentation/components';
+import { NavigationDrawer } from '@/presentation/components';
 
 export default function DashboardLayout({
   children,
@@ -7,7 +7,6 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <TopBar />
       <NavigationDrawer />
       {children}
     </>
