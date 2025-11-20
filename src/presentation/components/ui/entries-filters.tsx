@@ -6,8 +6,17 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon,
   XIcon,
+  PlusIcon,
 } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './select';
+import { Input } from './input';
 
 interface EntriesFiltersProps {
   currentMonth: string;
@@ -121,7 +130,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   return (
     <div className='mb-6'>
-      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4'>
+      <div className='flex items-center justify-between gap-4 mb-4'>
         <div>
           <h2 className='text-xl font-bold text-slate-900'>Entradas do mês</h2>
           <p className='text-sm text-slate-600'>
@@ -133,21 +142,21 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
         <div className='flex gap-2'>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className='inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors'
+            className='relative inline-flex items-center gap-2 px-3 sm:px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors'
           >
-            <FunnelIcon className='w-4 h-4' />
-            Filtros
+            <FunnelIcon className='w-5 h-5 sm:w-4 sm:h-4' />
+            <span className='hidden sm:inline'>Filtros</span>
             {hasActiveFilters && (
-              <span className='inline-flex items-center justify-center w-2 h-2 bg-blue-500 rounded-full'></span>
+              <span className='absolute -top-1 -right-1 sm:relative sm:top-0 sm:right-0 inline-flex items-center justify-center w-2 h-2 bg-primary rounded-full'></span>
             )}
           </button>
 
           <Link
             href='/entries/add'
-            className='inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 transition-colors'
+            className='inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-black transition-colors'
           >
-            <span className='text-lg'>+</span>
-            Adicionar Entrada
+            <PlusIcon className='w-5 h-5 sm:w-4 sm:h-4' />
+            <span className='hidden sm:inline'>Adicionar Entrada</span>
           </Link>
         </div>
       </div>
@@ -159,61 +168,97 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Mês
               </label>
-              <select
+              <Select
                 value={filters.month}
-                onChange={e => handleFilterChange('month', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                onValueChange={value => handleFilterChange('month', value)}
               >
-                {generateMonthOptions().map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                  <SelectValue placeholder='Selecione o mês' />
+                </SelectTrigger>
+                <SelectContent>
+                  {generateMonthOptions().map(option => (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                      className='rounded-lg'
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Tipo
               </label>
-              <select
+              <Select
                 value={filters.type}
-                onChange={e => handleFilterChange('type', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                onValueChange={value => handleFilterChange('type', value)}
               >
-                <option value='all'>Todos</option>
-                <option value='INCOME'>Receitas</option>
-                <option value='EXPENSE'>Despesas</option>
-              </select>
+                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                  <SelectValue placeholder='Selecione o tipo' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all' className='rounded-lg'>
+                    Todos
+                  </SelectItem>
+                  <SelectItem value='INCOME' className='rounded-lg'>
+                    Receitas
+                  </SelectItem>
+                  <SelectItem value='EXPENSE' className='rounded-lg'>
+                    Despesas
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Ordenar por
               </label>
-              <select
+              <Select
                 value={filters.sort}
-                onChange={e => handleFilterChange('sort', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                onValueChange={value => handleFilterChange('sort', value)}
               >
-                <option value='date'>Data</option>
-                <option value='amount'>Valor</option>
-                <option value='description'>Descrição</option>
-              </select>
+                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                  <SelectValue placeholder='Selecione a ordenação' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='date' className='rounded-lg'>
+                    Data
+                  </SelectItem>
+                  <SelectItem value='amount' className='rounded-lg'>
+                    Valor
+                  </SelectItem>
+                  <SelectItem value='description' className='rounded-lg'>
+                    Descrição
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className='block text-sm font-medium text-slate-700 mb-1'>
                 Ordem
               </label>
-              <select
+              <Select
                 value={filters.order}
-                onChange={e => handleFilterChange('order', e.target.value)}
-                className='w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                onValueChange={value => handleFilterChange('order', value)}
               >
-                <option value='desc'>Decrescente</option>
-                <option value='asc'>Crescente</option>
-              </select>
+                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                  <SelectValue placeholder='Selecione a ordem' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='desc' className='rounded-lg'>
+                    Decrescente
+                  </SelectItem>
+                  <SelectItem value='asc' className='rounded-lg'>
+                    Crescente
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -222,13 +267,13 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
               Buscar
             </label>
             <div className='relative'>
-              <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400' />
-              <input
+              <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 z-10' />
+              <Input
                 type='text'
                 value={filters.search}
                 onChange={e => handleFilterChange('search', e.target.value)}
                 placeholder='Descrição...'
-                className='w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                className='pl-10'
               />
             </div>
           </div>

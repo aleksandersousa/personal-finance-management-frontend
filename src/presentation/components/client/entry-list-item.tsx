@@ -48,7 +48,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
         onDelete={handleDeleteWithModal}
       />
 
-      <Card className='mb-3 hover:shadow-md transition-all duration-200'>
+      <Card className='mb-3 shadow-none transition-all duration-200'>
         <div className='flex items-center justify-between p-4'>
           <div className='flex-1'>
             <div className='font-medium text-foreground'>
