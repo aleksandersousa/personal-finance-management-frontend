@@ -2,7 +2,7 @@ import React from 'react';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
 import { EntryListItem } from '@/presentation/components/client';
 import { Pagination } from '../components/client';
-import { EntriesFilters } from '@/presentation/components';
+import { Card, EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
 import { EntriesCache } from '@/presentation/components/entries-cache';
@@ -36,7 +36,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            <div className='bg-white rounded-3xl shadow-md border border-slate-200 p-6 sm:p-8'>
+            <Card className='rounded-3xl p-6 sm:p-8'>
               <EntriesFilters
                 currentMonth={
                   searchParams.month || new Date().toISOString().slice(0, 7)
@@ -85,7 +85,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                   )}
                 </>
               )}
-            </div>
+            </Card>
           </div>
         </div>
       </div>

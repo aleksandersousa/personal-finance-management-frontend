@@ -10,7 +10,7 @@ import {
 } from '../actions';
 import type { EntryFormData } from '@/infra/validation';
 import type { CategoryWithStatsModel } from '@/domain/models';
-import { Button, Input, PageLoading, Select } from '../components';
+import { Button, Card, Input, PageLoading, Select } from '../components';
 import { redirect } from 'next/navigation';
 import { typeOptions } from '@/domain/constants';
 
@@ -211,7 +211,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
               </p>
             </div>
 
-            <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+            <Card className='rounded-3xl p-6 sm:p-8'>
               <form onSubmit={handleSubmit} className='space-y-6'>
                 {errors.general && (
                   <div className='bg-pink-50 border border-pink-400 text-pink-700 px-4 py-3 rounded'>
@@ -308,11 +308,10 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                 <div className='flex space-x-4'>
                   <Button
                     type='button'
-                    variant='secondary'
+                    variant='outline'
                     onClick={() => redirect('/entries')}
                     disabled={isPendingUpdate}
-                    className='flex-1'
-                    size='lg'
+                    className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
                   >
                     Cancelar
                   </Button>
@@ -320,14 +319,13 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                     type='submit'
                     isLoading={isPendingUpdate}
                     disabled={isPendingUpdate}
-                    className='flex-1'
-                    size='lg'
+                    className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                   >
                     {isPendingUpdate ? 'Salvando...' : 'Salvar Alterações'}
                   </Button>
                 </div>
               </form>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
