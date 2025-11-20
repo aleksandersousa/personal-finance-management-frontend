@@ -1,0 +1,587 @@
+{
+  "metadata": {
+    "name": "Financial Management Design System",
+    "version": "1.0.0",
+    "description": "Modern financial management app design system with dark mode support",
+    "designStyle": "Neumorphic/Glassmorphic with 3D elements"
+  },
+  "designPrinciples": {
+    "visual": [
+      "Clean and minimal interface with focus on data visualization",
+      "High contrast between background and content cards",
+      "Soft shadows and rounded corners for depth",
+      "3D isometric illustrations for onboarding/marketing",
+      "Consistent use of icons paired with text labels",
+      "Circular progress indicators for visual data representation"
+    ],
+    "layout": [
+      "Mobile-first single column layouts",
+      "Card-based component architecture",
+      "Generous whitespace between major sections",
+      "Sticky bottom navigation on main screens",
+      "Hierarchical information display (largest to smallest)"
+    ],
+    "interaction": [
+      "Percentage badges with directional indicators",
+      "Smooth transitions between states",
+      "Active state highlighting with primary color",
+      "Swipeable pagination dots for multi-screen flows"
+    ]
+  },
+  "colorSystem": {
+    "palette": {
+      "primary": {
+        "main": "#0066FF",
+        "light": "#3384FF",
+        "dark": "#0052CC",
+        "contrast": "#FFFFFF",
+        "description": "Vibrant blue for primary actions, active states, and key UI elements"
+      },
+      "secondary": {
+        "main": "#6B7280",
+        "light": "#9CA3AF",
+        "dark": "#4B5563",
+        "contrast": "#FFFFFF",
+        "description": "Gray tones for secondary actions and inactive states"
+      },
+      "success": {
+        "main": "#10B981",
+        "light": "#34D399",
+        "dark": "#059669",
+        "badge": "#D1FAE5",
+        "description": "Green for income, positive trends, and success states"
+      },
+      "error": {
+        "main": "#EF4444",
+        "light": "#F87171",
+        "dark": "#DC2626",
+        "badge": "#FEE2E2",
+        "description": "Red for expenses, negative trends, and error states"
+      },
+      "neutral": {
+        "white": "#FFFFFF",
+        "gray50": "#F9FAFB",
+        "gray100": "#F3F4F6",
+        "gray200": "#E5E7EB",
+        "gray300": "#D1D5DB",
+        "gray400": "#9CA3AF",
+        "gray500": "#6B7280",
+        "gray600": "#4B5563",
+        "gray700": "#374151",
+        "gray800": "#1F2937",
+        "gray900": "#111827",
+        "black": "#000000"
+      }
+    },
+    "semantic": {
+      "background": {
+        "primary": "#FFFFFF",
+        "secondary": "#F9FAFB",
+        "tertiary": "#F3F4F6",
+        "dark": "#111827",
+        "card": "#FFFFFF",
+        "cardDark": "#1F2937"
+      },
+      "text": {
+        "primary": "#111827",
+        "secondary": "#6B7280",
+        "tertiary": "#9CA3AF",
+        "inverse": "#FFFFFF",
+        "disabled": "#D1D5DB"
+      },
+      "border": {
+        "default": "#E5E7EB",
+        "light": "#F3F4F6",
+        "dark": "#D1D5DB",
+        "focus": "#0066FF"
+      }
+    },
+    "gradients": {
+      "cardOverlay": "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+      "chartBar": "linear-gradient(180deg, #E5E7EB 0%, #F3F4F6 100%)",
+      "activeCard": "linear-gradient(135deg, #000000 0%, #1F2937 100%)"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      "display": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      "mono": "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace"
+    },
+    "fontSize": {
+      "xs": "0.75rem",
+      "sm": "0.875rem",
+      "base": "1rem",
+      "lg": "1.125rem",
+      "xl": "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem",
+      "4xl": "2.25rem",
+      "5xl": "3rem",
+      "display": "3.5rem"
+    },
+    "fontWeight": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "extrabold": 800
+    },
+    "lineHeight": {
+      "tight": 1.25,
+      "snug": 1.375,
+      "normal": 1.5,
+      "relaxed": 1.625,
+      "loose": 2
+    },
+    "textStyles": {
+      "displayLarge": {
+        "fontSize": "3.5rem",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.02em",
+        "usage": "Hero numbers, main balance displays"
+      },
+      "displayMedium": {
+        "fontSize": "3rem",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em",
+        "usage": "Secondary balance displays"
+      },
+      "h1": {
+        "fontSize": "2.25rem",
+        "fontWeight": 700,
+        "lineHeight": 1.25,
+        "usage": "Page titles"
+      },
+      "h2": {
+        "fontSize": "1.875rem",
+        "fontWeight": 600,
+        "lineHeight": 1.3,
+        "usage": "Section headers"
+      },
+      "h3": {
+        "fontSize": "1.5rem",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "usage": "Card titles"
+      },
+      "body1": {
+        "fontSize": "1rem",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "usage": "Primary body text"
+      },
+      "body2": {
+        "fontSize": "0.875rem",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "usage": "Secondary body text, descriptions"
+      },
+      "caption": {
+        "fontSize": "0.75rem",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "usage": "Labels, timestamps, metadata"
+      },
+      "badge": {
+        "fontSize": "0.75rem",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "usage": "Percentage indicators, badges"
+      }
+    }
+  },
+  "spacing": {
+    "scale": {
+      "0": "0",
+      "1": "0.25rem",
+      "2": "0.5rem",
+      "3": "0.75rem",
+      "4": "1rem",
+      "5": "1.25rem",
+      "6": "1.5rem",
+      "8": "2rem",
+      "10": "2.5rem",
+      "12": "3rem",
+      "16": "4rem",
+      "20": "5rem",
+      "24": "6rem"
+    },
+    "semantic": {
+      "cardPadding": "1.5rem",
+      "cardGap": "1rem",
+      "sectionGap": "2rem",
+      "listItemGap": "0.75rem",
+      "componentMargin": "1.25rem",
+      "iconTextGap": "0.75rem"
+    }
+  },
+  "borderRadius": {
+    "none": "0",
+    "sm": "0.375rem",
+    "md": "0.5rem",
+    "lg": "0.75rem",
+    "xl": "1rem",
+    "2xl": "1.25rem",
+    "3xl": "1.5rem",
+    "4xl": "2rem",
+    "full": "9999px",
+    "semantic": {
+      "card": "1.5rem",
+      "button": "0.75rem",
+      "buttonPrimary": "9999px",
+      "badge": "9999px",
+      "input": "0.75rem",
+      "modal": "1.25rem"
+    }
+  },
+  "shadows": {
+    "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "base": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+    "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+    "inner": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+    "semantic": {
+      "card": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      "cardHover": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      "floating": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      "neumorphic": "8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.8)"
+    }
+  },
+  "components": {
+    "button": {
+      "primary": {
+        "background": "#0066FF",
+        "color": "#FFFFFF",
+        "borderRadius": "9999px",
+        "padding": "0.75rem 2rem",
+        "fontSize": "1rem",
+        "fontWeight": 600,
+        "shadow": "0 4px 6px -1px rgba(0, 102, 255, 0.2)",
+        "hover": {
+          "background": "#0052CC",
+          "transform": "translateY(-1px)",
+          "shadow": "0 6px 8px -1px rgba(0, 102, 255, 0.3)"
+        }
+      },
+      "secondary": {
+        "background": "#FFFFFF",
+        "color": "#111827",
+        "borderRadius": "9999px",
+        "padding": "0.75rem 2rem",
+        "fontSize": "1rem",
+        "fontWeight": 600,
+        "border": "1px solid #E5E7EB",
+        "hover": {
+          "background": "#F9FAFB",
+          "borderColor": "#D1D5DB"
+        }
+      },
+      "icon": {
+        "size": "2.5rem",
+        "padding": "0.625rem",
+        "borderRadius": "0.75rem",
+        "background": "#F3F4F6",
+        "hover": {
+          "background": "#E5E7EB"
+        }
+      }
+    },
+    "card": {
+      "default": {
+        "background": "#FFFFFF",
+        "borderRadius": "1.5rem",
+        "padding": "1.5rem",
+        "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+        "border": "none"
+      },
+      "dark": {
+        "background": "linear-gradient(135deg, #000000 0%, #1F2937 100%)",
+        "borderRadius": "1.5rem",
+        "padding": "1.5rem",
+        "shadow": "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
+        "border": "none",
+        "color": "#FFFFFF"
+      },
+      "elevated": {
+        "background": "#FFFFFF",
+        "borderRadius": "2rem",
+        "padding": "2rem",
+        "shadow": "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+      }
+    },
+    "badge": {
+      "default": {
+        "padding": "0.25rem 0.625rem",
+        "borderRadius": "9999px",
+        "fontSize": "0.75rem",
+        "fontWeight": 600,
+        "display": "inline-flex",
+        "alignItems": "center",
+        "gap": "0.25rem"
+      },
+      "success": {
+        "background": "#D1FAE5",
+        "color": "#065F46",
+        "icon": "↑"
+      },
+      "error": {
+        "background": "#FEE2E2",
+        "color": "#991B1B",
+        "icon": "↓"
+      },
+      "neutral": {
+        "background": "#F3F4F6",
+        "color": "#374151"
+      }
+    },
+    "navigation": {
+      "bottom": {
+        "height": "4rem",
+        "background": "#FFFFFF",
+        "borderRadius": "2rem 2rem 0 0",
+        "padding": "0.5rem 1rem",
+        "shadow": "0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
+        "items": {
+          "size": "2.5rem",
+          "gap": "1rem",
+          "active": {
+            "background": "#0066FF",
+            "color": "#FFFFFF",
+            "borderRadius": "1rem"
+          },
+          "inactive": {
+            "color": "#9CA3AF"
+          }
+        }
+      }
+    },
+    "listItem": {
+      "transaction": {
+        "padding": "1rem",
+        "borderRadius": "0.75rem",
+        "background": "transparent",
+        "hover": {
+          "background": "#F9FAFB"
+        },
+        "structure": {
+          "icon": {
+            "size": "2.5rem",
+            "background": "#F3F4F6",
+            "borderRadius": "0.75rem",
+            "padding": "0.5rem"
+          },
+          "content": {
+            "gap": "0.25rem",
+            "title": {
+              "fontSize": "1rem",
+              "fontWeight": 600,
+              "color": "#111827"
+            },
+            "subtitle": {
+              "fontSize": "0.75rem",
+              "fontWeight": 400,
+              "color": "#9CA3AF"
+            }
+          },
+          "amount": {
+            "fontSize": "1rem",
+            "fontWeight": 600,
+            "alignment": "right"
+          }
+        }
+      }
+    },
+    "chart": {
+      "bar": {
+        "barColor": "#E5E7EB",
+        "barActiveColor": "#000000",
+        "barRadius": "0.5rem 0.5rem 0 0",
+        "gap": "0.75rem",
+        "labelPosition": "bottom",
+        "labelColor": "#9CA3AF",
+        "badgePosition": "top",
+        "badgeOffset": "-1.5rem"
+      },
+      "donut": {
+        "strokeWidth": "2rem",
+        "gap": "0.25rem",
+        "backgroundColor": "#F3F4F6",
+        "segments": {
+          "primary": "#111827",
+          "secondary": "#6B7280",
+          "tertiary": "#9CA3AF",
+          "quaternary": "#D1D5DB"
+        }
+      }
+    },
+    "input": {
+      "default": {
+        "padding": "0.75rem 1rem",
+        "borderRadius": "0.75rem",
+        "border": "1px solid #E5E7EB",
+        "fontSize": "1rem",
+        "background": "#FFFFFF",
+        "focus": {
+          "borderColor": "#0066FF",
+          "shadow": "0 0 0 3px rgba(0, 102, 255, 0.1)"
+        }
+      }
+    },
+    "modal": {
+      "overlay": {
+        "background": "rgba(0, 0, 0, 0.5)",
+        "backdropBlur": "4px"
+      },
+      "content": {
+        "background": "#FFFFFF",
+        "borderRadius": "1.25rem",
+        "padding": "1.5rem",
+        "maxWidth": "28rem",
+        "shadow": "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+      }
+    }
+  },
+  "layout": {
+    "container": {
+      "maxWidth": "28rem",
+      "padding": "1.5rem",
+      "margin": "0 auto"
+    },
+    "grid": {
+      "gap": "1rem",
+      "columns": {
+        "mobile": 1,
+        "tablet": 2,
+        "desktop": 3
+      }
+    },
+    "section": {
+      "marginBottom": "2rem",
+      "gap": "1rem"
+    }
+  },
+  "animations": {
+    "duration": {
+      "fast": "150ms",
+      "normal": "250ms",
+      "slow": "350ms"
+    },
+    "easing": {
+      "default": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "in": "cubic-bezier(0.4, 0, 1, 1)",
+      "out": "cubic-bezier(0, 0, 0.2, 1)",
+      "bounce": "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+    },
+    "transitions": {
+      "button": "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+      "card": "transform 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+      "fade": "opacity 250ms cubic-bezier(0.4, 0, 0.2, 1)"
+    }
+  },
+  "iconography": {
+    "style": "Rounded line icons with consistent stroke width",
+    "size": {
+      "xs": "1rem",
+      "sm": "1.25rem",
+      "md": "1.5rem",
+      "lg": "2rem",
+      "xl": "2.5rem"
+    },
+    "strokeWidth": "1.5px",
+    "guidelines": [
+      "Use rounded caps and joins",
+      "Maintain consistent optical weight",
+      "Icons should be recognizable at small sizes",
+      "Pair with background containers for emphasis"
+    ]
+  },
+  "illustrations": {
+    "style": "3D isometric with minimalist aesthetic",
+    "characteristics": [
+      "Monochromatic or limited color palette",
+      "Soft shadows and highlights",
+      "Abstract geometric shapes",
+      "Floating elements with orbital rings",
+      "Clean lines and smooth gradients"
+    ],
+    "usage": [
+      "Onboarding screens",
+      "Empty states",
+      "Marketing materials",
+      "Feature highlights"
+    ]
+  },
+  "dataVisualization": {
+    "principles": [
+      "Use minimal colors for clarity",
+      "Highlight active or current data points",
+      "Include percentage badges for quick insights",
+      "Use circular/donut charts for part-to-whole relationships",
+      "Use bar charts for time-series comparisons",
+      "Always include labels and legends"
+    ],
+    "colorMapping": {
+      "income": "#10B981",
+      "expense": "#EF4444",
+      "neutral": "#6B7280",
+      "active": "#000000",
+      "inactive": "#E5E7EB"
+    }
+  },
+  "accessibility": {
+    "contrast": {
+      "minimum": "4.5:1 for normal text",
+      "enhanced": "7:1 for important text",
+      "largeText": "3:1 for text larger than 18pt"
+    },
+    "focusIndicator": {
+      "color": "#0066FF",
+      "width": "3px",
+      "style": "solid",
+      "offset": "2px"
+    },
+    "touchTargets": {
+      "minimum": "44px × 44px",
+      "recommended": "48px × 48px"
+    }
+  },
+  "responsive": {
+    "breakpoints": {
+      "mobile": "320px",
+      "tablet": "768px",
+      "desktop": "1024px",
+      "wide": "1440px"
+    },
+    "strategy": "Mobile-first with progressive enhancement"
+  },
+  "patterns": {
+    "headerWithProfile": {
+      "structure": "Avatar + Name + Action Button",
+      "alignment": "Horizontal with space-between",
+      "avatarSize": "2.5rem",
+      "nameWeight": 600
+    },
+    "balanceDisplay": {
+      "structure": "Label + Large Number + Period Selector",
+      "numberSize": "3rem to 3.5rem",
+      "alignment": "Center or left-aligned",
+      "emphasis": "High contrast, bold weight"
+    },
+    "metricCard": {
+      "structure": "Icon/Label + Value + Change Indicator",
+      "layout": "Dark card for primary, light for secondary",
+      "changeIndicator": "Badge with percentage and arrow"
+    },
+    "transactionRow": {
+      "structure": "Icon + Title/Subtitle + Amount + Timestamp",
+      "layout": "Horizontal with space-between",
+      "iconStyle": "Rounded square container with centered icon"
+    }
+  }
+}
