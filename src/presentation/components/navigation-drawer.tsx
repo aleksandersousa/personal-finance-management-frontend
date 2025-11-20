@@ -309,7 +309,7 @@ export const NavigationDrawer: React.FC = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav
-        className='lg:hidden fixed bottom-0 left-0 right-0 bg-white z-50'
+        className='lg:hidden fixed bottom-0 left-0 right-0 bg-white z-40'
         style={{
           borderRadius: '2rem 2rem 0 0',
           boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
