@@ -8,15 +8,15 @@
   /* ===== COLOR SYSTEM ===== */
 
   /* Primary Colors */
-  --color-primary: #0066ff;
-  --color-primary-light: #3384ff;
-  --color-primary-dark: #0052cc;
+  --color-primary: #111827;
+  --color-primary-light: #374151;
+  --color-primary-dark: #000000;
   --color-primary-contrast: #ffffff;
 
   /* Secondary Colors */
-  --color-secondary: #6b7280;
-  --color-secondary-light: #9ca3af;
-  --color-secondary-dark: #4b5563;
+  --color-secondary: #0066ff;
+  --color-secondary-light: #3384ff;
+  --color-secondary-dark: #0052cc;
   --color-secondary-contrast: #ffffff;
 
   /* Success Colors */
@@ -64,7 +64,7 @@
   --color-border-default: #e5e7eb;
   --color-border-light: #f3f4f6;
   --color-border-dark: #d1d5db;
-  --color-border-focus: #0066ff;
+  --color-border-focus: #111827;
 
   /* Data Visualization Colors */
   --color-income: #10b981;

@@ -31,18 +31,18 @@
   "colorSystem": {
     "palette": {
       "primary": {
+        "main": "#111827",
+        "light": "#374151",
+        "dark": "#000000",
+        "contrast": "#FFFFFF",
+        "description": "Dark gray for primary actions, active states, and key UI elements"
+      },
+      "secondary": {
         "main": "#0066FF",
         "light": "#3384FF",
         "dark": "#0052CC",
         "contrast": "#FFFFFF",
-        "description": "Vibrant blue for primary actions, active states, and key UI elements"
-      },
-      "secondary": {
-        "main": "#6B7280",
-        "light": "#9CA3AF",
-        "dark": "#4B5563",
-        "contrast": "#FFFFFF",
-        "description": "Gray tones for secondary actions and inactive states"
+        "description": "Vibrant blue for secondary actions and highlights"
       },
       "success": {
         "main": "#10B981",
@@ -93,7 +93,7 @@
         "default": "#E5E7EB",
         "light": "#F3F4F6",
         "dark": "#D1D5DB",
-        "focus": "#0066FF"
+        "focus": "#111827"
       }
     },
     "gradients": {
@@ -256,22 +256,22 @@
   "components": {
     "button": {
       "primary": {
-        "background": "#0066FF",
+        "background": "#111827",
         "color": "#FFFFFF",
         "borderRadius": "9999px",
         "padding": "0.75rem 2rem",
         "fontSize": "1rem",
         "fontWeight": 600,
-        "shadow": "0 4px 6px -1px rgba(0, 102, 255, 0.2)",
+        "shadow": "0 4px 6px -1px rgba(17, 24, 39, 0.2)",
         "hover": {
-          "background": "#0052CC",
+          "background": "#000000",
           "transform": "translateY(-1px)",
-          "shadow": "0 6px 8px -1px rgba(0, 102, 255, 0.3)"
+          "shadow": "0 6px 8px -1px rgba(17, 24, 39, 0.3)"
         }
       },
       "secondary": {
         "background": "#FFFFFF",
-        "color": "#111827",
+        "color": "#0066FF",
         "borderRadius": "9999px",
         "padding": "0.75rem 2rem",
         "fontSize": "1rem",
@@ -351,7 +351,7 @@
           "size": "2.5rem",
           "gap": "1rem",
           "active": {
-            "background": "#0066FF",
+            "background": "#111827",
             "color": "#FFFFFF",
             "borderRadius": "1rem"
           },
