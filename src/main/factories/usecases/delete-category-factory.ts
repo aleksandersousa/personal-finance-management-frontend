@@ -1,6 +1,6 @@
 import { RemoteDeleteCategory } from '@/data/usecases';
 import { DeleteCategory } from '@/domain/usecases';
-import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
+import { makeAuthorizedServerHttpClient } from '@/main/factories/decorators';
 import { makeApiUrl } from '@/main/factories';
 
 export const makeRemoteDeleteCategory = (): DeleteCategory => {

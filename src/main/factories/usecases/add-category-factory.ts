@@ -1,6 +1,6 @@
 import { RemoteAddCategory } from '@/data/usecases';
 import { AddCategory } from '@/domain/usecases';
-import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
+import { makeAuthorizedServerHttpClient } from '@/main/factories/decorators';
 import { makeApiUrl } from '@/main/factories';
 
 export const makeRemoteAddCategory = (): AddCategory => {

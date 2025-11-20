@@ -1,6 +1,6 @@
 import { RemoteLoadCashFlowForecast } from '@/data/usecases';
 import { LoadCashFlowForecast } from '@/domain/usecases';
-import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
+import { makeAuthorizedServerHttpClient } from '@/main/factories/decorators';
 import { makeApiUrl } from '@/main/factories/http';
 
 export function makeRemoteLoadCashFlowForecast(): LoadCashFlowForecast {

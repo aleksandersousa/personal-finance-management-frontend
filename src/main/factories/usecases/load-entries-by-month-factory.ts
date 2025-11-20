@@ -1,7 +1,7 @@
 import { RemoteLoadEntriesByMonth } from '@/data/usecases';
 import { LoadEntriesByMonth } from '@/domain/usecases';
 import { makeApiUrl } from '@/main/factories/http';
-import { makeAuthorizedServerHttpClient } from '@/main/decorators/authorized-server-http-client-factory';
+import { makeAuthorizedServerHttpClient } from '@/main/factories/decorators';
 
 export function makeRemoteLoadEntriesByMonth(): LoadEntriesByMonth {
   return new RemoteLoadEntriesByMonth(
