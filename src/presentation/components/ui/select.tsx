@@ -201,6 +201,7 @@ function SimpleSelect({
   onValueChange,
   value,
   disabled,
+  required,
   ...props
 }: SimpleSelectProps) {
   const generatedId = React.useId();
@@ -214,6 +215,7 @@ function SimpleSelect({
           className='block text-sm font-medium text-foreground'
         >
           {label}
+          {required && <span className='text-red-500'>*</span>}
         </label>
       )}
 

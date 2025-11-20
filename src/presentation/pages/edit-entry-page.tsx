@@ -10,7 +10,14 @@ import {
 } from '../actions';
 import type { EntryFormData } from '@/infra/validation';
 import type { CategoryWithStatsModel } from '@/domain/models';
-import { Button, Card, Input, PageLoading, Select } from '../components';
+import {
+  Button,
+  Card,
+  Input,
+  PageLoading,
+  Select,
+  DatePicker,
+} from '../components';
 import { redirect } from 'next/navigation';
 import { typeOptions } from '@/domain/constants';
 
@@ -20,12 +27,19 @@ export interface EditEntryPageProps {
 
 export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
   const [entry, setEntry] = useState<EntryModel | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    description: string;
+    amount: string;
+    type: string;
+    categoryId: string;
+    date: Date | undefined;
+    isFixed: boolean;
+  }>({
     description: '',
     amount: '',
     type: '',
     categoryId: '',
-    date: '',
+    date: undefined,
     isFixed: false,
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -80,7 +94,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
         amount: (entry.amount / 100).toString(),
         type: entry.type,
         categoryId: entry.categoryId,
-        date: entry.date.toISOString().split('T')[0],
+        date: new Date(entry.date),
         isFixed: entry.isFixed,
       });
     }
@@ -110,7 +124,10 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     }
   }, [categories, entry?.categoryId]);
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (
+    field: string,
+    value: string | boolean | Date | undefined
+  ) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -132,14 +149,14 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!entry) return;
+    if (!entry || !formData.date) return;
 
     const dataToValidate = {
       description: formData.description,
       amount: parseFloat(formData.amount) || 0,
       type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
-      date: new Date(formData.date),
+      date: formData.date,
       isFixed: formData.isFixed,
     };
 
@@ -247,6 +264,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                 />
 
                 <Select
+                  required
                   label='Tipo'
                   value={formData.type}
                   onValueChange={value => handleInputChange('type', value)}
@@ -276,14 +294,14 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                   />
                 )}
 
-                <Input
+                <DatePicker
                   label='Data'
-                  type='date'
                   value={formData.date}
-                  onChange={e => handleInputChange('date', e.target.value)}
+                  onChange={date => handleInputChange('date', date)}
                   error={errors.date?.[0]}
                   required
                   disabled={isPendingUpdate}
+                  placeholder='Selecione a data'
                 />
 
                 <div className='flex items-center space-x-2'>

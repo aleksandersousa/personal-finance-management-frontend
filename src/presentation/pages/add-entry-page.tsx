@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
-import { Button, Input, Select } from '../components';
+import { Button, Input, Select, DatePicker } from '../components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
@@ -10,12 +10,19 @@ import { typeOptions } from '@/domain/constants';
 export const AddEntryPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    description: string;
+    amount: string;
+    type: string;
+    categoryId: string;
+    date: Date | undefined;
+    isFixed: boolean;
+  }>({
     description: '',
     amount: '',
     type: '',
     categoryId: '',
-    date: new Date().toISOString().split('T')[0],
+    date: new Date(),
     isFixed: false,
   });
 
@@ -59,7 +66,10 @@ export const AddEntryPage: React.FC = () => {
     });
   }, []);
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (
+    field: string,
+    value: string | boolean | Date | undefined
+  ) => {
     setFormData(prev => {
       const newData = {
         ...prev,
@@ -85,12 +95,14 @@ export const AddEntryPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.date) return;
+
     const dataToValidate = {
       description: formData.description,
       amount: parseFloat(formData.amount) || 0,
       type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
-      date: new Date(formData.date),
+      date: formData.date,
       isFixed: formData.isFixed,
     };
 
@@ -114,7 +126,7 @@ export const AddEntryPage: React.FC = () => {
         amount: '',
         type: '',
         categoryId: '',
-        date: new Date().toISOString().split('T')[0],
+        date: new Date(),
         isFixed: false,
       });
       setErrors({});
@@ -205,14 +217,14 @@ export const AddEntryPage: React.FC = () => {
                 />
               )}
 
-              <Input
+              <DatePicker
                 label='Data'
-                type='date'
                 value={formData.date}
-                onChange={e => handleInputChange('date', e.target.value)}
+                onChange={date => handleInputChange('date', date)}
                 error={errors.date?.[0]}
                 required
                 disabled={isPendingSubmit}
+                placeholder='Selecione a data'
               />
 
               <div className='flex items-center space-x-2'>

@@ -16,6 +16,7 @@ function Input({
   error,
   helperText,
   id,
+  required,
   ...props
 }: InputProps) {
   const generatedId = useId();
@@ -36,6 +37,7 @@ function Input({
             className='block text-sm font-medium text-foreground'
           >
             {label}
+            {required && <span className='text-red-500'>*</span>}
           </label>
         )}
 

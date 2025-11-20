@@ -11,3 +11,6 @@ export * from './dashboard-filters';
 export * from './entries-filters';
 export * from './loading';
 export * from './dialog';
+export * from './popover';
+export * from './calendar';
+export * from './date-picker';
