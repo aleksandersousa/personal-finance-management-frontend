@@ -13,3 +13,4 @@ export * from './interactive-monthly-projections-chart';
 export * from './dashboard-filters';
 export * from './entries-filters';
 export * from './loading';
+export * from './dialog';

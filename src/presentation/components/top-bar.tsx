@@ -17,8 +17,17 @@ import { Button } from '@/presentation/components/ui/button';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import type { UserModel } from '@/domain';
 import { logoutAction } from '../actions/logout-action';
+import { DashboardFilters } from './ui';
 
-export const TopBar: React.FC = () => {
+export interface TopBarProps {
+  currentMonth: string;
+  currentForecastMonths: number;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({
+  currentMonth,
+  currentForecastMonths,
+}) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const getLocalStorage = makeCookieStorageAdapter();
 
@@ -51,20 +60,25 @@ export const TopBar: React.FC = () => {
   return (
     <header className='fixed top-0 left-0 right-0 z-40 bg-slate-50 lg:left-64'>
       <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
-        <div className='flex items-center space-x-2'>
+        <div className='flex items-center space-x-2 mr-6'>
           <Button
             variant='ghost'
             size='sm'
             onClick={handleThemeToggle}
-            className='h-9 w-9 p-0 hover:bg-slate-100 cursor-pointer'
+            className='relative h-10 px-6 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
           >
             {isDarkMode ? (
-              <SunIcon className='h-5 w-5 text-slate-600' weight='bold' />
+              <SunIcon className='h-5 w-5 text-white' weight='bold' />
             ) : (
-              <MoonIcon className='h-5 w-5 text-slate-600' weight='bold' />
+              <MoonIcon className='h-5 w-5 text-white' weight='bold' />
             )}
           </Button>
         </div>
+
+        <DashboardFilters
+          currentMonth={currentMonth}
+          currentForecastMonths={currentForecastMonths}
+        />
 
         <div className='ml-6 flex items-center space-x-3 lg:hidden'>
           <div className='hidden sm:block'>

@@ -6,7 +6,7 @@ import {
   CategoryBreakdown,
   ConsolidatedForecastCard,
   InteractiveMonthlyProjectionsChart,
-  DashboardFilters,
+  TopBar,
 } from '@/presentation/components';
 import {
   MonthlySummaryModel,
@@ -71,7 +71,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           isCollapsed ? 'lg:pl-[7rem] lg:pr-8' : 'lg:pl-[20rem] lg:pr-8'
         )}
       >
-        <DashboardFilters
+        <TopBar
           currentMonth={currentMonth}
           currentForecastMonths={currentForecastMonths}
         />
