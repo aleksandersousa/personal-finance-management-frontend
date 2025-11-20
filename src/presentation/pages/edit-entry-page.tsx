@@ -93,7 +93,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     if (entry) {
       setFormData({
         description: entry.description,
-        amount: formatCurrencyInput((entry.amount / 100).toString()),
+        amount: formatCurrencyInput(entry.amount.toString()),
         type: entry.type,
         categoryId: entry.categoryId,
         date: new Date(entry.date),
