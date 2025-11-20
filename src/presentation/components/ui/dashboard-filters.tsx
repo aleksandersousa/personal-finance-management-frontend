@@ -252,7 +252,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                         value={selectedMonth}
                         onValueChange={handleMonthChange}
                       >
-                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors focus:ring-2 focus:ring-slate-900 focus:ring-offset-0'>
+                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors'>
                           <SelectValue placeholder='Selecione o mês' />
                         </SelectTrigger>
                         <SelectContent>
@@ -283,7 +283,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                         value={selectedForecastMonths.toString()}
                         onValueChange={handleForecastMonthsChange}
                       >
-                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors focus:ring-2 focus:ring-slate-900 focus:ring-offset-0'>
+                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors'>
                           <SelectValue placeholder='Meses para previsão' />
                         </SelectTrigger>
                         <SelectContent>
