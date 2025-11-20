@@ -87,7 +87,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               type='balance'
               icon={
                 <CurrencyDollarIcon
-                  className='w-6 h-6 text-slate-600'
+                  className='w-6 h-6 text-slate-700'
                   weight='bold'
                 />
               }
@@ -103,7 +103,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               type='income'
               icon={
                 <ArrowUpIcon
-                  className='w-6 h-6 text-emerald-600'
+                  className='w-6 h-6 text-emerald-500'
                   weight='bold'
                 />
               }
@@ -122,10 +122,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               value={summary.summary.totalExpenses}
               type='expense'
               icon={
-                <ArrowDownIcon
-                  className='w-6 h-6 text-rose-600'
-                  weight='bold'
-                />
+                <ArrowDownIcon className='w-6 h-6 text-red-500' weight='bold' />
               }
               comparison={{
                 previousValue: 0,

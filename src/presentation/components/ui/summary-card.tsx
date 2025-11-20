@@ -81,43 +81,34 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   };
 
   const getCardStyles = () => {
-    switch (type) {
-      case 'income':
-        return 'bg-white border-slate-200 shadow-md';
-      case 'expense':
-        return 'bg-white border-slate-200 shadow-md';
-      case 'balance':
-        return 'bg-white border-slate-200 shadow-md';
-      default:
-        return 'bg-white border-slate-200 shadow-md';
-    }
+    return 'p-6';
   };
 
   const getValueColor = () => {
     switch (type) {
       case 'income':
-        return 'text-emerald-600';
+        return 'text-emerald-500';
       case 'expense':
-        return 'text-rose-600';
+        return 'text-red-500';
       case 'balance':
-        return value >= 0 ? 'text-slate-700' : 'text-amber-600';
+        return value >= 0 ? 'text-slate-900' : 'text-red-500';
       default:
-        return 'text-slate-600';
+        return 'text-slate-700';
     }
   };
 
   const getChangeColor = (change: number) => {
     if (type === 'expense') {
       // Para despesas, aumento é ruim (vermelho), diminuição é bom (verde)
-      return change > 0 ? 'text-rose-600' : 'text-emerald-600';
+      return change > 0 ? 'text-red-500' : 'text-emerald-500';
     } else {
       // Para receitas e saldo, aumento é bom (verde), diminuição é ruim (vermelho)
-      return change > 0 ? 'text-emerald-600' : 'text-rose-600';
+      return change > 0 ? 'text-emerald-500' : 'text-red-500';
     }
   };
 
   const getChangeIcon = (change: number) => {
-    const isPositive = change > 0;
+    const isPositive = change >= 0;
     return isPositive ? (
       <TrendUpIcon className='w-4 h-4' weight='bold' />
     ) : (
@@ -128,13 +119,13 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className='relative summary-card-container group'>
       <Card
-        className={`${getCardStyles()} ${isMobile ? 'cursor-pointer' : ''} border-2`}
+        className={`${getCardStyles()} ${isMobile ? 'cursor-pointer' : ''}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleCardClick}
       >
-        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-          <CardTitle className='text-sm font-medium text-slate-600'>
+        <CardHeader className='flex-row items-center justify-between mb-3'>
+          <CardTitle className='text-sm font-semibold text-slate-700 uppercase tracking-wide'>
             {title}
           </CardTitle>
           {icon && <div className='p-2 rounded-lg bg-slate-100'>{icon}</div>}
@@ -143,7 +134,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
         <CardContent className='space-y-3'>
           {/* Value */}
           <div>
-            <div className={`text-2xl font-bold ${getValueColor()}`}>
+            <div className={`text-3xl font-bold ${getValueColor()}`}>
               {type === 'expense' && value > 0 ? '-' : ''}
               {formatCurrency(value)}
             </div>
@@ -153,14 +144,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
           {comparison && (
             <div className='flex items-center gap-2'>
               <div
-                className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getChangeColor(comparison.change)} ${
+                className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${getChangeColor(comparison.change)} ${
                   comparison.change > 0
                     ? type === 'expense'
-                      ? 'bg-rose-50'
+                      ? 'bg-red-50'
                       : 'bg-emerald-50'
                     : type === 'expense'
                       ? 'bg-emerald-50'
-                      : 'bg-rose-50'
+                      : 'bg-red-50'
                 }`}
               >
                 {getChangeIcon(comparison.change)}
@@ -194,14 +185,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-emerald-500' : 'bg-red-500'}`}
                     ></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <span className='text-sm font-medium text-slate-700'>
                       Fixas
                     </span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}
+                    className={`text-sm font-bold ${type === 'income' ? 'text-emerald-500' : 'text-red-500'}`}
                   >
                     {formatCurrency(details.fixed)}
                   </span>
@@ -210,14 +201,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-emerald-400' : 'bg-rose-400'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-emerald-400' : 'bg-red-400'}`}
                     ></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <span className='text-sm font-medium text-slate-700'>
                       Variáveis
                     </span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-emerald-500' : 'text-rose-500'}`}
+                    className={`text-sm font-bold ${type === 'income' ? 'text-emerald-500' : 'text-red-500'}`}
                   >
                     {formatCurrency(details.variable)}
                   </span>

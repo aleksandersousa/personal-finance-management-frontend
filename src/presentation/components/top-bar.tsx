@@ -77,7 +77,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             variant='ghost'
             size='sm'
             onClick={handleThemeToggle}
-            className='relative rounded-xl py-3 px-2 bg-accent text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
+            className='relative rounded-xl py-3 px-2 bg-primary text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
           >
             {isDarkMode ? (
               <SunIcon className='h-5 w-5 text-white' weight='bold' />

@@ -17,6 +17,7 @@ import {
   ChartBarIcon,
 } from '@phosphor-icons/react/dist/ssr';
 import { InteractiveMonthlyProjectionsChart } from './interactive-monthly-projections-chart';
+import { Card } from './card';
 
 export interface ConsolidatedForecastCardProps {
   summary: ForecastSummaryModel;
@@ -43,14 +44,12 @@ export const ConsolidatedForecastCard: React.FC<
     switch (trend) {
       case 'positive':
         return (
-          <TrendUpIcon className='w-5 h-5 text-emerald-600' weight='bold' />
+          <TrendUpIcon className='w-5 h-5 text-emerald-500' weight='bold' />
         );
       case 'negative':
-        return (
-          <TrendDownIcon className='w-5 h-5 text-rose-600' weight='bold' />
-        );
+        return <TrendDownIcon className='w-5 h-5 text-red-500' weight='bold' />;
       case 'stable':
-        return <MinusIcon className='w-5 h-5 text-slate-600' weight='bold' />;
+        return <MinusIcon className='w-5 h-5 text-slate-700' weight='bold' />;
     }
   };
 
@@ -68,11 +67,11 @@ export const ConsolidatedForecastCard: React.FC<
   const getTrendColor = (trend: 'positive' | 'negative' | 'stable') => {
     switch (trend) {
       case 'positive':
-        return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+        return 'text-emerald-600 bg-emerald-50 border-emerald-200';
       case 'negative':
-        return 'text-rose-700 bg-rose-50 border-rose-200';
+        return 'text-red-600 bg-red-50 border-red-200';
       case 'stable':
-        return 'text-slate-700 bg-slate-50 border-slate-200';
+        return 'text-slate-700 bg-slate-100 border-slate-200';
     }
   };
 
@@ -90,19 +89,19 @@ export const ConsolidatedForecastCard: React.FC<
   const getRiskColor = (risk: 'low' | 'medium' | 'high') => {
     switch (risk) {
       case 'low':
-        return 'text-emerald-700 bg-emerald-50';
+        return 'text-emerald-600 bg-emerald-50';
       case 'medium':
-        return 'text-amber-700 bg-amber-50';
+        return 'text-amber-600 bg-amber-50';
       case 'high':
-        return 'text-rose-700 bg-rose-50';
+        return 'text-red-600 bg-red-50';
     }
   };
 
   return (
-    <div className='bg-white rounded-xl border border-slate-200 p-6 shadow-md'>
+    <Card className='p-6'>
       {/* Header with Tabs */}
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
-        <h3 className='text-lg font-semibold text-slate-900'>
+        <h3 className='text-lg font-bold text-slate-900'>
           Previsão Financeira ({monthsCount} meses)
         </h3>
 
@@ -149,24 +148,30 @@ export const ConsolidatedForecastCard: React.FC<
           {/* Main Metrics Grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
             <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm text-slate-600 mb-1'>Receita Total</p>
-              <p className='text-xl font-bold text-emerald-600'>
+              <p className='text-sm font-medium text-slate-600 mb-1'>
+                Receita Total
+              </p>
+              <p className='text-xl font-bold text-emerald-500'>
                 {formatCurrency(summary.totalProjectedIncome)}
               </p>
             </div>
 
             <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm text-slate-600 mb-1'>Despesas Totais</p>
-              <p className='text-xl font-bold text-rose-600'>
+              <p className='text-sm font-medium text-slate-600 mb-1'>
+                Despesas Totais
+              </p>
+              <p className='text-xl font-bold text-red-500'>
                 {formatCurrency(summary.totalProjectedExpenses)}
               </p>
             </div>
 
             <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm text-slate-600 mb-1'>Fluxo Líquido</p>
+              <p className='text-sm font-medium text-slate-600 mb-1'>
+                Fluxo Líquido
+              </p>
               <p
                 className={`text-xl font-bold ${
-                  summary.totalNetFlow >= 0 ? 'text-slate-700' : 'text-rose-600'
+                  summary.totalNetFlow >= 0 ? 'text-slate-900' : 'text-red-500'
                 }`}
               >
                 {formatCurrency(summary.totalNetFlow)}
@@ -174,10 +179,12 @@ export const ConsolidatedForecastCard: React.FC<
             </div>
 
             <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm text-slate-600 mb-1'>Saldo Final</p>
+              <p className='text-sm font-medium text-slate-600 mb-1'>
+                Saldo Final
+              </p>
               <p
                 className={`text-xl font-bold ${
-                  summary.finalBalance >= 0 ? 'text-slate-700' : 'text-rose-600'
+                  summary.finalBalance >= 0 ? 'text-slate-900' : 'text-red-500'
                 }`}
               >
                 {formatCurrency(summary.finalBalance)}
@@ -194,8 +201,8 @@ export const ConsolidatedForecastCard: React.FC<
               <p
                 className={`text-lg font-bold ${
                   summary.averageMonthlyFlow >= 0
-                    ? 'text-slate-700'
-                    : 'text-rose-600'
+                    ? 'text-slate-900'
+                    : 'text-red-500'
                 }`}
               >
                 {formatCurrency(summary.averageMonthlyFlow)}
@@ -246,7 +253,7 @@ export const ConsolidatedForecastCard: React.FC<
                 {insights.recommendations.map((recommendation, index) => (
                   <li key={index} className='flex items-start'>
                     <CheckCircleIcon
-                      className='w-4 h-4 text-emerald-600 mr-2 mt-0.5 flex-shrink-0'
+                      className='w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0'
                       weight='bold'
                     />
                     <span className='text-sm text-slate-700'>
@@ -265,6 +272,6 @@ export const ConsolidatedForecastCard: React.FC<
           <InteractiveMonthlyProjectionsChart projections={projections} />
         </div>
       )}
-    </div>
+    </Card>
   );
 };

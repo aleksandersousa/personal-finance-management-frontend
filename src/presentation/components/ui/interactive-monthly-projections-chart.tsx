@@ -100,11 +100,11 @@ export const InteractiveMonthlyProjectionsChart: React.FC<
   const getConfidenceColor = (confidence: 'high' | 'medium' | 'low') => {
     switch (confidence) {
       case 'high':
-        return 'text-emerald-700 bg-emerald-50';
+        return 'text-emerald-600 bg-emerald-50';
       case 'medium':
-        return 'text-amber-700 bg-amber-50';
+        return 'text-amber-600 bg-amber-50';
       case 'low':
-        return 'text-rose-700 bg-rose-50';
+        return 'text-red-600 bg-red-50';
     }
   };
 
@@ -312,11 +312,9 @@ export const InteractiveMonthlyProjectionsChart: React.FC<
   };
 
   return (
-    <div className='bg-white rounded-xl border border-slate-200 p-6 shadow-md'>
+    <div className='bg-white rounded-xl border border-slate-200 p-6 shadow-md -mx-6 -mb-6 mt-4'>
       <div className='flex items-center justify-between mb-6'>
-        <h3 className='text-lg font-semibold text-slate-900'>
-          Projeções Mensais
-        </h3>
+        <h3 className='text-lg font-bold text-slate-900'>Projeções Mensais</h3>
       </div>
 
       <div className='relative overflow-hidden' onMouseLeave={clearTooltip}>
@@ -350,40 +348,40 @@ export const InteractiveMonthlyProjectionsChart: React.FC<
               <div className='space-y-2'>
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
-                    <div className='w-3 h-3 rounded-full bg-emerald-400'></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <div className='w-3 h-3 rounded-full bg-emerald-500'></div>
+                    <span className='text-sm font-medium text-slate-700'>
                       Receitas
                     </span>
                   </div>
-                  <span className='text-sm font-bold text-emerald-600'>
+                  <span className='text-sm font-bold text-emerald-500'>
                     {formatCurrency(hoveredData.projectedIncome)}
                   </span>
                 </div>
 
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
-                    <div className='w-3 h-3 rounded-full bg-rose-400'></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <div className='w-3 h-3 rounded-full bg-red-500'></div>
+                    <span className='text-sm font-medium text-slate-700'>
                       Despesas
                     </span>
                   </div>
-                  <span className='text-sm font-bold text-rose-600'>
+                  <span className='text-sm font-bold text-red-500'>
                     {formatCurrency(hoveredData.projectedExpenses)}
                   </span>
                 </div>
 
                 <div className='flex justify-between items-center py-1 border-t border-slate-100 pt-2'>
                   <div className='flex items-center gap-2'>
-                    <div className='w-3 h-3 rounded-full bg-slate-400'></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <div className='w-3 h-3 rounded-full bg-slate-600'></div>
+                    <span className='text-sm font-medium text-slate-700'>
                       Fluxo Líquido Mensal
                     </span>
                   </div>
                   <span
                     className={`text-sm font-bold ${
                       hoveredData.netFlow >= 0
-                        ? 'text-slate-700'
-                        : 'text-rose-600'
+                        ? 'text-slate-900'
+                        : 'text-red-500'
                     }`}
                   >
                     {formatCurrency(hoveredData.netFlow)}
@@ -395,19 +393,19 @@ export const InteractiveMonthlyProjectionsChart: React.FC<
                     <div
                       className={`w-3 h-3 rounded-full ${
                         hoveredData.cumulativeBalance >= 0
-                          ? 'bg-slate-500'
-                          : 'bg-rose-400'
+                          ? 'bg-slate-700'
+                          : 'bg-red-400'
                       }`}
                     ></div>
-                    <span className='text-sm font-medium text-slate-600'>
+                    <span className='text-sm font-medium text-slate-700'>
                       Saldo Acumulado
                     </span>
                   </div>
                   <span
                     className={`text-sm font-bold ${
                       hoveredData.cumulativeBalance >= 0
-                        ? 'text-slate-700'
-                        : 'text-rose-600'
+                        ? 'text-slate-900'
+                        : 'text-red-500'
                     }`}
                   >
                     {formatCurrency(hoveredData.cumulativeBalance)}
