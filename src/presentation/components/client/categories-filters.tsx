@@ -1,0 +1,154 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { FunnelIcon, XIcon, PlusIcon } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+
+interface CategoriesFiltersProps {
+  totalResults: number;
+  showHeader?: boolean;
+  hasActiveFilters?: boolean;
+}
+
+const typeOptions = [
+  { value: 'all', label: 'Todos os tipos' },
+  { value: 'INCOME', label: 'Receitas' },
+  { value: 'EXPENSE', label: 'Despesas' },
+];
+
+export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
+  totalResults,
+  showHeader = true,
+  hasActiveFilters: externalHasActiveFilters = false,
+}) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [filters, setFilters] = useState({
+    type: searchParams.get('type') || 'all',
+  });
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    updateURL(newFilters);
+  };
+
+  const updateURL = (newFilters: typeof filters) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (newFilters.type && newFilters.type !== 'all') {
+      params.set('type', newFilters.type);
+    } else {
+      params.delete('type');
+    }
+
+    router.push(`/categories?${params.toString()}`);
+  };
+
+  const clearFilters = () => {
+    const clearedFilters = {
+      type: 'all',
+    } as typeof filters;
+    setFilters(clearedFilters);
+    updateURL(clearedFilters);
+  };
+
+  const hasActiveFilters = filters.type !== 'all';
+
+  const shouldShowHeader = showHeader || externalHasActiveFilters;
+
+  if (!shouldShowHeader) {
+    return null;
+  }
+
+  return (
+    <div className='mb-6'>
+      <div className='flex items-center justify-between gap-4 mb-4'>
+        <div>
+          <h2 className='text-xl font-bold text-slate-900'>Categorias</h2>
+          <p className='text-sm text-slate-600'>
+            {totalResults}{' '}
+            {totalResults === 1
+              ? 'categoria encontrada'
+              : 'categorias encontradas'}
+          </p>
+        </div>
+
+        <div className='flex gap-2'>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className='relative inline-flex items-center gap-2 px-3 sm:px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer'
+          >
+            <FunnelIcon className='w-5 h-5 sm:w-4 sm:h-4' />
+            <span className='hidden sm:inline'>Filtros</span>
+            {hasActiveFilters && (
+              <span className='absolute -top-1 -right-1 sm:relative sm:top-0 sm:right-0 inline-flex items-center justify-center w-2 h-2 bg-primary rounded-full'></span>
+            )}
+          </button>
+
+          <Link
+            href='/categories/add'
+            className='inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-black transition-colors'
+          >
+            <PlusIcon className='w-5 h-5 sm:w-4 sm:h-4' />
+            <span className='hidden sm:inline'>Nova Categoria</span>
+          </Link>
+        </div>
+      </div>
+
+      {showFilters && (
+        <div className='border-t border-slate-200 pt-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
+            <div>
+              <label className='block text-sm font-medium text-slate-700 mb-1'>
+                Tipo
+              </label>
+              <Select
+                value={filters.type}
+                onValueChange={value => handleFilterChange('type', value)}
+              >
+                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                  <SelectValue placeholder='Selecione o tipo' />
+                </SelectTrigger>
+                <SelectContent>
+                  {typeOptions.map(option => (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                      className='rounded-lg'
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {hasActiveFilters && (
+            <div className='mt-4 pt-4 border-t border-slate-200'>
+              <button
+                onClick={clearFilters}
+                className='inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors'
+              >
+                <XIcon className='w-4 h-4' />
+                Limpar filtros
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

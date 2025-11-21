@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["cypress"],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "isolatedModules": false
+  },
+  "include": ["tests/e2e/**/*.ts", "tests/e2e/**/*.tsx", "cypress.config.ts"],
+  "exclude": [
+    "node_modules",
+    "src/**/*",
+    "tests/**/*.spec.ts",
+    "tests/**/*.spec.tsx"
+  ]
+}
