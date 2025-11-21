@@ -2,7 +2,7 @@ name: Frontend CI
 
 on:
   pull_request:
-    branches: [main, develop, staging]
+    branches: [main, develop]
     paths:
       - '**'
       - '.github/workflows/ci.yml'
@@ -38,7 +38,7 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
   security-scan:
     runs-on: ubuntu-latest
