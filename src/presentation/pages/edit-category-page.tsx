@@ -3,8 +3,9 @@
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import { makeCategoryFormValidator } from '@/main/factories/validation';
 import { loadCategoriesAction, updateCategoryAction } from '../actions';
-import { Button, Input, Select } from '../components';
+import { Button, Card, Input, Select, PageLoading } from '../components';
 import { typeOptions } from '@/domain/constants';
+import { redirect } from 'next/navigation';
 
 export interface EditCategoryPageProps {
   categoryId: string;
@@ -90,14 +91,7 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
   };
 
   if (isPendingCategory) {
-    return (
-      <div className='flex items-center justify-center py-8'>
-        <div className='text-center'>
-          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-          <p className='text-muted-foreground'>Carregando categoria...</p>
-        </div>
-      </div>
-    );
+    return <PageLoading text='Carregando categorias...' />;
   }
 
   return (
@@ -111,7 +105,7 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
             <p className='text-slate-600'>Atualize os dados da sua categoria</p>
           </div>
 
-          <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+          <Card className='rounded-3xl p-6 sm:p-8'>
             <form onSubmit={handleSubmit} className='space-y-6'>
               {errors.general && (
                 <div className='bg-pink-50 border border-pink-400 text-pink-700 px-4 py-3 rounded'>
@@ -141,6 +135,7 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
               />
 
               <Select
+                required
                 label='Tipo'
                 value={formData.type}
                 onValueChange={value => handleInputChange('type', value)}
@@ -148,7 +143,6 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
                 placeholder='Selecione o tipo'
                 error={errors.type?.[0]}
                 disabled={isPendingUpdate}
-                required
               />
 
               <div>
@@ -184,21 +178,27 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
                 </div>
               </div>
 
-              <div className='flex justify-end space-x-3 pt-4'>
+              <div className='flex space-x-4'>
                 <Button
                   type='button'
                   variant='outline'
-                  onClick={() => window.history.back()}
+                  onClick={() => redirect('/categories')}
                   disabled={isPendingUpdate}
+                  className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
                 >
                   Cancelar
                 </Button>
-                <Button type='submit' disabled={isPendingUpdate}>
-                  {isPendingUpdate ? 'Salvando...' : 'Salvar'}
+                <Button
+                  type='submit'
+                  isLoading={isPendingUpdate}
+                  disabled={isPendingUpdate}
+                  className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                >
+                  {isPendingUpdate ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

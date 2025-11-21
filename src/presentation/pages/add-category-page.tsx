@@ -3,40 +3,9 @@
 import React, { useMemo, useTransition, useState } from 'react';
 import { makeCategoryFormValidator } from '@/main/factories/validation';
 import { addCategoryAction } from '../actions';
-import { Button, Input, Select } from '../components';
+import { Button, Card, Input, PageLoading, Select } from '../components';
 import { typeOptions } from '@/domain/constants';
-
-const colorOptions = [
-  { value: '#3B82F6', label: 'Azul' },
-  { value: '#10B981', label: 'Verde' },
-  { value: '#F59E0B', label: 'Amarelo' },
-  { value: '#EF4444', label: 'Vermelho' },
-  { value: '#8B5CF6', label: 'Roxo' },
-  { value: '#F97316', label: 'Laranja' },
-  { value: '#06B6D4', label: 'Ciano' },
-  { value: '#84CC16', label: 'Lima' },
-  { value: '#EC4899', label: 'Rosa' },
-  { value: '#6B7280', label: 'Cinza' },
-];
-
-const iconOptions = [
-  { value: '💰', label: '💰 Dinheiro' },
-  { value: '🛒', label: '🛒 Compras' },
-  { value: '🍕', label: '🍕 Alimentação' },
-  { value: '⛽', label: '⛽ Combustível' },
-  { value: '🏠', label: '🏠 Casa' },
-  { value: '🚗', label: '🚗 Transporte' },
-  { value: '💊', label: '💊 Saúde' },
-  { value: '🎓', label: '🎓 Educação' },
-  { value: '🎮', label: '🎮 Entretenimento' },
-  { value: '💼', label: '💼 Trabalho' },
-  { value: '💳', label: '💳 Cartão' },
-  { value: '📱', label: '📱 Tecnologia' },
-  { value: '👕', label: '👕 Roupas' },
-  { value: '✈️', label: '✈️ Viagem' },
-  { value: '🎁', label: '🎁 Presente' },
-  { value: '💡', label: '💡 Outros' },
-];
+import { redirect } from 'next/navigation';
 
 export const AddCategoryPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +17,8 @@ export const AddCategoryPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-  const [isPending, startTransition] = useTransition();
+  const [isPendingCategory, startCategoryTransition] = useTransition();
+  const [isPendingAdd, startAddTransition] = useTransition();
 
   const validator = useMemo(() => makeCategoryFormValidator(), []);
 
@@ -77,7 +47,7 @@ export const AddCategoryPage: React.FC = () => {
     }
 
     try {
-      startTransition(async () => {
+      startAddTransition(async () => {
         await addCategoryAction(validation.data!);
       });
 
@@ -96,8 +66,12 @@ export const AddCategoryPage: React.FC = () => {
     }
   };
 
+  if (isPendingCategory) {
+    return <PageLoading text='Carregando categorias...' />;
+  }
+
   return (
-    <div className='bg-slate-50 pt-20 pb-20 lg:pb-8 w-full min-h-screen'>
+    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
       <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
         <div className='w-full max-w-2xl box-border'>
           <div className='text-center mb-8'>
@@ -109,7 +83,7 @@ export const AddCategoryPage: React.FC = () => {
             </p>
           </div>
 
-          <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8'>
+          <Card className='rounded-3xl p-6 sm:p-8'>
             <form onSubmit={handleSubmit} className='space-y-6'>
               {errors.general && (
                 <div className='bg-pink-50 border border-pink-400 text-pink-700 px-4 py-3 rounded'>
@@ -126,7 +100,7 @@ export const AddCategoryPage: React.FC = () => {
                 placeholder='Digite o nome da categoria'
                 error={errors.name?.[0]}
                 required
-                disabled={isPending}
+                disabled={isPendingAdd}
               />
 
               <Input
@@ -135,88 +109,74 @@ export const AddCategoryPage: React.FC = () => {
                 onChange={e => handleInputChange('description', e.target.value)}
                 placeholder='Digite uma descrição (opcional)'
                 error={errors.description?.[0]}
-                disabled={isPending}
+                disabled={isPendingAdd}
               />
 
               <Select
+                required
                 label='Tipo'
                 value={formData.type}
                 onValueChange={value => handleInputChange('type', value)}
                 options={typeOptions}
                 placeholder='Selecione o tipo'
                 error={errors.type?.[0]}
-                disabled={isPending}
-                required
+                disabled={isPendingAdd}
               />
 
-              <div className='space-y-2'>
+              <div>
                 <label className='text-sm font-medium text-foreground'>
                   Cor
                 </label>
-                <div className='grid grid-cols-5 gap-2'>
-                  {colorOptions.map(color => (
-                    <button
-                      key={color.value}
-                      type='button'
-                      onClick={() => handleInputChange('color', color.value)}
-                      className={`w-10 h-10 rounded-lg border-2 transition-all ${
-                        formData.color === color.value
-                          ? 'border-foreground ring-2 ring-primary'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                      style={{ backgroundColor: color.value }}
-                      title={color.label}
-                      disabled={isPending}
-                    />
-                  ))}
+                <div className='flex items-center gap-3'>
+                  <input
+                    type='color'
+                    value={formData.color}
+                    onChange={e =>
+                      handleInputChange('color', e.target.value.toUpperCase())
+                    }
+                    className='h-10 w-10 rounded border border-gray-300'
+                    disabled={isPendingAdd}
+                    aria-label='Selecionar cor'
+                  />
+                  <Input
+                    value={formData.color}
+                    onChange={e => {
+                      const raw = e.target.value.replace(/[^0-9a-fA-F#]/g, '');
+                      const withoutHash = raw.startsWith('#')
+                        ? raw.slice(1)
+                        : raw;
+                      const trimmed = withoutHash.slice(0, 6);
+                      const hex = `#${trimmed}`;
+                      handleInputChange('color', hex.toUpperCase());
+                    }}
+                    placeholder='#000000'
+                    error={errors.color?.[0]}
+                    disabled={isPendingAdd}
+                  />
                 </div>
-                {errors.color?.[0] && (
-                  <p className='text-sm text-red-600'>{errors.color[0]}</p>
-                )}
               </div>
 
-              <div className='space-y-2'>
-                <label className='text-sm font-medium text-foreground'>
-                  Ícone
-                </label>
-                <div className='grid grid-cols-8 gap-2'>
-                  {iconOptions.map(icon => (
-                    <button
-                      key={icon.value}
-                      type='button'
-                      onClick={() => handleInputChange('icon', icon.value)}
-                      className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center text-lg transition-all ${
-                        formData.icon === icon.value
-                          ? 'border-foreground ring-2 ring-primary'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                      title={icon.label}
-                      disabled={isPending}
-                    >
-                      {icon.value}
-                    </button>
-                  ))}
-                </div>
-                {errors.icon?.[0] && (
-                  <p className='text-sm text-red-600'>{errors.icon[0]}</p>
-                )}
-              </div>
-
-              <div className='flex justify-end space-x-3 pt-4'>
+              <div className='flex space-x-4'>
                 <Button
                   type='button'
                   variant='outline'
-                  onClick={() => window.history.back()}
-                  disabled={isPending}
+                  onClick={() => redirect('/categories')}
+                  disabled={isPendingAdd}
+                  className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
                 >
                   Cancelar
                 </Button>
-                <Button type='submit' disabled={isPending}>
-                  {isPending ? 'Salvando...' : 'Salvar'}
+                <Button
+                  type='submit'
+                  isLoading={isPendingAdd}
+                  disabled={isPendingAdd}
+                  className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                >
+                  {isPendingAdd ? 'Salvando...' : 'Adicionar Categoria'}
                 </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
