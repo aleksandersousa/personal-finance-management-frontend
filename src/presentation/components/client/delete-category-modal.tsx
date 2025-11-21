@@ -74,9 +74,7 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
               <div
                 className='flex items-center justify-center w-10 h-10 text-sm text-white rounded-xl'
                 style={{ backgroundColor: category.color }}
-              >
-                {category.icon}
-              </div>
+              />
               <div className='flex-1 min-w-0'>
                 <div className='font-semibold text-gray-900'>
                   {category.name}
