@@ -25,7 +25,7 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
       searchParams.type === 'INCOME' ? 'receitas' : 'despesas';
 
     return (
-      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+      <div className='min-h-screen bg-slate-50 pt-16 pb-20 lg:pb-8'>
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
             <div className='bg-white rounded-3xl shadow-md border border-slate-200 p-6 sm:p-8'>

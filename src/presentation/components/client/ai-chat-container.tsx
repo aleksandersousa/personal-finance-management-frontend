@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { aiChatAction } from '@/presentation/actions';
 import { AiChatMessage } from '@/domain/models';
+import { PaperPlaneRight } from '@phosphor-icons/react/dist/ssr';
 
 export function AiChatContainer() {
   const [messages, setMessages] = useState<AiChatMessage[]>([]);
@@ -31,10 +32,7 @@ export function AiChatContainer() {
           timestamp: new Date(),
         };
         setMessages(prev => [...prev, assistantMessage]);
-        setFeedback({
-          type: 'success',
-          message: 'Resposta recebida com sucesso!',
-        });
+        setFeedback({ type: null, message: '' });
       } catch (error) {
         console.error(error);
         const errorMessage: AiChatMessage = {
@@ -53,42 +51,47 @@ export function AiChatContainer() {
   };
 
   return (
-    <div className='space-y-6'>
-      <div className='space-y-3 max-h-96 overflow-y-auto'>
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                message.role === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-800'
-              }`}
-            >
-              <p className='text-sm'>{message.content}</p>
-              <p className='text-xs opacity-70 mt-1'>
-                {message.timestamp.toLocaleTimeString()}
-              </p>
-            </div>
+    <div className='flex flex-col gap-4 flex-1 min-h-0'>
+      <div className='space-y-3 flex-1 overflow-y-auto min-h-0 px-2 py-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl'>
+        {messages.length === 0 ? (
+          <div className='flex items-center justify-center h-full text-slate-400 text-sm'>
+            Nenhuma mensagem ainda. Comece a conversar!
           </div>
-        ))}
+        ) : (
+          messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm ${
+                  message.role === 'user'
+                    ? 'bg-emerald-500 text-white rounded-tr-md'
+                    : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-md'
+                }`}
+              >
+                <p className='text-sm leading-relaxed'>{message.content}</p>
+                <p className='text-xs opacity-60 mt-1 text-right'>
+                  {message.timestamp.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      {feedback.type && (
-        <div
-          className={`p-4 rounded-lg ${
-            feedback.type === 'success'
-              ? 'bg-green-50 border border-green-200 text-green-700'
-              : 'bg-red-50 border border-red-200 text-red-700'
-          }`}
-        >
+      {feedback.type === 'error' && (
+        <div className='p-3 rounded-lg shrink-0 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm'>
           {feedback.message}
         </div>
       )}
 
-      <AiChatForm onSubmit={handleSubmit} isLoading={isPending} />
+      <div className='shrink-0'>
+        <AiChatForm onSubmit={handleSubmit} isLoading={isPending} />
+      </div>
     </div>
   );
 }
@@ -110,21 +113,28 @@ function AiChatForm({ onSubmit, isLoading }: AiChatFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex gap-2'>
-      <input
-        type='text'
-        value={question}
-        onChange={e => setQuestion(e.target.value)}
-        placeholder='Pergunte: Quanto tenho que pagar ainda este mês?'
-        className='flex-1 border px-3 py-2 rounded'
-        disabled={isLoading}
-      />
+    <form onSubmit={handleSubmit} className='flex items-end gap-2'>
+      <div className='flex-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 px-4 py-2 flex items-center shadow-sm'>
+        <input
+          type='text'
+          value={question}
+          onChange={e => setQuestion(e.target.value)}
+          placeholder='Digite sua mensagem...'
+          className='flex-1 bg-transparent outline-none text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400'
+          disabled={isLoading}
+        />
+      </div>
       <button
         type='submit'
         disabled={isLoading || !question.trim()}
-        className='px-4 py-2 bg-black text-white rounded disabled:opacity-50'
+        className='size-10 rounded-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-sm shrink-0'
+        aria-label='Enviar mensagem'
       >
-        {isLoading ? 'Enviando...' : 'Enviar'}
+        {isLoading ? (
+          <div className='size-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
+        ) : (
+          <PaperPlaneRight className='size-5 text-white' weight='fill' />
+        )}
       </button>
     </form>
   );

@@ -31,7 +31,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
       searchParams.type === 'INCOME' ? 'receitas' : 'despesas';
 
     return (
-      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+      <div className='min-h-screen bg-slate-50 pt-16 pb-20 lg:pb-8'>
         <EntriesCache entries={entries} />
 
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>

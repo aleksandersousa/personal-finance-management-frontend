@@ -67,7 +67,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* Subtle Background */}
       <div className='fixed inset-0 bg-slate-50 -z-10' />
 
-      <div className='pt-20 pb-20 lg:pb-8'>
+      <div className='pt-16 pb-20 lg:pb-8'>
         <div
           className={cn(
             'px-4 sm:px-6 lg:px-8 box-border transition-all duration-300',
