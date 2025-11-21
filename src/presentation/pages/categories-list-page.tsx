@@ -26,9 +26,9 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
     return (
       <div className='min-h-screen bg-slate-50 pt-16 pb-20 lg:pb-8'>
-        <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
+        <div className='flex justify-center px-3 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            <div className='bg-white rounded-3xl shadow-md border border-slate-200 p-6 sm:p-8'>
+            <div className='bg-white rounded-2xl sm:rounded-3xl shadow-md border border-slate-200 p-4 sm:p-6 lg:p-8'>
               <CategoriesFilters
                 totalResults={filteredCategories.length}
                 showHeader={filteredCategories.length > 0}
@@ -81,10 +81,10 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
     console.error('Error loading categories:', error);
     return (
-      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
-        <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
+      <div className='min-h-screen bg-slate-50 pt-16 pb-20 lg:pb-8'>
+        <div className='flex justify-center px-3 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border'>
-            <div className='bg-white rounded-3xl shadow-md border border-slate-200 p-6 sm:p-8'>
+            <div className='bg-white rounded-2xl sm:rounded-3xl shadow-md border border-slate-200 p-4 sm:p-6 lg:p-8'>
               <div className='flex flex-col items-center justify-center text-center py-16'>
                 <div className='w-24 h-24 mx-auto mb-6 bg-red-50 rounded-2xl flex items-center justify-center'>
                   <span className='text-5xl'>⚠️</span>

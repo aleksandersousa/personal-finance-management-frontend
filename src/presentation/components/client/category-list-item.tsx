@@ -49,85 +49,98 @@ export const CategoryListItem: React.FC<CategoryListItemProps> = ({
       />
 
       <Card className='mb-3 shadow-none transition-all duration-200'>
-        <div className='flex items-center justify-between p-4'>
-          <div className='flex items-center space-x-3 flex-1'>
+        <div className='p-4 sm:p-5'>
+          {/* Mobile and Desktop Layout */}
+          <div className='flex items-start gap-3 sm:gap-4'>
+            {/* Category Icon */}
             <div
-              className='w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg p-6'
+              className='w-12 h-12 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-white text-lg shrink-0'
               style={{ backgroundColor: category.color }}
             />
 
-            <div className='flex-1'>
-              <div className='font-medium text-foreground'>{category.name}</div>
-              <div className='text-sm text-muted-foreground mt-1 flex items-center gap-2'>
-                <span>
-                  {category.description || 'Sem descrição'} •{' '}
-                  {category.type === 'INCOME' ? 'Receita' : 'Despesa'}
-                </span>
+            {/* Main Content */}
+            <div className='flex-1 min-w-0'>
+              {/* Category Name and Badge */}
+              <div className='flex items-start justify-between gap-2 mb-1'>
+                <h3 className='font-semibold text-foreground text-base sm:text-sm'>
+                  {category.name}
+                </h3>
                 {category.isDefault && (
                   <Badge
                     variant='secondary'
-                    className='bg-primary/10 text-primary'
+                    className='bg-primary/10 text-primary shrink-0'
                   >
                     Padrão
                   </Badge>
                 )}
               </div>
+
+              {/* Description and Type */}
+              <p className='text-sm text-muted-foreground mb-2 line-clamp-1'>
+                {category.description || 'Sem descrição'} •{' '}
+                {category.type === 'INCOME' ? 'Receita' : 'Despesa'}
+              </p>
+
+              {/* Stats - Mobile: Stack, Desktop: Inline */}
               {category.entriesCount > 0 && (
-                <div className='text-xs text-muted-foreground mt-1'>
-                  {category.entriesCount} entrada
-                  {category.entriesCount !== 1 ? 's' : ''} • Total:{' '}
-                  {formatCurrency(category.totalAmount)}
-                  {category.lastUsed &&
-                    ` • Último uso: ${formatDate(category.lastUsed)}`}
+                <div className='flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-3 sm:mb-2'>
+                  <span>
+                    {category.entriesCount} entrada
+                    {category.entriesCount !== 1 ? 's' : ''}
+                  </span>
+                  <span className='hidden sm:inline'>•</span>
+                  <span
+                    className={`font-medium ${
+                      category.type === 'INCOME'
+                        ? 'text-green-600'
+                        : 'text-red-600'
+                    }`}
+                  >
+                    {formatCurrency(category.totalAmount)}
+                  </span>
+                  {category.lastUsed && (
+                    <>
+                      <span className='hidden sm:inline'>•</span>
+                      <span className='hidden sm:inline'>
+                        Último uso: {formatDate(category.lastUsed)}
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              {showActions && !category.isDefault && (
+                <div className='flex items-center gap-2 mt-3 sm:mt-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={handleEdit}
+                    title='Editar categoria'
+                    data-testid='edit-button'
+                    className='h-8'
+                  >
+                    <PencilSimpleIcon
+                      className='w-4 h-4 sm:mr-1.5'
+                      weight='bold'
+                    />
+                    <span className='hidden sm:inline'>Editar</span>
+                  </Button>
+
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={handleDeleteClick}
+                    title='Excluir categoria'
+                    data-testid='delete-button'
+                    className='h-8 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400'
+                  >
+                    <TrashIcon className='w-4 h-4 sm:mr-1.5' weight='bold' />
+                    <span className='hidden sm:inline'>Excluir</span>
+                  </Button>
                 </div>
               )}
             </div>
-          </div>
-
-          <div className='flex items-center space-x-3'>
-            {category.entriesCount > 0 && (
-              <div className='text-right'>
-                <div className='text-sm font-medium text-foreground'>
-                  {category.entriesCount} entrada
-                  {category.entriesCount !== 1 ? 's' : ''}
-                </div>
-                <div
-                  className={`text-xs ${
-                    category.type === 'INCOME'
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {formatCurrency(category.totalAmount)}
-                </div>
-              </div>
-            )}
-
-            {showActions && !category.isDefault && (
-              <div className='flex items-center space-x-1'>
-                <Button
-                  variant='outline'
-                  size='icon'
-                  onClick={handleEdit}
-                  title='Editar categoria'
-                  data-testid='edit-button'
-                  className='h-8 w-8'
-                >
-                  <PencilSimpleIcon className='w-4 h-4' weight='bold' />
-                </Button>
-
-                <Button
-                  variant='outline'
-                  size='icon'
-                  onClick={handleDeleteClick}
-                  title='Excluir categoria'
-                  data-testid='delete-button'
-                  className='h-8 w-8 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400'
-                >
-                  <TrashIcon className='w-4 h-4' weight='bold' />
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </Card>
