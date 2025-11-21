@@ -20,101 +20,103 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
   onDelete,
 }) => {
   const [isPending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{
-    type: 'error' | null;
-    message: string;
-  }>({ type: null, message: '' });
+  const [error, setError] = useState<string>('');
 
   const handleConfirmDelete = () => {
     if (!onDelete) return;
 
-    setFeedback({ type: null, message: '' });
-
+    setError('');
     startTransition(async () => {
       try {
         await onDelete();
-      } catch (error) {
-        console.error('Error deleting category:', error);
-        setFeedback({
-          type: 'error',
-          message: 'Erro ao excluir categoria. Tente novamente.',
-        });
+      } catch (err) {
+        console.error('Error deleting category:', err);
+        setError('Erro ao excluir categoria. Tente novamente.');
       }
     });
   };
 
   const handleClose = () => {
     if (!isPending) {
-      setFeedback({ type: null, message: '' });
+      setError('');
       onClose();
     }
   };
 
   if (!isOpen) return null;
 
+  const hasEntries = category.entriesCount > 0;
+  const isIncome = category.type === 'INCOME';
+  const entriesText = `${category.entriesCount} entrada${category.entriesCount !== 1 ? 's' : ''}`;
+
   return (
-    <div className='fixed inset-0 bg-slate-900/20 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-slate-200'>
-        <div className='flex items-center mb-4'>
-          <div className='flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm'>
+      <div className='w-full max-w-md bg-white rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
+        {/* Header */}
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
             <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
           </div>
-          <h3 className='ml-3 text-lg font-semibold text-slate-900'>
+          <h3 className='text-lg font-semibold text-gray-900'>
             Confirmar Exclusão
           </h3>
         </div>
 
-        <div className='mb-6'>
-          <p className='text-slate-600 mb-4'>
+        {/* Content */}
+        <div className='mb-6 space-y-4'>
+          <p className='text-sm text-gray-600'>
             Você tem certeza que deseja excluir a categoria:
           </p>
 
-          <div className='bg-slate-50 rounded-lg p-4 mb-4'>
-            <div className='flex items-center gap-3 mb-2'>
+          {/* Category Details */}
+          <div className='p-4 rounded-xl bg-gray-50'>
+            <div className='flex items-center gap-3'>
               <div
-                className='w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm'
+                className='flex items-center justify-center w-10 h-10 text-sm text-white rounded-xl'
                 style={{ backgroundColor: category.color }}
               >
                 {category.icon}
               </div>
-              <div>
-                <div className='font-medium text-slate-900'>
+              <div className='flex-1 min-w-0'>
+                <div className='font-semibold text-gray-900'>
                   {category.name}
                 </div>
-                <div className='text-sm text-slate-500'>
-                  {category.type === 'INCOME' ? 'Receita' : 'Despesa'}
+                <div className='text-xs text-gray-500'>
+                  {isIncome ? 'Receita' : 'Despesa'}
                   {category.description && ` • ${category.description}`}
                 </div>
               </div>
             </div>
 
-            {category.entriesCount > 0 && (
-              <div className='text-sm text-slate-500 mt-2'>
-                {category.entriesCount} entrada
-                {category.entriesCount !== 1 ? 's' : ''} • Total:{' '}
-                {formatCurrency(category.totalAmount)}
-                {category.lastUsed &&
-                  ` • Último uso: ${formatDate(category.lastUsed)}`}
+            {hasEntries && (
+              <div className='pt-3 mt-3 text-xs border-t text-gray-500 border-gray-200'>
+                <span className='font-medium'>{entriesText}</span>
+                <span className='mx-1'>•</span>
+                <span>Total: {formatCurrency(category.totalAmount)}</span>
+                {category.lastUsed && (
+                  <>
+                    <span className='mx-1'>•</span>
+                    <span>Último uso: {formatDate(category.lastUsed)}</span>
+                  </>
+                )}
               </div>
             )}
           </div>
 
-          {category.entriesCount > 0 && (
-            <div className='bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4'>
-              <div className='flex items-start'>
-                <div className='flex-shrink-0'>
-                  <WarningIcon
-                    className='w-5 h-5 text-amber-600 mt-0.5'
-                    weight='bold'
-                  />
-                </div>
-                <div className='ml-3'>
+          {/* Warning for Categories with Entries */}
+          {hasEntries && (
+            <div className='p-4 border rounded-xl bg-amber-50 border-amber-200'>
+              <div className='flex items-start gap-3'>
+                <WarningIcon
+                  className='flex-shrink-0 w-5 h-5 mt-0.5 text-amber-600'
+                  weight='bold'
+                />
+                <div className='space-y-1'>
                   <p className='text-sm font-medium text-amber-800'>
-                    Esta categoria possui {category.entriesCount} entrada
-                    {category.entriesCount !== 1 ? 's' : ''} associada
+                    Esta categoria possui {entriesText} associada
                     {category.entriesCount !== 1 ? 's' : ''}
                   </p>
-                  <p className='text-sm text-amber-700 mt-1'>
+                  <p className='text-sm text-amber-700'>
                     Ao excluir esta categoria, as entradas associadas ficarão
                     sem categoria.
                   </p>
@@ -123,28 +125,32 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
             </div>
           )}
 
-          <p className='text-sm text-slate-500'>
-            <strong>Esta ação não pode ser desfeita.</strong> A categoria será
-            permanentemente removida dos seus registros.
+          {/* Warning Message */}
+          <p className='text-xs text-gray-500'>
+            <strong className='font-semibold'>
+              Esta ação não pode ser desfeita.
+            </strong>{' '}
+            A categoria será permanentemente removida dos seus registros.
           </p>
         </div>
 
-        {feedback.type === 'error' && (
-          <div className='mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-            {feedback.message}
+        {/* Error Message */}
+        {error && (
+          <div className='mb-4 p-3 text-sm border rounded-xl bg-red-50 border-red-200 text-red-700'>
+            {error}
           </div>
         )}
 
-        <div className='flex space-x-3'>
+        {/* Actions */}
+        <div className='flex gap-3'>
           <Button
             onClick={handleClose}
-            variant='secondary'
+            variant='outline'
             className='flex-1'
             disabled={isPending}
           >
             Cancelar
           </Button>
-
           <Button
             onClick={handleConfirmDelete}
             variant='danger'

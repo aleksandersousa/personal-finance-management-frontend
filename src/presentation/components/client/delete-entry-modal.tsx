@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { Button } from '@/presentation/components/ui';
+import { Checkbox } from '@/presentation/components/ui/checkbox';
 import { EntryModel } from '@/domain/models/entry';
 import { TrashIcon, WarningIcon } from '@phosphor-icons/react/dist/ssr';
 import { formatDate } from '@/lib/utils';
@@ -21,25 +22,18 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 }) => {
   const [deleteAllOccurrences, setDeleteAllOccurrences] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{
-    type: 'error' | null;
-    message: string;
-  }>({ type: null, message: '' });
+  const [error, setError] = useState<string>('');
 
   const handleConfirmDelete = () => {
     if (!onDelete) return;
 
-    setFeedback({ type: null, message: '' });
-
+    setError('');
     startTransition(async () => {
       try {
         await onDelete(deleteAllOccurrences);
-      } catch (error) {
-        console.error('Error deleting entry:', error);
-        setFeedback({
-          type: 'error',
-          message: 'Erro ao excluir entrada. Tente novamente.',
-        });
+      } catch (err) {
+        console.error('Error deleting entry:', err);
+        setError('Erro ao excluir entrada. Tente novamente.');
       }
     });
   };
@@ -47,72 +41,79 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
   const handleClose = () => {
     if (!isPending) {
       setDeleteAllOccurrences(false);
-      setFeedback({ type: null, message: '' });
+      setError('');
       onClose();
     }
   };
 
   if (!isOpen) return null;
 
+  const isIncome = entry.type === 'INCOME';
+  const amount = (entry.amount / 100).toFixed(2);
+
   return (
-    <div className='fixed inset-0 bg-slate-900/20 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-slate-200'>
-        <div className='flex items-center mb-4'>
-          <div className='flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm'>
+      <div className='w-full max-w-md bg-white rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
+        {/* Header */}
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
             <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
           </div>
-          <h3 className='ml-3 text-lg font-semibold text-slate-900'>
+          <h3 className='text-lg font-semibold text-gray-900'>
             Confirmar Exclusão
           </h3>
         </div>
 
-        <div className='mb-6'>
-          <p className='text-slate-600 mb-4'>
+        {/* Content */}
+        <div className='mb-6 space-y-4'>
+          <p className='text-sm text-gray-600'>
             Você tem certeza que deseja excluir a entrada:
           </p>
 
-          <div className='bg-slate-50 rounded-lg p-4 mb-4'>
-            <div className='font-medium text-slate-900'>
+          {/* Entry Details */}
+          <div className='p-4 rounded-xl bg-gray-50'>
+            <div className='font-semibold text-gray-900'>
               {entry.description}
             </div>
-            <div className='text-sm text-slate-500 mt-1'>
+            <div className='mt-1 text-xs text-gray-500'>
               {entry.categoryName} • {formatDate(entry.date)}
             </div>
             <div
-              className={`text-sm font-semibold mt-1 ${
-                entry.type === 'INCOME' ? 'text-green-600' : 'text-red-600'
+              className={`mt-2 text-sm font-semibold ${
+                isIncome ? 'text-[#10B981]' : 'text-[#EF4444]'
               }`}
             >
-              {entry.type === 'INCOME' ? '+' : '-'} R${' '}
-              {(entry.amount / 100).toFixed(2)}
+              {isIncome ? '+' : '-'} R$ {amount}
             </div>
           </div>
 
+          {/* Fixed Entry Warning */}
           {entry.isFixed && (
-            <div className='bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4'>
-              <div className='flex items-start'>
-                <div className='flex-shrink-0'>
+            <div className='p-4 border rounded-xl bg-amber-50 border-amber-200'>
+              <div className='flex flex-col gap-3'>
+                <div className='flex items-center gap-3'>
                   <WarningIcon
-                    className='w-5 h-5 text-amber-600 mt-0.5'
+                    className='flex-shrink-0 w-5 h-5 mt-0.5 text-amber-600'
                     weight='bold'
                   />
-                </div>
-                <div className='ml-3'>
-                  <p className='text-sm font-medium text-amber-800 mb-2'>
+                  <p className='text-sm font-medium text-amber-800'>
                     Esta é uma entrada fixa (recorrente)
                   </p>
-                  <div className='flex items-center'>
-                    <input
-                      type='checkbox'
+                </div>
+                <div className='space-y-3'>
+                  <div className='flex items-center gap-2'>
+                    <Checkbox
                       id='deleteAllOccurrences'
                       checked={deleteAllOccurrences}
-                      onChange={e => setDeleteAllOccurrences(e.target.checked)}
-                      className='h-4 w-4 text-red-600 focus:ring-red-500 border-slate-300 rounded'
+                      onCheckedChange={checked =>
+                        setDeleteAllOccurrences(checked === true)
+                      }
                       disabled={isPending}
+                      className='mt-0.5'
                     />
                     <label
                       htmlFor='deleteAllOccurrences'
-                      className='ml-2 text-sm text-amber-700'
+                      className='text-sm text-amber-700 cursor-pointer leading-tight'
                     >
                       Excluir todas as ocorrências futuras desta entrada fixa
                     </label>
@@ -122,28 +123,33 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             </div>
           )}
 
-          <p className='text-sm text-slate-500'>
-            <strong>Esta ação não pode ser desfeita.</strong> A entrada será
-            permanentemente removida dos seus registros financeiros.
+          {/* Warning Message */}
+          <p className='text-xs text-gray-500'>
+            <strong className='font-semibold'>
+              Esta ação não pode ser desfeita.
+            </strong>{' '}
+            A entrada será permanentemente removida dos seus registros
+            financeiros.
           </p>
         </div>
 
-        {feedback.type === 'error' && (
-          <div className='mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-            {feedback.message}
+        {/* Error Message */}
+        {error && (
+          <div className='mb-4 p-3 text-sm border rounded-xl bg-red-50 border-red-200 text-red-700'>
+            {error}
           </div>
         )}
 
-        <div className='flex space-x-3'>
+        {/* Actions */}
+        <div className='flex gap-3'>
           <Button
             onClick={handleClose}
-            variant='secondary'
+            variant='outline'
             className='flex-1'
             disabled={isPending}
           >
             Cancelar
           </Button>
-
           <Button
             onClick={handleConfirmDelete}
             variant='danger'
