@@ -13,3 +13,4 @@ export * from './update-category-action';
 export * from './delete-category-action';
 export * from './load-cash-flow-forecast-action';
 export * from './logout-action';
+export * from './load-entries-months-years-action';

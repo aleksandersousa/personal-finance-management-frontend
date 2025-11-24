@@ -8,6 +8,7 @@ export * from './load-categories-factory';
 export * from './load-cash-flow-forecast-factory';
 export * from './load-categories-factory';
 export * from './load-entries-by-month-factory';
+export * from './load-entries-months-years-factory';
 export * from './load-monthly-summary-factory';
 export * from './refresh-token-factory';
 export * from './registration-factory';

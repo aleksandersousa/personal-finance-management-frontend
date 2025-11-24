@@ -4,6 +4,7 @@ export * from './authentication';
 export * from './delete-entry';
 export * from './load-cash-flow-forecast';
 export * from './load-entries-by-month';
+export * from './load-entries-months-years';
 export * from './load-monthly-summary';
 export * from './refresh-token';
 export * from './registration';
