@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
+import { loadEntriesMonthsYearsAction } from '@/presentation/actions';
 
 export interface DashboardFiltersProps {
   currentMonth: string;
@@ -35,27 +36,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   );
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [monthOptions, setMonthOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+  const [isLoadingMonths, setIsLoadingMonths] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const getDefaultMonth = () => {
-    const currentDate = new Date();
-    return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-  };
-
-  const getDefaultForecastMonths = () => 6;
-
-  const isFiltered =
-    selectedMonth !== getDefaultMonth() ||
-    selectedForecastMonths !== getDefaultForecastMonths();
-
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      setIsOpen(false);
-    }
-  };
 
   useEffect(() => {
     if (isOpen) {
@@ -79,6 +67,51 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
+
+  useEffect(() => {
+    const fetchMonthsYears = async () => {
+      try {
+        setIsLoadingMonths(true);
+        const result = await loadEntriesMonthsYearsAction();
+
+        if (result.monthsYears && result.monthsYears.length > 0) {
+          const options = result.monthsYears.map(({ year, month }) => {
+            const date = new Date(year, month - 1, 1);
+            const value = `${year}-${String(month).padStart(2, '0')}`;
+            const label = date.toLocaleDateString('pt-BR', {
+              year: 'numeric',
+              month: 'long',
+            });
+            return { value, label };
+          });
+
+          setMonthOptions(options);
+        } else {
+          setMonthOptions(generateMonthOptions());
+        }
+      } catch (error) {
+        console.error('Error loading months/years:', error);
+        setMonthOptions(generateMonthOptions());
+      } finally {
+        setIsLoadingMonths(false);
+      }
+    };
+
+    fetchMonthsYears();
+  }, []);
+
+  const getDefaultMonth = () => {
+    const currentDate = new Date();
+    return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  const getDefaultForecastMonths = () => 6;
+
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      setIsOpen(false);
+    }
+  };
 
   const generateMonthOptions = () => {
     const options = [];
@@ -172,15 +205,30 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     setSelectedForecastMonths(defaultForecastMonths);
 
     router.push('/dashboard');
+    handleCloseFilters();
   };
 
-  const monthOptions = generateMonthOptions();
+  const handleOpenFilters = () => {
+    setIsOpen(true);
+  };
+  const handleCloseFilters = () => {
+    setIsOpen(false);
+  };
+
   const forecastOptions = generateForecastOptions();
+
+  const isFiltered =
+    selectedMonth !== getDefaultMonth() ||
+    selectedForecastMonths !== getDefaultForecastMonths();
+
+  if (isLoadingMonths) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <>
       <Button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenFilters}
         variant='ghost'
         size='sm'
         className='relative py-3 px-2 rounded-xl bg-primary text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
@@ -229,7 +277,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                   <Button
                     variant='ghost'
                     size='icon'
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleCloseFilters}
                     className='h-10 w-10 rounded-xl hover:bg-gray-900'
                   >
                     <XIcon className='w-5 h-5' weight='bold' />
@@ -323,7 +371,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                     <Button
                       onClick={() => {
                         handleApplyFilters();
-                        setIsOpen(false);
+                        handleCloseFilters();
                       }}
                       className='flex-1 h-12 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                     >
