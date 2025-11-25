@@ -217,7 +217,7 @@ export const NavigationDrawer: React.FC = () => {
         <button
           onClick={toggleCollapse}
           className={cn(
-            'absolute top-6 w-5 h-5 bg-background hover:bg-primary hover:text-primary-foreground text-foreground rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
+            'absolute top-6 w-5 h-5 bg-background hover:bg-primary text-foreground rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
             isCollapsed ? '-right-3' : '-right-3'
           )}
           title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
