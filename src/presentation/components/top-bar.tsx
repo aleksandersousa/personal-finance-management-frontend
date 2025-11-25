@@ -63,25 +63,6 @@ export const TopBar: React.FC<TopBarProps> = ({
     navigate.push('/notifications');
   };
 
-  // Prevent hydration mismatch by not rendering theme-dependent content until mounted
-  if (!isMounted) {
-    return (
-      <header className='fixed top-0 left-0 right-0 z-30 bg-background lg:left-64'>
-        <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
-          <div className='flex items-center space-x-2'>
-            <Button
-              variant='ghost'
-              size='sm'
-              className='relative rounded-xl py-3 px-2 bg-primary text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
-            >
-              <MoonIcon className='h-5 w-5 text-white' weight='bold' />
-            </Button>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
   return (
     <header className='fixed top-0 left-0 right-0 z-30 bg-background lg:left-64'>
       <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
@@ -89,13 +70,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           <Button
             variant='ghost'
             size='sm'
+            className='text-foreground'
             onClick={toggleTheme}
-            className='relative rounded-xl py-3 px-2 bg-primary text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
           >
             {isDarkMode ? (
-              <SunIcon className='h-5 w-5 text-white' weight='bold' />
+              <SunIcon className='h-6 w-6' weight='bold' />
             ) : (
-              <MoonIcon className='h-5 w-5 text-white' weight='bold' />
+              <MoonIcon className='h-6 w-6' weight='bold' />
             )}
           </Button>
         </div>
@@ -123,27 +104,26 @@ export const TopBar: React.FC<TopBarProps> = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant='ghost'
-                className='relative h-10 w-10 rounded-full p-0 hover:bg-slate-100 dark:hover:bg-slate-800'
+                className='h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary-800 flex items-center justify-center'
               >
-                <div className='h-10 w-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center'>
-                  <UserIcon className='h-6 w-6 text-white' weight='bold' />
-                </div>
+                <UserIcon className='h-6 w-6 text-neutral-0' weight='bold' />
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align='start' className='w-48 mr-4'>
-              <div className='px-3 py-2 border-b border-slate-100 dark:border-slate-800'>
-                <p className='text-sm font-medium text-slate-900 dark:text-slate-100'>
+            <DropdownMenuContent
+              align='start'
+              className='w-48 mr-4 bg-neutral-0 border border-border-foreground'
+            >
+              <div className='px-3 py-2 border-b border-border-foreground'>
+                <p className='text-sm font-medium text-neutral-900'>
                   {user?.name ?? ''}
                 </p>
-                <p className='text-xs text-slate-500 dark:text-slate-400'>
-                  {user?.email ?? ''}
-                </p>
+                <p className='text-xs text-neutral-900 '>{user?.email ?? ''}</p>
               </div>
 
               <DropdownMenuItem
                 onClick={handleSettings}
-                className='text-slate-900 dark:text-slate-100 focus:text-slate-900 dark:focus:text-slate-100 focus:bg-slate-100 dark:focus:bg-slate-800 cursor-pointer'
+                className='text-neutral-900 cursor-pointer'
               >
                 <GearIcon className='mr-2 h-4 w-4' weight='bold' />
                 Configurações
@@ -151,7 +131,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
               <DropdownMenuItem
                 onClick={handleNotifications}
-                className='text-slate-900 dark:text-slate-100 focus:text-slate-900 dark:focus:text-slate-100 focus:bg-slate-100 dark:focus:bg-slate-800 cursor-pointer'
+                className='text-neutral-900 cursor-pointer'
               >
                 <BellIcon className='mr-2 h-4 w-4' weight='bold' />
                 Notificações
@@ -159,7 +139,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className='text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-900/20 cursor-pointer'
+                className='text-neutral-900 cursor-pointer'
               >
                 <SignOutIcon className='mr-2 h-4 w-4' weight='bold' />
                 Sair

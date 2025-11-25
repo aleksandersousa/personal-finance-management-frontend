@@ -235,7 +235,10 @@ export const NavigationDrawer: React.FC = () => {
             <>
               <div className='flex items-center gap-3 mb-6'>
                 <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-800 rounded-xl flex items-center justify-center shadow-md'>
-                  <WalletIcon className='w-6 h-6 text-white' weight='fill' />
+                  <WalletIcon
+                    className='w-6 h-6 text-neutral-0'
+                    weight='fill'
+                  />
                 </div>
                 <div>
                   <h2 className='text-base font-bold text-foreground'>
