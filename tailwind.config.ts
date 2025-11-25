@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { themeTokens } from './src/presentation/theme/theme-tokens';
 
 const config: Config = {
   darkMode: 'class',
@@ -10,52 +11,59 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: 'var(--color-bg-primary-contrast)',
-        foreground: 'var(--color-text-primary)',
-        card: 'var(--color-bg-card)',
-        'card-foreground': 'var(--color-text-primary)',
-        primary: {
-          DEFAULT: 'var(--color-primary)',
-          foreground: 'var(--color-primary-contrast)',
-        },
-        secondary: {
-          DEFAULT: 'var(--color-secondary)',
-          foreground: 'var(--color-secondary-contrast)',
-        },
-        destructive: {
-          DEFAULT: 'var(--color-error)',
-          foreground: 'var(--color-white)',
-        },
-        muted: {
-          DEFAULT: 'var(--color-bg-secondary)',
-          foreground: 'var(--color-text-secondary)',
-        },
-        accent: {
-          DEFAULT: 'var(--color-primary-light)',
-          foreground: 'var(--color-primary-contrast)',
-        },
-        popover: {
-          DEFAULT: 'var(--color-bg-card)',
-          foreground: 'var(--color-text-primary)',
-        },
-        border: 'var(--color-border-default)',
-        input: 'var(--color-border-default)',
-        ring: 'var(--color-border-focus)',
-        income: 'var(--color-income)',
-        expense: 'var(--color-expense)',
+        ...themeTokens.colors,
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
+        card: 'rgb(var(--color-card) / <alpha-value>)',
+        'card-foreground': 'rgb(var(--color-card-foreground) / <alpha-value>)',
       },
-      borderRadius: {
-        lg: `var(--radius-lg)`,
-        md: `var(--radius-md)`,
-        sm: `var(--radius-sm)`,
+
+      fontFamily: themeTokens.typography.fontFamily,
+      fontSize: themeTokens.typography.fontSize,
+      fontWeight: themeTokens.typography.fontWeight,
+      lineHeight: themeTokens.typography.lineHeight,
+
+      spacing: themeTokens.spacing,
+
+      borderRadius: themeTokens.borderRadius,
+
+      boxShadow: themeTokens.boxShadow,
+
+      transitionDuration: themeTokens.transitionDuration,
+      transitionTimingFunction: themeTokens.transitionTimingFunction,
+
+      width: {
+        ...themeTokens.iconSizes,
       },
-      fontFamily: {
-        sans: ['var(--font-geist-sans)'],
-        mono: ['var(--font-geist-mono)'],
+      height: {
+        ...themeTokens.iconSizes,
       },
+
+      maxWidth: themeTokens.maxWidth,
+      padding: themeTokens.padding,
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    function ({ addBase }: any) {
+      addBase({
+        ':root': {
+          '--color-background': '255 255 255', // white
+          '--color-foreground': '17 24 39', // gray-900
+          '--color-card': '255 255 255', // white
+          '--color-card-foreground': '17 24 39', // gray-900
+          '--color-border': '229 231 235', // gray-200
+        },
+        '.dark': {
+          '--color-background': '17 24 39', // gray-900
+          '--color-foreground': '249 250 251', // gray-50
+          '--color-card': '31 41 55', // gray-800
+          '--color-card-foreground': '249 250 251', // gray-50
+          '--color-border': '55 65 81', // gray-700
+        },
+      });
+    },
+  ],
 };
 
 export default config;
