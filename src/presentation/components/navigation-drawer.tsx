@@ -44,14 +44,19 @@ const navigationItems: NavigationItem[] = [
     icon: ClipboardTextIcon,
   },
   {
+    href: '/ai',
+    label: 'Assistente AI',
+    icon: CirclesFourIcon,
+  },
+  {
     href: '/categories',
     label: 'Categorias',
     icon: TagIcon,
   },
   {
-    href: '/ai',
-    label: 'Assistente AI',
-    icon: CirclesFourIcon,
+    href: '/settings',
+    label: 'Configurações',
+    icon: GearIcon,
   },
 ];
 
@@ -74,7 +79,7 @@ const buttonVariants = cva('', {
     variant: {
       active:
         'bg-gradient-to-br from-primary to-primary-800 text-neutral-100 shadow-sm',
-      inactive: 'text-foreground hover:bg-button-hover',
+      inactive: 'text-foreground',
     },
   },
 });
@@ -96,7 +101,7 @@ const renderNavItem = (
       >
         <button
           className={cn(
-            'w-10 h-10 flex items-center justify-center rounded-xl transition-all cursor-pointer relative',
+            'w-10 h-10 flex items-center justify-center rounded-xl transition-all cursor-pointer relative hover:bg-button-hover',
             buttonVariants({
               variant: active ? 'active' : 'inactive',
             })
@@ -321,7 +326,7 @@ export const NavigationDrawer: React.FC = () => {
           {isCollapsed ? (
             <button
               className={cn(
-                'w-10 h-10 mx-auto flex items-center justify-center rounded-xl transition-all cursor-pointer',
+                'w-10 h-10 mx-auto flex items-center justify-center rounded-xl transition-all cursor-pointer hover:bg-button-hover',
                 buttonVariants({
                   variant: 'inactive',
                 })
@@ -352,11 +357,10 @@ export const NavigationDrawer: React.FC = () => {
       <nav
         className='lg:hidden fixed bottom-0 left-0 right-0 bg-background z-40'
         style={{
-          borderRadius: '2rem 2rem 0 0',
           boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <div className='grid grid-cols-4 gap-1 p-3 pb-safe'>
+        <div className='grid grid-cols-5 gap-1 px-2 py-2 relative'>
           {navigationItems.map(item => {
             const active = isActive(item.href);
             const Icon = item.icon;
@@ -365,26 +369,41 @@ export const NavigationDrawer: React.FC = () => {
               <Link key={item.href} href={item.href || '#'} className='block'>
                 <div
                   className={cn(
-                    'flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all relative',
-                    active
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground active:bg-gray-100 dark:active:bg-gray-800'
+                    'flex flex-col items-center justify-center rounded-xl transition-all relative duration-300 ease-in-out',
+                    active ? 'pb-0' : 'py-2',
+                    buttonVariants({
+                      variant: 'inactive',
+                    })
                   )}
                 >
-                  {item.badge && (
-                    <span className='absolute top-1 right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full'>
-                      {item.badge}
-                    </span>
-                  )}
-                  <Icon
-                    className={cn('w-6 h-6', active ? 'mb-1' : '')}
-                    weight={active ? 'fill' : 'regular'}
-                  />
-                  {active && (
-                    <span className='text-[10px] font-semibold text-center leading-tight mt-0.5'>
-                      {item.label}
-                    </span>
-                  )}
+                  <div className='relative flex flex-col items-center justify-center'>
+                    <div
+                      className={cn(
+                        'flex items-center justify-center transition-all duration-300 ease-in-out',
+                        active
+                          ? 'w-11 h-11 rounded-full bg-primary shadow-lg -translate-y-6'
+                          : 'w-5 h-5 translate-y-0'
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          'transition-all duration-300 ease-in-out',
+                          active
+                            ? 'w-6 h-6 text-white'
+                            : 'w-5 h-5 text-foreground-secondary'
+                        )}
+                        weight={active ? 'fill' : 'regular'}
+                      />
+                    </div>
+                    <span
+                      className={cn(
+                        'absolute w-1.5 h-1.5 bg-primary rounded-full transition-all duration-300 ease-in-out',
+                        active
+                          ? '-bottom-0.5 opacity-100'
+                          : 'bottom-0 opacity-0'
+                      )}
+                    />
+                  </div>
                 </div>
               </Link>
             );

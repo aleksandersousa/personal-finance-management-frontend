@@ -18,7 +18,7 @@ import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import type { UserModel } from '@/domain';
 import { logoutAction } from '../actions/logout-action';
 import { DashboardFilters } from './ui';
-import { BellIcon, GearIcon } from '@phosphor-icons/react';
+import { BellIcon } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/presentation/hooks';
 
@@ -120,14 +120,6 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </p>
                 <p className='text-xs text-neutral-900 '>{user?.email ?? ''}</p>
               </div>
-
-              <DropdownMenuItem
-                onClick={handleSettings}
-                className='text-neutral-900 cursor-pointer'
-              >
-                <GearIcon className='mr-2 h-4 w-4' weight='bold' />
-                Configurações
-              </DropdownMenuItem>
 
               <DropdownMenuItem
                 onClick={handleNotifications}
