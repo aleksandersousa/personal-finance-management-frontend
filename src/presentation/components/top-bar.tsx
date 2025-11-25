@@ -66,7 +66,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   // Prevent hydration mismatch by not rendering theme-dependent content until mounted
   if (!isMounted) {
     return (
-      <header className='fixed top-0 left-0 right-0 z-30 bg-slate-50 dark:bg-slate-900 lg:left-64'>
+      <header className='fixed top-0 left-0 right-0 z-30 bg-background lg:left-64'>
         <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
           <div className='flex items-center space-x-2'>
             <Button
@@ -83,7 +83,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   }
 
   return (
-    <header className='fixed top-0 left-0 right-0 z-30 bg-slate-50 dark:bg-slate-800 lg:left-64'>
+    <header className='fixed top-0 left-0 right-0 z-30 bg-background lg:left-64'>
       <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
         <div className='flex items-center space-x-2'>
           <Button

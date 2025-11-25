@@ -65,7 +65,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className='relative w-full min-h-screen overflow-x-hidden'>
       {/* Subtle Background */}
-      <div className='fixed inset-0 bg-slate-50 dark:bg-slate-800 -z-10' />
+      <div className='fixed inset-0 bg-background -z-10' />
 
       <div className='pt-17 pb-20 lg:pb-8'>
         <div

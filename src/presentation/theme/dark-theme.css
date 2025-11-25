@@ -1,0 +1,18 @@
+@layer theme {
+  .dark,
+  .dark :root,
+  .dark :host {
+    /* Colors - Backgrounds */
+    --color-background: var(--color-secondary);
+    --color-background-secondary: var(--color-secondary);
+    --color-foreground: var(--color-neutral-200);
+
+    --color-border-foreground: color-mix(
+      in srgb,
+      var(--color-neutral-600) 50%,
+      transparent
+    );
+
+    --color-button-hover: var(--color-neutral-700);
+  }
+}
