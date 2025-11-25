@@ -41,13 +41,13 @@ export const ConsolidatedForecastCard: React.FC<
   const getTrendIcon = (trend: 'positive' | 'negative' | 'stable') => {
     switch (trend) {
       case 'positive':
-        return (
-          <TrendUpIcon className='w-5 h-5 text-emerald-500' weight='bold' />
-        );
+        return <TrendUpIcon className='w-5 h-5 text-income' weight='bold' />;
       case 'negative':
-        return <TrendDownIcon className='w-5 h-5 text-red-500' weight='bold' />;
+        return <TrendDownIcon className='w-5 h-5 text-expense' weight='bold' />;
       case 'stable':
-        return <MinusIcon className='w-5 h-5 text-slate-700' weight='bold' />;
+        return (
+          <MinusIcon className='w-5 h-5 text-muted-foreground' weight='bold' />
+        );
     }
   };
 
@@ -65,11 +65,11 @@ export const ConsolidatedForecastCard: React.FC<
   const getTrendColor = (trend: 'positive' | 'negative' | 'stable') => {
     switch (trend) {
       case 'positive':
-        return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+        return 'text-income bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20';
       case 'negative':
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'text-expense bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20';
       case 'stable':
-        return 'text-slate-700 bg-slate-100 border-slate-200';
+        return 'text-muted-foreground bg-muted border-border';
     }
   };
 
@@ -87,28 +87,28 @@ export const ConsolidatedForecastCard: React.FC<
   const getRiskColor = (risk: 'low' | 'medium' | 'high') => {
     switch (risk) {
       case 'low':
-        return 'text-emerald-600 bg-emerald-50';
+        return 'text-income bg-emerald-50 dark:bg-emerald-500/10';
       case 'medium':
-        return 'text-amber-600 bg-amber-50';
+        return 'text-amber-600 bg-amber-50 dark:bg-amber-500/10';
       case 'high':
-        return 'text-red-600 bg-red-50';
+        return 'text-expense bg-red-50 dark:bg-red-500/10';
     }
   };
 
   return (
     <Card className='p-6'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
-        <h3 className='text-lg font-bold text-slate-900'>
+        <h3 className='text-lg font-bold text-foreground'>
           Previsão Financeira ({monthsCount} meses)
         </h3>
 
-        <div className='flex gap-1 bg-slate-100 rounded-lg p-1 justify-center lg:justify-normal'>
+        <div className='flex gap-1 bg-muted rounded-lg p-1 justify-center lg:justify-normal'>
           <button
             onClick={() => setActiveTab('summary')}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'summary'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-800'
+                ? 'bg-background text-foreground dark:text-gray-100 shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             <ChartLineIcon className='w-4 h-4' />
@@ -118,8 +118,8 @@ export const ConsolidatedForecastCard: React.FC<
             onClick={() => setActiveTab('insights')}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'insights'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-800'
+                ? 'bg-background dark:bg-primary text-foreground dark:text-gray-100 shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             <LightbulbIcon className='w-4 h-4' />
@@ -131,44 +131,44 @@ export const ConsolidatedForecastCard: React.FC<
       {activeTab === 'summary' && (
         <div className='space-y-4'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
+            <div className='bg-muted rounded-lg p-4'>
+              <p className='text-sm font-medium text-muted-foreground mb-1'>
                 Receita Total
               </p>
-              <p className='text-xl font-bold text-emerald-500'>
+              <p className='text-xl font-bold text-income'>
                 {formatCurrency(summary.totalProjectedIncome)}
               </p>
             </div>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
+            <div className='bg-muted rounded-lg p-4'>
+              <p className='text-sm font-medium text-muted-foreground mb-1'>
                 Despesas Totais
               </p>
-              <p className='text-xl font-bold text-red-500'>
+              <p className='text-xl font-bold text-expense'>
                 {formatCurrency(summary.totalProjectedExpenses)}
               </p>
             </div>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
+            <div className='bg-muted rounded-lg p-4'>
+              <p className='text-sm font-medium text-muted-foreground mb-1'>
                 Fluxo Líquido
               </p>
               <p
                 className={`text-xl font-bold ${
-                  summary.totalNetFlow >= 0 ? 'text-slate-900' : 'text-red-500'
+                  summary.totalNetFlow >= 0 ? 'text-foreground' : 'text-expense'
                 }`}
               >
                 {formatCurrency(summary.totalNetFlow)}
               </p>
             </div>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
+            <div className='bg-muted rounded-lg p-4'>
+              <p className='text-sm font-medium text-muted-foreground mb-1'>
                 Saldo Final
               </p>
               <p
                 className={`text-xl font-bold ${
-                  summary.finalBalance >= 0 ? 'text-slate-900' : 'text-red-500'
+                  summary.finalBalance >= 0 ? 'text-foreground' : 'text-expense'
                 }`}
               >
                 {formatCurrency(summary.finalBalance)}
@@ -176,16 +176,16 @@ export const ConsolidatedForecastCard: React.FC<
             </div>
           </div>
 
-          <div className='bg-slate-50 rounded-lg p-4'>
+          <div className='bg-muted rounded-lg p-4'>
             <div className='flex items-center justify-between'>
-              <p className='text-sm font-medium text-slate-700'>
+              <p className='text-sm font-medium text-muted-foreground'>
                 Fluxo Médio Mensal
               </p>
               <p
                 className={`text-lg font-bold ${
                   summary.averageMonthlyFlow >= 0
-                    ? 'text-slate-900'
-                    : 'text-red-500'
+                    ? 'text-foreground'
+                    : 'text-expense'
                 }`}
               >
                 {formatCurrency(summary.averageMonthlyFlow)}
@@ -211,12 +211,15 @@ export const ConsolidatedForecastCard: React.FC<
               </p>
             </div>
 
-            <div className='rounded-lg border border-slate-200 bg-slate-50 p-4'>
+            <div className='rounded-lg border border-border bg-muted p-4'>
               <div className='flex items-center justify-between mb-2'>
-                <span className='text-sm font-medium text-slate-700'>
+                <span className='text-sm font-medium text-muted-foreground'>
                   Nível de Risco
                 </span>
-                <WarningIcon className='w-5 h-5 text-slate-600' weight='bold' />
+                <WarningIcon
+                  className='w-5 h-5 text-muted-foreground'
+                  weight='bold'
+                />
               </div>
               <span
                 className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getRiskColor(insights.riskLevel)}`}
@@ -228,18 +231,18 @@ export const ConsolidatedForecastCard: React.FC<
 
           {/* Recommendations */}
           {insights.recommendations && insights.recommendations.length > 0 && (
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <h4 className='text-sm font-semibold text-slate-900 mb-3'>
+            <div className='bg-muted rounded-lg p-4'>
+              <h4 className='text-sm font-semibold text-foreground mb-3'>
                 Recomendações
               </h4>
               <ul className='space-y-2'>
                 {insights.recommendations.map((recommendation, index) => (
                   <li key={index} className='flex items-start'>
                     <CheckCircleIcon
-                      className='w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0'
+                      className='w-4 h-4 text-income mr-2 mt-0.5 flex-shrink-0'
                       weight='bold'
                     />
-                    <span className='text-sm text-slate-700'>
+                    <span className='text-sm text-muted-foreground'>
                       {recommendation}
                     </span>
                   </li>

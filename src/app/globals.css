@@ -73,36 +73,12 @@
   --color-active-data: #000000;
   --color-inactive-data: #e5e7eb;
 
-  /* Legacy support for existing components */
-  --color-background: var(--color-bg-primary);
-  --color-foreground: var(--color-text-primary);
-  --color-card: var(--color-bg-card);
-  --color-card-foreground: var(--color-text-primary);
-  --color-popover: var(--color-bg-card);
-  --color-popover-foreground: var(--color-text-primary);
-  --color-primary-foreground: var(--color-primary-contrast);
-  --color-secondary-foreground: var(--color-secondary-contrast);
-  --color-muted: var(--color-gray-100);
-  --color-muted-foreground: var(--color-text-secondary);
-  --color-accent: var(--color-primary-light);
-  --color-accent-foreground: var(--color-primary-contrast);
-  --color-destructive: var(--color-error);
-  --color-border: var(--color-border-default);
-  --color-input: var(--color-border-default);
-  --color-ring: var(--color-border-focus);
+  /* Chart Colors */
   --color-chart-1: #f97316;
   --color-chart-2: #06b6d4;
   --color-chart-3: #8b5cf6;
   --color-chart-4: #eab308;
   --color-chart-5: #ec4899;
-  --color-sidebar: var(--color-bg-secondary);
-  --color-sidebar-foreground: var(--color-text-primary);
-  --color-sidebar-primary: var(--color-primary);
-  --color-sidebar-primary-foreground: var(--color-primary-contrast);
-  --color-sidebar-accent: var(--color-gray-100);
-  --color-sidebar-accent-foreground: var(--color-text-primary);
-  --color-sidebar-border: var(--color-border-default);
-  --color-sidebar-ring: var(--color-primary);
 
   /* ===== SPACING SYSTEM ===== */
   --spacing-card-padding: 1.5rem;
@@ -234,33 +210,15 @@
   --color-border-default: #374151;
   --color-border-light: #4b5563;
   --color-border-dark: #1f2937;
-
-  /* Legacy support */
-  --color-background: var(--color-bg-primary);
-  --color-foreground: var(--color-text-primary);
-  --color-card: var(--color-bg-card);
-  --color-card-foreground: var(--color-text-primary);
-  --color-popover: var(--color-bg-card);
-  --color-popover-foreground: var(--color-text-primary);
-  --color-muted: var(--color-gray-800);
-  --color-muted-foreground: var(--color-text-secondary);
-  --color-accent: var(--color-gray-700);
-  --color-accent-foreground: var(--color-text-primary);
-  --color-border: var(--color-border-default);
-  --color-input: var(--color-border-default);
-  --color-sidebar: var(--color-bg-card);
-  --color-sidebar-foreground: var(--color-text-primary);
-  --color-sidebar-accent: var(--color-gray-700);
-  --color-sidebar-accent-foreground: var(--color-text-primary);
-  --color-sidebar-border: var(--color-border-default);
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--color-border-default);
   }
   body {
-    @apply bg-bg-primary text-text-primary;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
   }
 
   /* Remove focus outlines globally */

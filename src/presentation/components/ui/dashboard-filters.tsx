@@ -231,11 +231,11 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         onClick={handleOpenFilters}
         variant='ghost'
         size='sm'
-        className='relative py-3 px-2 rounded-xl bg-primary text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
+        className='relative py-3 px-2 rounded-xl bg-primary text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all duration-250 hover:-translate-y-0.5'
       >
         <FunnelIcon className='w-5 h-5' weight='bold' />
         {isFiltered && (
-          <span className='absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white animate-pulse'></span>
+          <span className='absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background animate-pulse'></span>
         )}
       </Button>
 
@@ -250,21 +250,21 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             />
 
             <div
-              className={`fixed top-0 right-0 h-full bg-white shadow-2xl z-[110] transition-transform duration-300 ease-in-out ${
+              className={`fixed top-0 right-0 h-full bg-background shadow-2xl z-[110] transition-transform duration-300 ease-in-out ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
               } w-full sm:w-[23.75rem]`}
             >
               <div className='flex flex-col h-full'>
-                <div className='flex items-center justify-between p-6 border-b border-slate-200'>
+                <div className='flex items-center justify-between p-6 border-b border-border'>
                   <div className='flex items-center gap-3'>
-                    <div className='w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center'>
+                    <div className='w-10 h-10 rounded-xl bg-primary flex items-center justify-center'>
                       <FunnelIcon
-                        className='w-5 h-5 text-white'
+                        className='w-5 h-5 text-primary-foreground'
                         weight='bold'
                       />
                     </div>
                     <div>
-                      <h2 className='text-xl font-bold text-slate-900'>
+                      <h2 className='text-xl font-bold text-foreground'>
                         Filtros do Dashboard
                       </h2>
                       {isFiltered && (
@@ -278,7 +278,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                     variant='ghost'
                     size='icon'
                     onClick={handleCloseFilters}
-                    className='h-10 w-10 rounded-xl hover:bg-gray-900'
+                    className='h-10 w-10 rounded-xl hover:bg-accent'
                   >
                     <XIcon className='w-5 h-5' weight='bold' />
                   </Button>
@@ -287,10 +287,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 <div className='flex-1 overflow-y-auto p-6'>
                   <div className='flex flex-col gap-6'>
                     <div className='flex flex-col gap-3'>
-                      <label className='text-sm font-semibold text-slate-700 flex items-center gap-2'>
-                        <div className='w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center'>
+                      <label className='text-sm font-semibold text-foreground flex items-center gap-2'>
+                        <div className='w-8 h-8 rounded-xl bg-muted flex items-center justify-center'>
                           <CalendarIcon
-                            className='w-4 h-4 text-slate-600'
+                            className='w-4 h-4 text-muted-foreground'
                             weight='bold'
                           />
                         </div>
@@ -300,7 +300,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                         value={selectedMonth}
                         onValueChange={handleMonthChange}
                       >
-                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors'>
+                        <SelectTrigger className='w-full h-12 rounded-xl border-border bg-muted hover:bg-accent transition-colors'>
                           <SelectValue placeholder='Selecione o mês' />
                         </SelectTrigger>
                         <SelectContent>
@@ -318,10 +318,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                     </div>
 
                     <div className='flex flex-col gap-3'>
-                      <label className='text-sm font-semibold text-slate-700 flex items-center gap-2'>
-                        <div className='w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center'>
+                      <label className='text-sm font-semibold text-foreground flex items-center gap-2'>
+                        <div className='w-8 h-8 rounded-xl bg-muted flex items-center justify-center'>
                           <ChartLineIcon
-                            className='w-4 h-4 text-slate-600'
+                            className='w-4 h-4 text-muted-foreground'
                             weight='bold'
                           />
                         </div>
@@ -331,7 +331,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                         value={selectedForecastMonths.toString()}
                         onValueChange={handleForecastMonthsChange}
                       >
-                        <SelectTrigger className='w-full h-12 rounded-xl border-slate-200 bg-slate-50 hover:bg-white transition-colors'>
+                        <SelectTrigger className='w-full h-12 rounded-xl border-border bg-muted hover:bg-accent transition-colors'>
                           <SelectValue placeholder='Meses para previsão' />
                         </SelectTrigger>
                         <SelectContent>
@@ -359,12 +359,12 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                   </div>
                 </div>
 
-                <div className='border-t border-slate-200 p-6'>
+                <div className='border-t border-border p-6'>
                   <div className='flex gap-3'>
                     <Button
                       variant='outline'
                       onClick={handleResetFilters}
-                      className='flex-1 h-12 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
+                      className='flex-1 h-12 rounded-xl border-border bg-transparent hover:bg-accent font-semibold text-foreground transition-all duration-250'
                     >
                       Resetar
                     </Button>
@@ -373,7 +373,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                         handleApplyFilters();
                         handleCloseFilters();
                       }}
-                      className='flex-1 h-12 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                      className='flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                     >
                       Aplicar Filtros
                     </Button>

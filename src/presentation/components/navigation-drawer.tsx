@@ -132,8 +132,8 @@ export const NavigationDrawer: React.FC = () => {
             className={cn(
               'w-10 h-10 flex items-center justify-center rounded-xl transition-all cursor-pointer relative',
               active
-                ? 'bg-primary text-white shadow-sm'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-primary dark:bg-gray-500 text-white shadow-sm'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
             )}
             title={item.label}
           >
@@ -154,16 +154,25 @@ export const NavigationDrawer: React.FC = () => {
           className={cn(
             'w-full flex items-center justify-between gap-3 py-3 px-4 rounded-xl font-medium text-sm transition-all cursor-pointer relative',
             active
-              ? 'bg-primary text-white shadow-sm'
-              : 'text-gray-700 hover:bg-gray-50'
+              ? 'bg-primary dark:bg-slate-800 text-white shadow-sm'
+              : 'text-foreground hover:bg-slate-100 dark:hover:bg-slate-400/5'
           )}
         >
           <div className='flex items-center gap-3'>
             <Icon
-              className='w-5 h-5 shrink-0'
+              className={cn(
+                'w-5 h-5 shrink-0',
+                active && 'text-primary-foreground'
+              )}
               weight={active ? 'fill' : 'regular'}
             />
-            <span>{item.label}</span>
+            <span
+              className={cn(
+                active ? 'text-primary-foreground' : 'text-foreground'
+              )}
+            >
+              {item.label}
+            </span>
           </div>
           {item.badge && (
             <span className='min-w-[20px] h-5 px-1.5 flex items-center justify-center bg-error text-white text-xs font-semibold rounded-full'>
@@ -180,7 +189,7 @@ export const NavigationDrawer: React.FC = () => {
       {/* Desktop Sidebar - Fixed Left Drawer */}
       <aside
         className={cn(
-          'hidden lg:flex fixed left-0 top-0 h-full bg-white z-50 flex-col shadow-lg transition-all duration-300',
+          'hidden lg:flex fixed left-0 top-0 h-full bg-background dark:bg-primary z-50 flex-col shadow-lg dark:shadow-[0_25px_60px_rgba(15,25,42,0.60)] transition-all duration-300',
           isCollapsed ? 'w-20' : 'w-72'
         )}
       >
@@ -188,7 +197,7 @@ export const NavigationDrawer: React.FC = () => {
         <button
           onClick={toggleCollapse}
           className={cn(
-            'absolute top-6 w-5 h-5 bg-gray-400 hover:bg-primary-dark text-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
+            'absolute top-6 w-5 h-5 bg-gray-300 dark:bg-gray-700 hover:bg-primary dark:hover:bg-primary-dark text-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
             isCollapsed ? '-right-3' : '-right-3'
           )}
           title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
@@ -203,7 +212,7 @@ export const NavigationDrawer: React.FC = () => {
         {/* Header with User Profile */}
         <div
           className={cn(
-            'border-b border-gray-100 transition-all',
+            'border-b border-border transition-all',
             isCollapsed ? 'p-3' : 'p-6'
           )}
         >
@@ -214,23 +223,25 @@ export const NavigationDrawer: React.FC = () => {
                   <WalletIcon className='w-6 h-6 text-white' weight='fill' />
                 </div>
                 <div>
-                  <h2 className='text-base font-bold text-gray-900'>
+                  <h2 className='text-base font-bold text-foreground'>
                     Finanças
                   </h2>
-                  <p className='text-xs text-gray-500'>Gestão Pessoal</p>
+                  <p className='text-xs text-muted-foreground'>
+                    Gestão Pessoal
+                  </p>
                 </div>
               </div>
 
               {/* User Info */}
-              <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors'>
-                <div className='w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center'>
+              <div className='flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors'>
+                <div className='w-10 h-10 bg-gradient-to-br from-gray-300 dark:from-gray-500 to-gray-400 dark:to-gray-600 rounded-full flex items-center justify-center'>
                   <UserIcon className='w-5 h-5 text-white' weight='fill' />
                 </div>
                 <div className='flex-1 min-w-0'>
-                  <p className='text-sm font-semibold text-gray-900 truncate'>
+                  <p className='text-sm font-semibold text-foreground truncate'>
                     {user?.name}
                   </p>
-                  <p className='text-xs text-gray-500 truncate'>
+                  <p className='text-xs text-muted-foreground truncate'>
                     {user?.email}
                   </p>
                 </div>
@@ -241,7 +252,7 @@ export const NavigationDrawer: React.FC = () => {
               <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-md'>
                 <WalletIcon className='w-6 h-6 text-white' weight='fill' />
               </div>
-              <div className='w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center'>
+              <div className='w-10 h-10 bg-gradient-to-br from-gray-300 dark:from-gray-500 to-gray-400 dark:to-gray-600 rounded-full flex items-center justify-center'>
                 <UserIcon className='w-5 h-5 text-white' weight='fill' />
               </div>
             </div>
@@ -258,7 +269,7 @@ export const NavigationDrawer: React.FC = () => {
           <div className={cn(isCollapsed ? 'space-y-3' : 'space-y-1')}>
             {!isCollapsed && (
               <div className='px-3 mb-2'>
-                <p className='text-xs font-semibold text-gray-400 uppercase tracking-wider'>
+                <p className='text-xs font-semibold text-gray-400/90 uppercase tracking-wider'>
                   Menu Principal
                 </p>
               </div>
@@ -271,7 +282,7 @@ export const NavigationDrawer: React.FC = () => {
           >
             {!isCollapsed && (
               <div className='px-3 mb-2'>
-                <p className='text-xs font-semibold text-gray-400 uppercase tracking-wider'>
+                <p className='text-xs font-semibold text-gray-400/90 uppercase tracking-wider'>
                   Sistema
                 </p>
               </div>
@@ -282,14 +293,11 @@ export const NavigationDrawer: React.FC = () => {
 
         {/* Footer */}
         <div
-          className={cn(
-            'border-t border-gray-100',
-            isCollapsed ? 'p-3' : 'p-4'
-          )}
+          className={cn('border-t border-border', isCollapsed ? 'p-3' : 'p-4')}
         >
           {isCollapsed ? (
             <button
-              className='w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-primary text-secondary-foreground transition-all cursor-pointer'
+              className='w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-foreground dark:text-gray-200 transition-all cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'
               onClick={handleSignOut}
               title='Sair'
             >
@@ -297,7 +305,7 @@ export const NavigationDrawer: React.FC = () => {
             </button>
           ) : (
             <button
-              className='w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-sm text-gray-400 hover:text-secondary-foreground hover:bg-primary-dark transition-all cursor-pointer'
+              className='w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-sm text-foreground hover:text-destructive hover:bg-slate-100 dark:hover:bg-slate-400/5 transition-all cursor-pointer'
               onClick={handleSignOut}
             >
               <SignOutIcon className='w-5 h-5 shrink-0' weight='bold' />
@@ -309,7 +317,7 @@ export const NavigationDrawer: React.FC = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav
-        className='lg:hidden fixed bottom-0 left-0 right-0 bg-white z-40'
+        className='lg:hidden fixed bottom-0 left-0 right-0 bg-background z-40'
         style={{
           borderRadius: '2rem 2rem 0 0',
           boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
