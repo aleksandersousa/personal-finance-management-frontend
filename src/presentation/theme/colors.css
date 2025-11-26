@@ -14,17 +14,17 @@
   --color-neutral-1000: #0a0a0a;
 
   /* Primary */
-  --color-primary: #128c7e;
-  --color-primary-50: #e6f7f5;
-  --color-primary-100: #b3e8e0;
-  --color-primary-200: #80d9cb;
-  --color-primary-300: #4dcab6;
-  --color-primary-400: #1abba1;
-  --color-primary-500: #128c7e;
-  --color-primary-600: #0e6f63;
-  --color-primary-700: #0a5248;
-  --color-primary-800: #075e54;
-  --color-primary-900: #03382f;
+  --color-primary: #8b5cf6;
+  --color-primary-50: #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a855f7;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7c3aed;
+  --color-primary-800: #6b21a8;
+  --color-primary-900: #581c87;
 
   /* Secondary */
   --color-secondary: #2d2f33;
@@ -49,8 +49,8 @@
   --color-error-600: #dc2626;
 
   /*Gradients */
-  --gradient-app-bar: linear-gradient(135deg, #128c7e 0%, #075e54 100%);
-  --gradient-bottom-nav: linear-gradient(135deg, #128c7e 0%, #075e54 100%);
+  --gradient-app-bar: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  --gradient-bottom-nav: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
   --gradient-card-overlay: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,

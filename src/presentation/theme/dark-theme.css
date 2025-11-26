@@ -12,6 +12,11 @@
       var(--color-neutral-600) 50%,
       transparent
     );
+    --color-border-input: color-mix(
+      in srgb,
+      var(--color-neutral-600) 50%,
+      transparent
+    );
 
     --color-button-hover: var(--color-neutral-700);
   }

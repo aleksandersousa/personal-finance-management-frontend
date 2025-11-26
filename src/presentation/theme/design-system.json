@@ -43,12 +43,12 @@
   "colorSystem": {
     "palette": {
       "primary": {
-        "main": "#128C7E",
-        "light": "#25D366",
-        "dark": "#075E54",
-        "gradient": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+        "main": "#8B5CF6",
+        "light": "#A855F7",
+        "dark": "#7C3AED",
+        "gradient": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
         "contrast": "#FFFFFF",
-        "description": "Primary brand color - dark teal/green gradient used for app bars, bottom navigation, and primary UI elements. Remains consistent across light and dark themes."
+        "description": "Primary brand color - purple gradient used for app bars, bottom navigation, and primary UI elements. Remains consistent across light and dark themes."
       },
       "secondary": {
         "main": "#6B7280",
@@ -89,8 +89,8 @@
       }
     },
     "gradients": {
-      "appBar": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
-      "bottomNav": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+      "appBar": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
+      "bottomNav": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
       "cardOverlay": "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
       "cardDark": "linear-gradient(135deg, #000000 0%, #1F2937 100%)",
       "activeCard": "linear-gradient(135deg, #000000 0%, #1F2937 100%)"
@@ -270,7 +270,7 @@
     },
     "appBar": {
       "height": "4rem",
-      "background": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+      "background": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
       "text": "#FFFFFF",
       "icon": "#FFFFFF",
       "padding": "1rem",
@@ -388,7 +388,7 @@
     },
     "bottomNavigation": {
       "height": "4rem",
-      "background": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+      "background": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
       "borderRadius": "2rem 2rem 0 0",
       "padding": "0.5rem 1rem",
       "shadow": "0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
@@ -692,7 +692,7 @@
   },
   "darkModeStrategy": {
     "principles": [
-      "Primary brand color (teal/green gradient) remains consistent across themes",
+      "Primary brand color (purple gradient) remains consistent across themes",
       "Success color (green) remains consistent for badges and notifications",
       "Neutral grayscale adapts: use lighter grays in light mode, darker grays in dark mode",
       "Selected/active states invert between themes using neutral colors",
@@ -700,13 +700,13 @@
     ],
     "consistentElements": {
       "appBar": {
-        "background": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+        "background": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
         "text": "#FFFFFF",
         "icon": "#FFFFFF",
         "description": "Primary brand gradient - never changes between themes"
       },
       "bottomNav": {
-        "background": "linear-gradient(135deg, #128C7E 0%, #075E54 100%)",
+        "background": "linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)",
         "icon": "#FFFFFF",
         "description": "Primary brand gradient - never changes between themes"
       },

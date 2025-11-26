@@ -77,8 +77,7 @@ const secondaryItems: NavigationItem[] = [
 const buttonVariants = cva('', {
   variants: {
     variant: {
-      active:
-        'bg-gradient-to-br from-primary to-primary-800 text-neutral-100 shadow-sm',
+      active: 'bg-primary text-neutral-100 shadow-sm',
       inactive: 'text-foreground',
     },
   },
@@ -137,19 +136,8 @@ const renderNavItem = (
             )}
             weight={active ? 'fill' : 'regular'}
           />
-          <span
-            className={cn(
-              active ? 'text-primary-foreground' : 'text-foreground'
-            )}
-          >
-            {item.label}
-          </span>
+          <span>{item.label}</span>
         </div>
-        {item.badge && (
-          <span className='min-w-[20px] h-5 px-1.5 flex items-center justify-center bg-error text-white text-xs font-semibold rounded-full'>
-            {item.badge}
-          </span>
-        )}
       </button>
     </Link>
   );
@@ -295,9 +283,9 @@ export const NavigationDrawer: React.FC = () => {
                 </p>
               </div>
             )}
-            {navigationItems.map(item =>
-              renderNavItem(item, isCollapsed, isActive)
-            )}
+            {navigationItems
+              .filter(item => item.href !== '/settings')
+              .map(item => renderNavItem(item, isCollapsed, isActive))}
           </div>
 
           <div
