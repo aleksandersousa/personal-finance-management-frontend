@@ -43,7 +43,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       setIsCollapsed(savedState === 'true');
     }
 
-    // Listen for sidebar state changes
     const handleStorageChange = () => {
       const savedState = localStorage.getItem('sidebarCollapsed');
       if (savedState !== null) {
@@ -52,8 +51,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     };
 
     window.addEventListener('storage', handleStorageChange);
-
-    // Custom event for same-tab changes
     window.addEventListener('sidebarToggle', handleStorageChange);
 
     return () => {
@@ -64,7 +61,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className='relative w-full min-h-screen overflow-x-hidden'>
-      {/* Subtle Background */}
       <div className='fixed inset-0 bg-background -z-10' />
 
       <div className='pt-17 pb-20 lg:pb-8'>
@@ -79,18 +75,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             currentForecastMonths={currentForecastMonths}
           />
 
-          {/* Summary Cards */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700'>
             <SummaryCard
               title='Saldo'
-              value={summary.summary.balance}
               type='balance'
-              icon={
-                <CurrencyDollarIcon
-                  className='w-6 h-6 text-slate-700'
-                  weight='bold'
-                />
-              }
+              value={summary.summary.balance}
+              icon={<CurrencyDollarIcon className='w-6 h-6 text-neutral-900' />}
               comparison={{
                 previousValue: 0,
                 change:
@@ -101,12 +91,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               title='Receitas'
               value={summary.summary.totalIncome}
               type='income'
-              icon={
-                <ArrowUpIcon
-                  className='w-6 h-6 text-emerald-500'
-                  weight='bold'
-                />
-              }
+              icon={<ArrowUpIcon className='w-6 h-6 text-success-500' />}
               comparison={{
                 previousValue: 0,
                 change: summary.comparisonWithPrevious.percentageChanges.income,
@@ -121,9 +106,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               title='Despesas'
               value={summary.summary.totalExpenses}
               type='expense'
-              icon={
-                <ArrowDownIcon className='w-6 h-6 text-red-500' weight='bold' />
-              }
+              icon={<ArrowDownIcon className='w-6 h-6 text-error-500' />}
               comparison={{
                 previousValue: 0,
                 change:
@@ -137,7 +120,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             />
           </div>
 
-          {/* Category Breakdown */}
           {categories.length > 0 && (
             <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150'>
               <CategoryBreakdown
@@ -154,7 +136,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
           )}
 
-          {/* Forecast Section */}
           {forecast && (
             <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300'>
               <ConsolidatedForecastCard

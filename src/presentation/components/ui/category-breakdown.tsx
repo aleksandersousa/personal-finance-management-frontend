@@ -59,9 +59,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   return (
     <Card className='p-6'>
       <CardHeader className='flex-row items-center justify-between mb-6'>
-        <CardTitle className='text-lg font-bold text-foreground'>
-          {title}
-        </CardTitle>
+        <CardTitle className='text-lg text-foreground'>{title}</CardTitle>
         <div className='text-sm font-semibold px-3 py-1 rounded-full text-foreground bg-neutral-200/70'>
           {formatCurrency(total)}
         </div>

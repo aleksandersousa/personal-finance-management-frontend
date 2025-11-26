@@ -80,32 +80,11 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
     }
   };
 
-  const getCardStyles = () => {
-    return 'p-6';
-  };
-
-  const getValueColor = () => {
-    switch (type) {
-      case 'income':
-        return 'text-income';
-      case 'expense':
-        return 'text-expense';
-      case 'balance':
-        return value >= 0
-          ? 'text-foreground dark:text-gray-100'
-          : 'text-expense';
-      default:
-        return 'text-muted-foreground dark:text-gray-100';
-    }
-  };
-
   const getChangeColor = (change: number) => {
     if (type === 'expense') {
-      // Para despesas, aumento é ruim (vermelho), diminuição é bom (verde)
-      return change > 0 ? 'text-expense' : 'text-income';
+      return change > 0 ? 'text-error-500' : 'text-success-500';
     } else {
-      // Para receitas e saldo, aumento é bom (verde), diminuição é ruim (vermelho)
-      return change > 0 ? 'text-income' : 'text-expense';
+      return change > 0 ? 'text-success-500' : 'text-error-500';
     }
   };
 
@@ -121,57 +100,42 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className='relative summary-card-container group'>
       <Card
-        className={`${getCardStyles()} ${isMobile ? 'cursor-pointer' : ''}`}
+        className='p-6'
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleCardClick}
       >
         <CardHeader className='flex-row items-center justify-between mb-3'>
-          <CardTitle className='text-sm font-semibold text-text-primary dark:text-gray-100 uppercase tracking-wide'>
+          <CardTitle className='text-sm font-semibold text-foreground uppercase tracking-wide'>
             {title}
           </CardTitle>
           {icon && (
-            <div className='p-2 rounded-lg bg-slate-100 dark:bg-slate-800'>
-              {icon}
-            </div>
+            <div className='p-2 rounded-lg bg-neutral-200/70 '>{icon}</div>
           )}
         </CardHeader>
 
         <CardContent className='space-y-3'>
-          {/* Value */}
           <div>
-            <div className={`text-3xl font-bold ${getValueColor()}`}>
+            <div className={`text-3xl text-foreground`}>
               {type === 'expense' && value > 0 ? '-' : ''}
               {formatCurrency(value)}
             </div>
           </div>
 
-          {/* Comparison */}
           {comparison && (
             <div className='flex items-center gap-2'>
               <div
-                className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${getChangeColor(comparison.change)} ${
-                  comparison.change > 0
-                    ? type === 'expense'
-                      ? 'bg-red-50 dark:bg-red-500/10'
-                      : 'bg-emerald-50 dark:bg-emerald-500/10'
-                    : type === 'expense'
-                      ? 'bg-emerald-50 dark:bg-emerald-500/10'
-                      : 'bg-red-50 dark:bg-red-500/10'
-                }`}
+                className={`flex items-center gap-1 py-0.5 rounded text-xs font-semibold ${getChangeColor(comparison.change)}`}
               >
                 {getChangeIcon(comparison.change)}
                 <span>{Math.abs(comparison.change).toFixed(1)}%</span>
               </div>
-              <span className='text-xs text-text-secondary'>
-                vs. mês anterior
-              </span>
+              <span className='text-xs text-foreground'>vs. mês anterior</span>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Hover Details */}
       {shouldShowDetails &&
         details &&
         (type === 'income' || type === 'expense') && (
@@ -185,7 +149,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
             onMouseLeave={handleMouseLeave}
           >
             <div className='space-y-3'>
-              <h4 className='text-sm font-semibold text-text-primary dark:text-gray-100 mb-3'>
+              <h4 className='text-sm font-semibold text-foreground mb-3'>
                 Detalhamento
               </h4>
 
@@ -193,14 +157,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-income' : 'bg-expense'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success-500' : 'bg-error-500'}`}
                     />
-                    <span className='text-sm font-medium text-text-primary dark:text-gray-100'>
+                    <span className='text-sm font-medium text-foreground'>
                       Fixas
                     </span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-income' : 'text-expense'}`}
+                    className={`text-sm font-bold ${type === 'income' ? 'text-success-500' : 'text-error-500'}`}
                   >
                     {formatCurrency(details.fixed)}
                   </span>
@@ -209,14 +173,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-green-400' : 'bg-red-400'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success-500' : 'bg-error-500'}`}
                     />
-                    <span className='text-sm font-medium text-text-primary dark:text-gray-100'>
+                    <span className='text-sm font-medium text-foreground'>
                       Variáveis
                     </span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-income' : 'text-expense'}`}
+                    className={`text-sm font-bold ${type === 'income' ? 'text-success-500' : 'text-error-500'}`}
                   >
                     {formatCurrency(details.variable)}
                   </span>
@@ -224,10 +188,10 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
 
                 <div className='pt-2 mt-2 border-t border-border'>
                   <div className='flex justify-between items-center'>
-                    <span className='text-xs font-medium text-text-secondary dark:text-gray-100'>
+                    <span className='text-xs font-medium text-foreground'>
                       Total de entradas
                     </span>
-                    <span className='text-sm font-semibold text-text-primary dark:text-gray-100'>
+                    <span className='text-sm font-semibold text-foreground'>
                       {details.entriesCount}
                     </span>
                   </div>
@@ -235,7 +199,6 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
               </div>
             </div>
 
-            {/* Arrow pointing to card (desktop only) */}
             {!isMobile && (
               <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent border-b-background'></div>
             )}
