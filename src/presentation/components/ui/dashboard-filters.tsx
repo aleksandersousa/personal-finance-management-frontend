@@ -235,7 +235,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       >
         <FunnelIcon className='w-5 h-5' weight='bold' />
         {isFiltered && (
-          <span className='absolute top-5 right-9 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background animate-pulse' />
+          <span className='absolute top-5 right-[4.6rem] md:right-9 w-3 h-3 bg-emerald-500 rounded-full border-2 border-background animate-pulse' />
         )}
       </Button>
 
