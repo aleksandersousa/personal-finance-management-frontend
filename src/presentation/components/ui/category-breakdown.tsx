@@ -27,16 +27,14 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   };
 
   const getProgressColor = () => {
-    return type === 'INCOME' ? 'bg-success-500' : 'bg-error-500';
+    return type === 'INCOME' ? 'bg-success' : 'bg-error';
   };
 
   if (filteredCategories.length === 0) {
     return (
       <Card className='p-6'>
         <CardHeader className='mb-4'>
-          <CardTitle className='text-lg font-bold text-foreground'>
-            {title}
-          </CardTitle>
+          <CardTitle className='text-lg text-foreground'>{title}</CardTitle>
         </CardHeader>
         <CardContent className='text-center text-neutral-500 dark:text-gray-100 py-8'>
           <ChartBarIcon
@@ -60,7 +58,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
     <Card className='p-6'>
       <CardHeader className='flex-row items-center justify-between mb-6'>
         <CardTitle className='text-lg text-foreground'>{title}</CardTitle>
-        <div className='text-sm font-semibold px-3 py-1 rounded-full text-foreground bg-neutral-200/70'>
+        <div className='text-sm px-3 py-1 rounded-full text-neutral-0 bg-primary'>
           {formatCurrency(total)}
         </div>
       </CardHeader>
@@ -79,18 +77,19 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
             >
               {/* Category header */}
               <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold text-foreground'>
+                <div className='flex flex-col gap-1'>
+                  <span className='text-foreground'>
                     {category.categoryName}
                   </span>
-                  <span className='text-xs font-medium text-neutral-600 bg-neutral-200/70 px-2 py-1 rounded-full'>
+                  <span className='text-xs text-neutral-500'>
                     {category.count}{' '}
                     {category.count === 1 ? 'entrada' : 'entradas'}
                   </span>
                 </div>
+
                 <div className='text-right'>
                   <div
-                    className={`font-bold ${
+                    className={`${
                       type === 'INCOME' ? 'text-success-500' : 'text-error-500'
                     }`}
                   >
@@ -103,7 +102,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
               </div>
 
               {/* Progress bar */}
-              <div className={`w-full h-2 rounded-full bg-neutral-200/70`}>
+              <div className={`w-full h-2 rounded-full bg-progress-background`}>
                 <div
                   className={`h-2 rounded-full transition-all duration-500 ${getProgressColor()}`}
                   style={{ width: `${percentage}%` }}

@@ -61,7 +61,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className='relative w-full min-h-screen overflow-x-hidden'>
-      <div className='fixed inset-0 bg-background -z-10' />
+      <div className='fixed inset-0 bg-background-secondary -z-10' />
 
       <div className='pt-17 pb-20 lg:pb-8'>
         <div
@@ -80,7 +80,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               title='Saldo'
               type='balance'
               value={summary.summary.balance}
-              icon={<CurrencyDollarIcon className='w-6 h-6 text-neutral-900' />}
+              icon={<CurrencyDollarIcon className='w-6 h-6 text-neutral-0' />}
               comparison={{
                 previousValue: 0,
                 change:
@@ -91,7 +91,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               title='Receitas'
               value={summary.summary.totalIncome}
               type='income'
-              icon={<ArrowUpIcon className='w-6 h-6 text-success-500' />}
+              icon={<ArrowUpIcon className='w-6 h-6 text-neutral-0' />}
               comparison={{
                 previousValue: 0,
                 change: summary.comparisonWithPrevious.percentageChanges.income,
@@ -106,7 +106,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               title='Despesas'
               value={summary.summary.totalExpenses}
               type='expense'
-              icon={<ArrowDownIcon className='w-6 h-6 text-error-500' />}
+              icon={<ArrowDownIcon className='w-6 h-6 text-neutral-0' />}
               comparison={{
                 previousValue: 0,
                 change:

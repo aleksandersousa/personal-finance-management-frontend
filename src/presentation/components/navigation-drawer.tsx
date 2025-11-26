@@ -77,7 +77,7 @@ const secondaryItems: NavigationItem[] = [
 const buttonVariants = cva('', {
   variants: {
     variant: {
-      active: 'bg-primary text-neutral-100 shadow-sm',
+      active: 'bg-primary text-neutral-50 shadow-sm',
       inactive: 'text-foreground',
     },
   },
@@ -197,7 +197,7 @@ export const NavigationDrawer: React.FC = () => {
       {/* Desktop Sidebar - Fixed Left Drawer */}
       <aside
         className={cn(
-          'hidden lg:flex fixed left-0 top-0 h-full bg-background-secondary z-50 flex-col shadow-lg transition-all duration-300',
+          'hidden lg:flex fixed left-0 top-0 h-full bg-background-secondary z-50 flex-col shadow-lg dark:shadow-none dark:border-r dark:border-border-foreground transition-all duration-300',
           isCollapsed ? 'w-20' : 'w-72'
         )}
       >

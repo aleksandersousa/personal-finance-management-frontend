@@ -64,7 +64,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className='fixed top-0 left-0 right-0 z-30 bg-background lg:left-64'>
+    <header className='fixed top-0 left-0 right-0 z-30 bg-background-secondary lg:left-64'>
       <div className='flex items-center justify-end px-4 sm:px-8 py-2 h-16'>
         <div className='flex items-center space-x-2'>
           <Button

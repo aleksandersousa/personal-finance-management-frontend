@@ -81,20 +81,31 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   };
 
   const getChangeColor = (change: number) => {
+    const isPositive = change > 0;
     if (type === 'expense') {
-      return change > 0 ? 'text-error-500' : 'text-success-500';
+      return isPositive ? 'text-error-500' : 'text-success';
     } else {
-      return change > 0 ? 'text-success-500' : 'text-error-500';
+      return isPositive ? 'text-success' : 'text-error-500';
     }
   };
 
   const getChangeIcon = (change: number) => {
-    const isPositive = change >= 0;
+    const isPositive = change > 0;
     return isPositive ? (
       <TrendUpIcon className='w-4 h-4' weight='bold' />
     ) : (
       <TrendDownIcon className='w-4 h-4' weight='bold' />
     );
+  };
+
+  const getCardIndicator = (value: number) => {
+    if (type === 'expense') {
+      return value > 0 ? '-' : '+';
+    } else if (type === 'income') {
+      return value > 0 ? '+' : '-';
+    } else {
+      return '';
+    }
   };
 
   return (
@@ -106,18 +117,16 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
         onClick={handleCardClick}
       >
         <CardHeader className='flex-row items-center justify-between mb-3'>
-          <CardTitle className='text-sm font-semibold text-foreground uppercase tracking-wide'>
+          <CardTitle className='text-sm text-foreground uppercase tracking-wide'>
             {title}
           </CardTitle>
-          {icon && (
-            <div className='p-2 rounded-lg bg-neutral-200/70 '>{icon}</div>
-          )}
+          {icon && <div className='p-2 rounded-lg bg-primary'>{icon}</div>}
         </CardHeader>
 
         <CardContent className='space-y-3'>
           <div>
             <div className={`text-3xl text-foreground`}>
-              {type === 'expense' && value > 0 ? '-' : ''}
+              {getCardIndicator(value)}
               {formatCurrency(value)}
             </div>
           </div>
@@ -125,12 +134,12 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
           {comparison && (
             <div className='flex items-center gap-2'>
               <div
-                className={`flex items-center gap-1 py-0.5 rounded text-xs font-semibold ${getChangeColor(comparison.change)}`}
+                className={`flex items-center gap-1 py-0.5 rounded text-xs ${getChangeColor(comparison.change)}`}
               >
                 {getChangeIcon(comparison.change)}
                 <span>{Math.abs(comparison.change).toFixed(1)}%</span>
               </div>
-              <span className='text-xs text-foreground'>vs. mês anterior</span>
+              <span className='text-xs text-neutral-500'>vs. mês anterior</span>
             </div>
           )}
         </CardContent>
@@ -140,7 +149,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
         details &&
         (type === 'income' || type === 'expense') && (
           <div
-            className={`absolute z-20 bg-background rounded-xl border border-border shadow-xl dark:shadow-[0_25px_60px_rgba(15,23,42,0.4)] p-4 min-w-[280px] ${
+            className={`absolute z-20 bg-background rounded-xl border border-border-foreground shadow-xl dark:shadow-[0_25px_60px_rgba(15,23,42,0.4)] p-4 min-w-[280px] ${
               isMobile
                 ? 'top-full left-0 right-0 mt-2'
                 : 'top-full left-1/2 transform -translate-x-1/2 mt-2'
@@ -149,22 +158,18 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
             onMouseLeave={handleMouseLeave}
           >
             <div className='space-y-3'>
-              <h4 className='text-sm font-semibold text-foreground mb-3'>
-                Detalhamento
-              </h4>
+              <h4 className='text-sm text-foreground mb-3'>Detalhamento</h4>
 
               <div className='space-y-2'>
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success-500' : 'bg-error-500'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
                     />
-                    <span className='text-sm font-medium text-foreground'>
-                      Fixas
-                    </span>
+                    <span className='text-sm text-foreground'>Fixas</span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-success-500' : 'text-error-500'}`}
+                    className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
                   >
                     {formatCurrency(details.fixed)}
                   </span>
@@ -173,25 +178,23 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
                 <div className='flex justify-between items-center py-1'>
                   <div className='flex items-center gap-2'>
                     <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success-500' : 'bg-error-500'}`}
+                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
                     />
-                    <span className='text-sm font-medium text-foreground'>
-                      Variáveis
-                    </span>
+                    <span className='text-sm text-foreground'>Variáveis</span>
                   </div>
                   <span
-                    className={`text-sm font-bold ${type === 'income' ? 'text-success-500' : 'text-error-500'}`}
+                    className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
                   >
                     {formatCurrency(details.variable)}
                   </span>
                 </div>
 
-                <div className='pt-2 mt-2 border-t border-border'>
+                <div className='pt-2 mt-2 border-t border-border-foreground'>
                   <div className='flex justify-between items-center'>
-                    <span className='text-xs font-medium text-foreground'>
+                    <span className='text-xs text-foreground'>
                       Total de entradas
                     </span>
-                    <span className='text-sm font-semibold text-foreground'>
+                    <span className='text-sm text-foreground'>
                       {details.entriesCount}
                     </span>
                   </div>
