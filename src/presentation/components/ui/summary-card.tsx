@@ -117,7 +117,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
         onClick={handleCardClick}
       >
         <CardHeader className='flex-row items-center justify-between mb-3'>
-          <CardTitle className='text-sm text-foreground uppercase tracking-wide'>
+          <CardTitle className='text-sm font-semibold text-foreground uppercase tracking-wide'>
             {title}
           </CardTitle>
           {icon && <div className='p-2 rounded-lg bg-primary'>{icon}</div>}
