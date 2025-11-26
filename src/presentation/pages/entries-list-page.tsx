@@ -75,14 +75,14 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                     ))}
                   </div>
 
-                  {result.meta && result.meta.totalPages > 1 && (
-                    <div className='mt-8'>
-                      <Pagination
-                        currentPage={result.meta.page}
-                        totalPages={result.meta.totalPages}
-                      />
-                    </div>
-                  )}
+                  <div className='mt-8'>
+                    <Pagination
+                      currentPage={result.pagination.page}
+                      totalPages={result.pagination.totalPages}
+                      totalItems={result.pagination.total}
+                      currentLimit={result.pagination.limit}
+                    />
+                  </div>
                 </>
               )}
             </Card>

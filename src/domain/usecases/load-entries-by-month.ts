@@ -15,7 +15,7 @@ export type LoadEntriesByMonthParams = {
 
 export type LoadEntriesByMonthResult = {
   data: EntryModel[];
-  meta: {
+  pagination: {
     page: number;
     limit: number;
     total: number;
