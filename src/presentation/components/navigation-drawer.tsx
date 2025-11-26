@@ -138,6 +138,11 @@ const renderNavItem = (
           />
           <span>{item.label}</span>
         </div>
+        {item.badge && (
+          <span className='absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full border-2 border-background'>
+            {item.badge}
+          </span>
+        )}
       </button>
     </Link>
   );
