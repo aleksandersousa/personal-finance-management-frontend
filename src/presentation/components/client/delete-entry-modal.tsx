@@ -75,7 +75,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             <div className='font-semibold text-foreground'>
               {entry.description}
             </div>
-            <div className='mt-1 text-xs text-gray-500'>
+            <div className='mt-1 text-xs text-neutral-500'>
               {entry.categoryName} • {formatDate(entry.date)}
             </div>
             <div
@@ -109,11 +109,11 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
                         setDeleteAllOccurrences(checked === true)
                       }
                       disabled={isPending}
-                      className='mt-0.5'
+                      className='mt-0.5 h-4 w-4 data-[state=checked]:bg-amber-700 data-[state=checked]:text-neutral-0 data-[state=checked]:border-none'
                     />
                     <label
                       htmlFor='deleteAllOccurrences'
-                      className='text-sm text-neutral-900 cursor-pointer leading-tight'
+                      className='text-sm text-amber-700 cursor-pointer leading-tight'
                     >
                       Excluir todas as ocorrências futuras desta entrada fixa
                     </label>

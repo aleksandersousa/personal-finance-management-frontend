@@ -21,14 +21,12 @@ import { Button } from './button';
 
 interface EntriesFiltersProps {
   currentMonth: string;
-  totalResults: number;
   showHeader?: boolean;
   hasActiveFilters?: boolean;
 }
 
 export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   currentMonth,
-  totalResults,
   showHeader = true,
   hasActiveFilters: externalHasActiveFilters = false,
 }) => {
