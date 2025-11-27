@@ -13,7 +13,7 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      'peer h-5 w-5 shrink-0 rounded border border-slate-300 ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-secondary data-[state=checked]:text-white data-[state=checked]:border-secondary',
+      'peer h-5 w-5 shrink-0 rounded border border-border-foreground ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-neutral-0',
       className
     )}
     {...props}
@@ -21,7 +21,7 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Indicator
       className={cn('flex items-center justify-center text-current')}
     >
-      <CheckIcon className='h-5 w-5' weight='bold' />
+      <CheckIcon className='h-5 w-5' />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));
@@ -57,16 +57,13 @@ const CheckboxWithLabel = React.forwardRef<
       </div>
 
       {error && (
-        <p className='text-sm text-destructive' id={`${checkboxId}-error`}>
+        <p className='text-sm text-error' id={`${checkboxId}-error`}>
           {error}
         </p>
       )}
 
       {helperText && !error && (
-        <p
-          className='text-sm text-muted-foreground'
-          id={`${checkboxId}-helper`}
-        >
+        <p className='text-sm text-foreground' id={`${checkboxId}-helper`}>
           {helperText}
         </p>
       )}

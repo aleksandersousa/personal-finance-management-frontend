@@ -218,14 +218,14 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
 
   return (
     <>
-      <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+      <div className='min-h-screen bg-background-secondary pt-20 pb-20 lg:pb-8'>
         <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-2xl box-border'>
             <div className='text-center mb-8'>
-              <h1 className='text-3xl font-bold text-slate-900 mb-2'>
+              <h1 className='text-3xl font-bold text-foreground mb-2'>
                 Editar Entrada
               </h1>
-              <p className='text-slate-600'>
+              <p className='text-foreground'>
                 Atualize os dados da sua entrada financeira
               </p>
             </div>
@@ -324,15 +324,16 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                     variant='outline'
                     onClick={() => redirect('/entries')}
                     disabled={isPendingUpdate}
-                    className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
+                    className='flex-1 rounded-xl'
                   >
                     Cancelar
                   </Button>
                   <Button
                     type='submit'
+                    variant='primary'
                     isLoading={isPendingUpdate}
                     disabled={isPendingUpdate}
-                    className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                    className='flex-1 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                   >
                     {isPendingUpdate ? 'Salvando...' : 'Salvar Alterações'}
                   </Button>
@@ -346,11 +347,11 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
       {showFixedModal && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
           <div className='bg-white rounded-xl p-6 max-w-md w-full'>
-            <h3 className='text-lg font-semibold text-slate-900 mb-4'>
+            <h3 className='text-lg font-semibold text-foreground mb-4'>
               Confirmar Alteração
             </h3>
 
-            <p className='text-slate-600 mb-6'>
+            <p className='text-foreground mb-6'>
               {entry?.isFixed
                 ? 'Você está alterando uma entrada fixa para variável. Isso afetará suas projeções futuras.'
                 : 'Você está alterando uma entrada variável para fixa. Isso incluirá esta entrada nas projeções futuras.'}
