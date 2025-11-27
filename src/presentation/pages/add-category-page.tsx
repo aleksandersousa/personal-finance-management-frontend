@@ -71,14 +71,14 @@ export const AddCategoryPage: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+    <div className='min-h-screen bg-background-secondary pt-20 pb-20 lg:pb-8'>
       <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
         <div className='w-full max-w-2xl box-border'>
           <div className='text-center mb-8'>
-            <h1 className='text-3xl font-bold text-slate-900 mb-2'>
+            <h1 className='text-3xl font-bold text-foreground mb-2'>
               Adicionar Nova Categoria
             </h1>
-            <p className='text-slate-600'>
+            <p className='text-foreground'>
               Crie categorias para organizar suas receitas e despesas
             </p>
           </div>
@@ -124,9 +124,7 @@ export const AddCategoryPage: React.FC = () => {
               />
 
               <div>
-                <label className='text-sm font-medium text-foreground'>
-                  Cor
-                </label>
+                <label className='text-sm text-foreground'>Cor</label>
                 <div className='flex items-center gap-3'>
                   <input
                     type='color'
@@ -134,7 +132,7 @@ export const AddCategoryPage: React.FC = () => {
                     onChange={e =>
                       handleInputChange('color', e.target.value.toUpperCase())
                     }
-                    className='h-10 w-10 rounded border border-gray-300'
+                    className='h-10 w-10 rounded border border-border-foreground'
                     disabled={isPendingAdd}
                     aria-label='Selecionar cor'
                   />
@@ -162,15 +160,16 @@ export const AddCategoryPage: React.FC = () => {
                   variant='outline'
                   onClick={() => redirect('/categories')}
                   disabled={isPendingAdd}
-                  className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
+                  className='flex-1 rounded-xl'
                 >
                   Cancelar
                 </Button>
                 <Button
                   type='submit'
+                  variant='primary'
                   isLoading={isPendingAdd}
                   disabled={isPendingAdd}
-                  className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                  className='flex-1 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                 >
                   {isPendingAdd ? 'Salvando...' : 'Adicionar Categoria'}
                 </Button>

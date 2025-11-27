@@ -23,8 +23,8 @@ function Input({
   const inputId = id || generatedId;
 
   const inputClasses = cn(
-    'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-    error ? 'aria-invalid:border-destructive border-destructive' : '',
+    'text-foreground file:text-foreground placeholder:text-foreground placeholder:opacity-50 selection:bg-background selection:text-foreground border-border-foreground flex h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+    error ? 'aria-invalid:border-error border-error' : '',
     className
   );
 
@@ -32,10 +32,7 @@ function Input({
     return (
       <div className='space-y-1'>
         {label && (
-          <label
-            htmlFor={inputId}
-            className='block text-sm font-medium text-foreground'
-          >
+          <label htmlFor={inputId} className='block text-sm text-foreground'>
             {label}
             {required && <span className='text-red-500'>*</span>}
           </label>
@@ -51,13 +48,13 @@ function Input({
         />
 
         {error && (
-          <p className='text-sm text-destructive' id={`${inputId}-error`}>
+          <p className='text-sm text-error' id={`${inputId}-error`}>
             {error}
           </p>
         )}
 
         {helperText && !error && (
-          <p className='text-sm text-muted-foreground' id={`${inputId}-helper`}>
+          <p className='text-sm text-foreground' id={`${inputId}-helper`}>
             {helperText}
           </p>
         )}

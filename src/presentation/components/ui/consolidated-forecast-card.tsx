@@ -16,6 +16,7 @@ import {
   LightbulbIcon,
 } from '@phosphor-icons/react/dist/ssr';
 import { Card } from './card';
+import { Button } from './button';
 
 export interface ConsolidatedForecastCardProps {
   summary: ForecastSummaryModel;
@@ -27,9 +28,7 @@ export interface ConsolidatedForecastCardProps {
 export const ConsolidatedForecastCard: React.FC<
   ConsolidatedForecastCardProps
 > = ({ summary, insights, monthsCount, projections }) => {
-  const [activeTab, setActiveTab] = useState<'summary' | 'insights' | 'chart'>(
-    'summary'
-  );
+  const [activeTab, setActiveTab] = useState<'summary' | 'insights'>('summary');
 
   const formatCurrency = (cents: number): string => {
     return new Intl.NumberFormat('pt-BR', {
@@ -41,13 +40,11 @@ export const ConsolidatedForecastCard: React.FC<
   const getTrendIcon = (trend: 'positive' | 'negative' | 'stable') => {
     switch (trend) {
       case 'positive':
-        return (
-          <TrendUpIcon className='w-5 h-5 text-emerald-500' weight='bold' />
-        );
+        return <TrendUpIcon className='w-5 h-5' />;
       case 'negative':
-        return <TrendDownIcon className='w-5 h-5 text-red-500' weight='bold' />;
+        return <TrendDownIcon className='w-5 h-5' />;
       case 'stable':
-        return <MinusIcon className='w-5 h-5 text-slate-700' weight='bold' />;
+        return <MinusIcon className='w-5 h-5' />;
     }
   };
 
@@ -62,17 +59,6 @@ export const ConsolidatedForecastCard: React.FC<
     }
   };
 
-  const getTrendColor = (trend: 'positive' | 'negative' | 'stable') => {
-    switch (trend) {
-      case 'positive':
-        return 'text-emerald-600 bg-emerald-50 border-emerald-200';
-      case 'negative':
-        return 'text-red-600 bg-red-50 border-red-200';
-      case 'stable':
-        return 'text-slate-700 bg-slate-100 border-slate-200';
-    }
-  };
-
   const getRiskLabel = (risk: 'low' | 'medium' | 'high') => {
     switch (risk) {
       case 'low':
@@ -84,113 +70,83 @@ export const ConsolidatedForecastCard: React.FC<
     }
   };
 
-  const getRiskColor = (risk: 'low' | 'medium' | 'high') => {
-    switch (risk) {
-      case 'low':
-        return 'text-emerald-600 bg-emerald-50';
-      case 'medium':
-        return 'text-amber-600 bg-amber-50';
-      case 'high':
-        return 'text-red-600 bg-red-50';
-    }
-  };
-
   return (
     <Card className='p-6'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
-        <h3 className='text-lg font-bold text-slate-900'>
+        <h3 className='text-lg font-semibold text-foreground'>
           Previsão Financeira ({monthsCount} meses)
         </h3>
 
-        <div className='flex gap-1 bg-slate-100 rounded-lg p-1 justify-center lg:justify-normal'>
-          <button
+        <div className='flex gap-1 bg-muted rounded-lg p-1 justify-center lg:justify-normal'>
+          <Button
+            variant={activeTab === 'summary' ? 'primary' : 'outline'}
             onClick={() => setActiveTab('summary')}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'summary'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-800'
+                ? 'bg-primary text-neutral-0 shadow-sm'
+                : 'text-foreground hover:text-foreground'
             }`}
           >
             <ChartLineIcon className='w-4 h-4' />
             <span>Resumo</span>
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={activeTab === 'insights' ? 'primary' : 'outline'}
             onClick={() => setActiveTab('insights')}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'insights'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-800'
+                ? 'bg-primary text-neutral-0 shadow-sm'
+                : 'text-foreground hover:text-foreground'
             }`}
           >
             <LightbulbIcon className='w-4 h-4' />
             <span>Insights</span>
-          </button>
+          </Button>
         </div>
       </div>
 
       {activeTab === 'summary' && (
         <div className='space-y-4'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
-                Receita Total
-              </p>
-              <p className='text-xl font-bold text-emerald-500'>
+            <Card className='rounded-lg p-4'>
+              <p className='text-sm text-foreground mb-1'>Receita Total</p>
+              <p className='text-xl text-foreground'>
                 {formatCurrency(summary.totalProjectedIncome)}
               </p>
-            </div>
+            </Card>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
-                Despesas Totais
-              </p>
-              <p className='text-xl font-bold text-red-500'>
+            <Card className=' rounded-lg p-4'>
+              <p className='text-sm text-foreground mb-1'>Despesas Totais</p>
+              <p className='text-xl text-foreground'>
                 {formatCurrency(summary.totalProjectedExpenses)}
               </p>
-            </div>
+            </Card>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
-                Fluxo Líquido
-              </p>
+            <Card className=' rounded-lg p-4'>
+              <p className='text-sm text-foreground mb-1'>Fluxo Líquido</p>
               <p
-                className={`text-xl font-bold ${
-                  summary.totalNetFlow >= 0 ? 'text-slate-900' : 'text-red-500'
+                className={`text-xl ${
+                  summary.totalNetFlow >= 0
+                    ? 'text-foreground'
+                    : 'text-foreground'
                 }`}
               >
                 {formatCurrency(summary.totalNetFlow)}
               </p>
-            </div>
+            </Card>
 
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <p className='text-sm font-medium text-slate-600 mb-1'>
-                Saldo Final
-              </p>
+            <Card className=' rounded-lg p-4'>
+              <p className='text-sm text-foreground mb-1'>Saldo Final</p>
               <p
-                className={`text-xl font-bold ${
-                  summary.finalBalance >= 0 ? 'text-slate-900' : 'text-red-500'
+                className={`text-xl ${
+                  summary.finalBalance >= 0
+                    ? 'text-foreground'
+                    : 'text-foreground'
                 }`}
               >
                 {formatCurrency(summary.finalBalance)}
               </p>
-            </div>
-          </div>
-
-          <div className='bg-slate-50 rounded-lg p-4'>
-            <div className='flex items-center justify-between'>
-              <p className='text-sm font-medium text-slate-700'>
-                Fluxo Médio Mensal
-              </p>
-              <p
-                className={`text-lg font-bold ${
-                  summary.averageMonthlyFlow >= 0
-                    ? 'text-slate-900'
-                    : 'text-red-500'
-                }`}
-              >
-                {formatCurrency(summary.averageMonthlyFlow)}
-              </p>
-            </div>
+            </Card>
           </div>
         </div>
       )}
@@ -199,53 +155,40 @@ export const ConsolidatedForecastCard: React.FC<
         <div className='space-y-4'>
           {/* Trend and Risk */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div
-              className={`rounded-lg border p-4 ${getTrendColor(insights.trend)}`}
-            >
+            <Card className='rounded-lg p-4 text-foreground '>
               <div className='flex items-center justify-between mb-2'>
-                <span className='text-sm font-medium'>Tendência</span>
+                <span className='text-sm'>Tendência</span>
                 {getTrendIcon(insights.trend)}
               </div>
-              <p className='text-lg font-bold'>
-                {getTrendLabel(insights.trend)}
-              </p>
-            </div>
+              <p className='text-lg'>{getTrendLabel(insights.trend)}</p>
+            </Card>
 
-            <div className='rounded-lg border border-slate-200 bg-slate-50 p-4'>
+            <Card className='rounded-lg  p-4'>
               <div className='flex items-center justify-between mb-2'>
-                <span className='text-sm font-medium text-slate-700'>
-                  Nível de Risco
-                </span>
-                <WarningIcon className='w-5 h-5 text-slate-600' weight='bold' />
+                <span className='text-sm text-foreground'>Nível de Risco</span>
+                <WarningIcon className='w-5 h-5 text-foreground' />
               </div>
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getRiskColor(insights.riskLevel)}`}
-              >
+              <p className='text-lg text-foreground'>
                 {getRiskLabel(insights.riskLevel)}
-              </span>
-            </div>
+              </p>
+            </Card>
           </div>
 
           {/* Recommendations */}
           {insights.recommendations && insights.recommendations.length > 0 && (
-            <div className='bg-slate-50 rounded-lg p-4'>
-              <h4 className='text-sm font-semibold text-slate-900 mb-3'>
-                Recomendações
-              </h4>
+            <Card className='rounded-lg p-4'>
+              <h4 className='text-sm text-foreground mb-3'>Recomendações</h4>
               <ul className='space-y-2'>
                 {insights.recommendations.map((recommendation, index) => (
                   <li key={index} className='flex items-start'>
-                    <CheckCircleIcon
-                      className='w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0'
-                      weight='bold'
-                    />
-                    <span className='text-sm text-slate-700'>
+                    <CheckCircleIcon className='w-4 h-4 text-foreground mr-2 mt-0.5 flex-shrink-0' />
+                    <span className='text-sm text-foreground'>
                       {recommendation}
                     </span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </Card>
           )}
         </div>
       )}

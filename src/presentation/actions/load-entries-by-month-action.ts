@@ -24,7 +24,7 @@ export async function loadEntriesByMonthAction(
 
     const month = searchParams.month || new Date().toISOString().slice(0, 7); // YYYY-MM
     const page = Number(searchParams.page) || 1;
-    const limit = Number(searchParams.limit) || 20;
+    const limit = Number(searchParams.limit) || 5;
     const type = searchParams.type as 'INCOME' | 'EXPENSE' | undefined;
     const categoryId = searchParams.categoryId;
 

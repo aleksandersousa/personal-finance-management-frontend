@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import type { UserModel } from '@/domain/models';
 import { logoutAction } from '../actions';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
+import { cva } from 'class-variance-authority';
 
 interface NavigationItem {
   href?: string;
@@ -43,14 +44,19 @@ const navigationItems: NavigationItem[] = [
     icon: ClipboardTextIcon,
   },
   {
+    href: '/ai',
+    label: 'Assistente AI',
+    icon: CirclesFourIcon,
+  },
+  {
     href: '/categories',
     label: 'Categorias',
     icon: TagIcon,
   },
   {
-    href: '/ai',
-    label: 'Assistente AI',
-    icon: CirclesFourIcon,
+    href: '/settings',
+    label: 'Configurações',
+    icon: GearIcon,
   },
 ];
 
@@ -67,6 +73,80 @@ const secondaryItems: NavigationItem[] = [
     badge: 3,
   },
 ];
+
+const buttonVariants = cva('', {
+  variants: {
+    variant: {
+      active: 'bg-primary text-neutral-50 shadow-sm',
+      inactive: 'text-foreground',
+    },
+  },
+});
+
+const renderNavItem = (
+  item: NavigationItem,
+  isCollapsed: boolean,
+  isActive: (href?: string) => boolean
+) => {
+  const active = isActive(item.href);
+  const Icon = item.icon;
+
+  if (isCollapsed) {
+    return (
+      <Link
+        key={item.href || item.label}
+        href={item.href || '#'}
+        className='flex justify-center'
+      >
+        <button
+          className={cn(
+            'w-10 h-10 flex items-center justify-center rounded-xl transition-all cursor-pointer relative hover:bg-button-hover',
+            buttonVariants({
+              variant: active ? 'active' : 'inactive',
+            })
+          )}
+          title={item.label}
+        >
+          <Icon className='w-5 h-5' weight={active ? 'fill' : 'regular'} />
+          {item.badge && (
+            <span className='absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full border-2 border-background'>
+              {item.badge}
+            </span>
+          )}
+        </button>
+      </Link>
+    );
+  }
+
+  return (
+    <Link key={item.href || item.label} href={item.href || '#'}>
+      <button
+        className={cn(
+          'w-full flex items-center justify-between gap-3 py-3 px-4 rounded-xl font-medium text-sm transition-all cursor-pointer relative',
+          buttonVariants({
+            variant: active ? 'active' : 'inactive',
+          })
+        )}
+      >
+        <div className='flex items-center gap-3'>
+          <Icon
+            className={cn(
+              'w-5 h-5 shrink-0',
+              active && 'text-primary-foreground'
+            )}
+            weight={active ? 'fill' : 'regular'}
+          />
+          <span>{item.label}</span>
+        </div>
+        {item.badge && (
+          <span className='absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full border-2 border-background'>
+            {item.badge}
+          </span>
+        )}
+      </button>
+    </Link>
+  );
+};
 
 export const NavigationDrawer: React.FC = () => {
   const pathname = usePathname();
@@ -117,70 +197,12 @@ export const NavigationDrawer: React.FC = () => {
     return pathname === href;
   };
 
-  const renderNavItem = (item: NavigationItem) => {
-    const active = isActive(item.href);
-    const Icon = item.icon;
-
-    if (isCollapsed) {
-      return (
-        <Link
-          key={item.href || item.label}
-          href={item.href || '#'}
-          className='flex justify-center'
-        >
-          <button
-            className={cn(
-              'w-10 h-10 flex items-center justify-center rounded-xl transition-all cursor-pointer relative',
-              active
-                ? 'bg-primary text-white shadow-sm'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            )}
-            title={item.label}
-          >
-            <Icon className='w-5 h-5' weight={active ? 'fill' : 'regular'} />
-            {item.badge && (
-              <span className='absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full border-2 border-white'>
-                {item.badge}
-              </span>
-            )}
-          </button>
-        </Link>
-      );
-    }
-
-    return (
-      <Link key={item.href || item.label} href={item.href || '#'}>
-        <button
-          className={cn(
-            'w-full flex items-center justify-between gap-3 py-3 px-4 rounded-xl font-medium text-sm transition-all cursor-pointer relative',
-            active
-              ? 'bg-primary text-white shadow-sm'
-              : 'text-gray-700 hover:bg-gray-50'
-          )}
-        >
-          <div className='flex items-center gap-3'>
-            <Icon
-              className='w-5 h-5 shrink-0'
-              weight={active ? 'fill' : 'regular'}
-            />
-            <span>{item.label}</span>
-          </div>
-          {item.badge && (
-            <span className='min-w-[20px] h-5 px-1.5 flex items-center justify-center bg-error text-white text-xs font-semibold rounded-full'>
-              {item.badge}
-            </span>
-          )}
-        </button>
-      </Link>
-    );
-  };
-
   return (
     <>
       {/* Desktop Sidebar - Fixed Left Drawer */}
       <aside
         className={cn(
-          'hidden lg:flex fixed left-0 top-0 h-full bg-white z-50 flex-col shadow-lg transition-all duration-300',
+          'hidden lg:flex fixed left-0 top-0 h-full bg-background-secondary z-50 flex-col shadow-lg dark:shadow-none dark:border-r dark:border-border-foreground transition-all duration-300',
           isCollapsed ? 'w-20' : 'w-72'
         )}
       >
@@ -188,7 +210,7 @@ export const NavigationDrawer: React.FC = () => {
         <button
           onClick={toggleCollapse}
           className={cn(
-            'absolute top-6 w-5 h-5 bg-gray-400 hover:bg-primary-dark text-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
+            'absolute top-6 w-5 h-5 bg-background hover:bg-primary text-foreground rounded-full flex items-center justify-center shadow-md transition-all duration-300 z-50',
             isCollapsed ? '-right-3' : '-right-3'
           )}
           title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
@@ -203,34 +225,37 @@ export const NavigationDrawer: React.FC = () => {
         {/* Header with User Profile */}
         <div
           className={cn(
-            'border-b border-gray-100 transition-all',
+            'border-b border-border border-border-foreground transition-all',
             isCollapsed ? 'p-3' : 'p-6'
           )}
         >
           {!isCollapsed ? (
             <>
               <div className='flex items-center gap-3 mb-6'>
-                <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-md'>
-                  <WalletIcon className='w-6 h-6 text-white' weight='fill' />
+                <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-800 rounded-xl flex items-center justify-center shadow-md'>
+                  <WalletIcon
+                    className='w-6 h-6 text-neutral-0'
+                    weight='fill'
+                  />
                 </div>
                 <div>
-                  <h2 className='text-base font-bold text-gray-900'>
+                  <h2 className='text-base font-bold text-foreground'>
                     Finanças
                   </h2>
-                  <p className='text-xs text-gray-500'>Gestão Pessoal</p>
+                  <p className='text-xs text-foreground'>Gestão Pessoal</p>
                 </div>
               </div>
 
               {/* User Info */}
-              <div className='flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors'>
-                <div className='w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center'>
+              <div className='flex items-center gap-3 p-3 bg-card rounded-xl transition-colors'>
+                <div className='w-10 h-10 bg-gradient-to-br from-gray-300 dark:from-gray-500 to-gray-400 dark:to-gray-600 rounded-full flex items-center justify-center'>
                   <UserIcon className='w-5 h-5 text-white' weight='fill' />
                 </div>
                 <div className='flex-1 min-w-0'>
-                  <p className='text-sm font-semibold text-gray-900 truncate'>
+                  <p className='text-sm font-semibold text-foreground truncate'>
                     {user?.name}
                   </p>
-                  <p className='text-xs text-gray-500 truncate'>
+                  <p className='text-xs text-foreground truncate'>
                     {user?.email}
                   </p>
                 </div>
@@ -238,7 +263,7 @@ export const NavigationDrawer: React.FC = () => {
             </>
           ) : (
             <div className='flex flex-col items-center gap-3'>
-              <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-md'>
+              <div className='w-10 h-10 bg-gradient-to-br from-primary to-primary-800 rounded-xl flex items-center justify-center shadow-md'>
                 <WalletIcon className='w-6 h-6 text-white' weight='fill' />
               </div>
               <div className='w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center'>
@@ -258,12 +283,14 @@ export const NavigationDrawer: React.FC = () => {
           <div className={cn(isCollapsed ? 'space-y-3' : 'space-y-1')}>
             {!isCollapsed && (
               <div className='px-3 mb-2'>
-                <p className='text-xs font-semibold text-gray-400 uppercase tracking-wider'>
+                <p className='text-xs font-semibold text-foreground-secondary uppercase tracking-wider'>
                   Menu Principal
                 </p>
               </div>
             )}
-            {navigationItems.map(item => renderNavItem(item))}
+            {navigationItems
+              .filter(item => item.href !== '/settings')
+              .map(item => renderNavItem(item, isCollapsed, isActive))}
           </div>
 
           <div
@@ -271,36 +298,48 @@ export const NavigationDrawer: React.FC = () => {
           >
             {!isCollapsed && (
               <div className='px-3 mb-2'>
-                <p className='text-xs font-semibold text-gray-400 uppercase tracking-wider'>
+                <p className='text-xs font-semibold text-foreground-secondary uppercase tracking-wider'>
                   Sistema
                 </p>
               </div>
             )}
-            {secondaryItems.map(item => renderNavItem(item))}
+            {secondaryItems.map(item =>
+              renderNavItem(item, isCollapsed, isActive)
+            )}
           </div>
         </div>
 
         {/* Footer */}
         <div
           className={cn(
-            'border-t border-gray-100',
+            'border-t border-border border-border-foreground',
             isCollapsed ? 'p-3' : 'p-4'
           )}
         >
           {isCollapsed ? (
             <button
-              className='w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-primary text-secondary-foreground transition-all cursor-pointer'
+              className={cn(
+                'w-10 h-10 mx-auto flex items-center justify-center rounded-xl transition-all cursor-pointer hover:bg-button-hover',
+                buttonVariants({
+                  variant: 'inactive',
+                })
+              )}
               onClick={handleSignOut}
               title='Sair'
             >
-              <SignOutIcon className='w-5 h-5' weight='bold' />
+              <SignOutIcon className='w-5 h-5' />
             </button>
           ) : (
             <button
-              className='w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-sm text-gray-400 hover:text-secondary-foreground hover:bg-primary-dark transition-all cursor-pointer'
+              className={cn(
+                'w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium transition-all cursor-pointer',
+                buttonVariants({
+                  variant: 'inactive',
+                })
+              )}
               onClick={handleSignOut}
             >
-              <SignOutIcon className='w-5 h-5 shrink-0' weight='bold' />
+              <SignOutIcon className='w-5 h-5 shrink-0' />
               <span>Sair</span>
             </button>
           )}
@@ -309,13 +348,12 @@ export const NavigationDrawer: React.FC = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav
-        className='lg:hidden fixed bottom-0 left-0 right-0 bg-white z-40'
+        className='lg:hidden fixed bottom-0 left-0 right-0 bg-background z-40'
         style={{
-          borderRadius: '2rem 2rem 0 0',
           boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <div className='grid grid-cols-4 gap-1 p-3 pb-safe'>
+        <div className='grid grid-cols-5 gap-1 px-2 py-2 relative'>
           {navigationItems.map(item => {
             const active = isActive(item.href);
             const Icon = item.icon;
@@ -324,26 +362,41 @@ export const NavigationDrawer: React.FC = () => {
               <Link key={item.href} href={item.href || '#'} className='block'>
                 <div
                   className={cn(
-                    'flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all relative',
-                    active
-                      ? 'bg-primary text-white'
-                      : 'text-gray-400 active:bg-gray-50'
+                    'flex flex-col items-center justify-center rounded-xl transition-all relative duration-300 ease-in-out',
+                    active ? 'pb-0' : 'py-2',
+                    buttonVariants({
+                      variant: 'inactive',
+                    })
                   )}
                 >
-                  {item.badge && (
-                    <span className='absolute top-1 right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-error text-white text-[10px] font-bold rounded-full'>
-                      {item.badge}
-                    </span>
-                  )}
-                  <Icon
-                    className={cn('w-6 h-6', active ? 'mb-1' : '')}
-                    weight={active ? 'fill' : 'regular'}
-                  />
-                  {active && (
-                    <span className='text-[10px] font-semibold text-center leading-tight mt-0.5'>
-                      {item.label}
-                    </span>
-                  )}
+                  <div className='relative flex flex-col items-center justify-center'>
+                    <div
+                      className={cn(
+                        'flex items-center justify-center transition-all duration-300 ease-in-out',
+                        active
+                          ? 'w-11 h-11 rounded-full bg-primary shadow-lg -translate-y-6'
+                          : 'w-5 h-5 translate-y-0'
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          'transition-all duration-300 ease-in-out',
+                          active
+                            ? 'w-6 h-6 text-white'
+                            : 'w-5 h-5 text-foreground-secondary'
+                        )}
+                        weight={active ? 'fill' : 'regular'}
+                      />
+                    </div>
+                    <span
+                      className={cn(
+                        'absolute w-1.5 h-1.5 bg-primary rounded-full transition-all duration-300 ease-in-out',
+                        active
+                          ? '-bottom-0.5 opacity-100'
+                          : 'bottom-0 opacity-0'
+                      )}
+                    />
+                  </div>
                 </div>
               </Link>
             );

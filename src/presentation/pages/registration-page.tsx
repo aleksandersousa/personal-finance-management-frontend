@@ -74,30 +74,30 @@ export const RegistrationPage: React.FC = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
+    <div className='min-h-screen bg-gradient-to-br from-neutral-50 to-blue-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
       <div className='absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2' />
       <div className='absolute bottom-0 left-0 w-96 h-96 bg-indigo-100 rounded-full opacity-20 blur-3xl translate-y-1/2 -translate-x-1/2' />
 
       <div className='relative z-10 w-full max-w-md mx-auto'>
         <div className='text-center mb-8'>
-          <div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-600 to-green-700 rounded-3xl shadow-xl mb-6'>
+          <div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-primary-800 rounded-3xl shadow-xl mb-6'>
             <UserCirclePlusIcon
               className='w-10 h-10 text-white'
               weight='bold'
             />
           </div>
-          <h1 className='text-4xl font-bold text-gray-900 mb-3'>
+          <h1 className='text-4xl font-bold text-neutral-900 mb-3'>
             Crie sua conta
           </h1>
-          <p className='text-base text-gray-600 font-medium'>
+          <p className='text-base text-neutral-600 font-medium'>
             Comece a gerenciar suas finanças hoje mesmo
           </p>
         </div>
 
-        <div className='bg-white rounded-3xl shadow-xl p-8 backdrop-blur-sm border border-gray-100'>
+        <div className='bg-background rounded-3xl shadow-xl p-8 backdrop-blur-sm border border-border-foreground'>
           <form onSubmit={handleSubmit} className='space-y-6'>
             {errors.general && (
-              <div className='bg-red-50 border border-red-100 text-red-700 px-5 py-4 rounded-xl flex items-start gap-3'>
+              <div className='bg-error-100 border border-error text-error px-5 py-4 rounded-xl flex items-start gap-3'>
                 <XCircleIcon
                   className='w-5 h-5 flex-shrink-0 mt-0.5'
                   weight='fill'
@@ -156,7 +156,7 @@ export const RegistrationPage: React.FC = () => {
                 <div className='w-full border-t border-gray-200' />
               </div>
               <div className='relative flex justify-center text-sm'>
-                <span className='px-4 bg-white text-gray-500 font-medium'>
+                <span className='px-4 bg-background-secondary text-neutral-500 font-medium'>
                   Já tem uma conta?
                 </span>
               </div>

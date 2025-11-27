@@ -51,35 +51,35 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md bg-white rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
+      <div className='w-full max-w-md bg-background rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
         {/* Header */}
         <div className='flex items-center gap-3 mb-6'>
-          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
-            <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
+          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-50 border border-red-200'>
+            <TrashIcon className='w-5 h-5 text-error' weight='bold' />
           </div>
-          <h3 className='text-lg font-semibold text-gray-900'>
+          <h3 className='text-lg font-semibold text-foreground'>
             Confirmar Exclusão
           </h3>
         </div>
 
         {/* Content */}
         <div className='mb-6 space-y-4'>
-          <p className='text-sm text-gray-600'>
+          <p className='text-sm text-foreground'>
             Você tem certeza que deseja excluir a categoria:
           </p>
 
           {/* Category Details */}
-          <div className='p-4 rounded-xl bg-gray-50'>
+          <div className='p-4 rounded-xl bg-card-background'>
             <div className='flex items-center gap-3'>
               <div
-                className='flex items-center justify-center w-10 h-10 text-sm text-white rounded-xl'
+                className='flex items-center justify-center w-10 h-10 text-sm text-neutral-0 rounded-xl'
                 style={{ backgroundColor: category.color }}
               />
               <div className='flex-1 min-w-0'>
-                <div className='font-semibold text-gray-900'>
+                <div className='font-semibold text-foreground'>
                   {category.name}
                 </div>
-                <div className='text-xs text-gray-500'>
+                <div className='text-xs text-neutral-500'>
                   {isIncome ? 'Receita' : 'Despesa'}
                   {category.description && ` • ${category.description}`}
                 </div>
@@ -87,7 +87,7 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
             </div>
 
             {hasEntries && (
-              <div className='pt-3 mt-3 text-xs border-t text-gray-500 border-gray-200'>
+              <div className='pt-3 mt-3 text-xs border-t text-foreground border-border-foreground'>
                 <span className='font-medium'>{entriesText}</span>
                 <span className='mx-1'>•</span>
                 <span>Total: {formatCurrency(category.totalAmount)}</span>
@@ -124,7 +124,7 @@ export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
           )}
 
           {/* Warning Message */}
-          <p className='text-xs text-gray-500'>
+          <p className='text-xs text-foreground'>
             <strong className='font-semibold'>
               Esta ação não pode ser desfeita.
             </strong>{' '}

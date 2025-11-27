@@ -11,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { Button } from '../ui/button';
 
 interface CategoriesFiltersProps {
-  totalResults: number;
   showHeader?: boolean;
   hasActiveFilters?: boolean;
 }
@@ -25,7 +25,6 @@ const typeOptions = [
 ];
 
 export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
-  totalResults,
   showHeader = true,
   hasActiveFilters: externalHasActiveFilters = false,
 }) => {
@@ -74,51 +73,40 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
 
   return (
     <div className='mb-6'>
-      <div className='flex items-center justify-between gap-4 mb-4'>
-        <div>
-          <h2 className='text-xl font-bold text-slate-900'>Categorias</h2>
-          <p className='text-sm text-slate-600'>
-            {totalResults}{' '}
-            {totalResults === 1
-              ? 'categoria encontrada'
-              : 'categorias encontradas'}
-          </p>
-        </div>
-
-        <div className='flex gap-2'>
-          <button
+      <div className='flex justify-end'>
+        <div className='flex gap-2 mr-4 md:mr-0'>
+          <Button
+            variant='outline'
             onClick={() => setShowFilters(!showFilters)}
-            className='relative inline-flex items-center gap-2 px-3 sm:px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer'
+            className='flex-1 h-12 rounded-xl'
           >
             <FunnelIcon className='w-5 h-5 sm:w-4 sm:h-4' />
-            <span className='hidden sm:inline'>Filtros</span>
+            <span className='inline'>Filtros</span>
             {hasActiveFilters && (
-              <span className='absolute -top-1 -right-1 sm:relative sm:top-0 sm:right-0 inline-flex items-center justify-center w-2 h-2 bg-primary rounded-full'></span>
+              <span className='absolute -top-1 -right-1 sm:relative sm:top-0 sm:right-0 inline-flex items-center justify-center w-2 h-2 bg-primary rounded-full' />
             )}
-          </button>
+          </Button>
 
-          <Link
-            href='/categories/add'
-            className='inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-black transition-colors'
+          <Button
+            variant='primary'
+            className='flex-1 h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
           >
             <PlusIcon className='w-5 h-5 sm:w-4 sm:h-4' />
-            <span className='hidden sm:inline'>Nova Categoria</span>
-          </Link>
+            <Link href='/categories/add'>Nova Categoria</Link>
+          </Button>
         </div>
       </div>
 
       {showFilters && (
-        <div className='border-t border-slate-200 pt-4'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
+        <div className='border-t border-border-foreground pt-4 mt-4 mx-4 md:mx-0'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
             <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Tipo
-              </label>
+              <label className='block text-sm text-foreground mb-1'>Tipo</label>
               <Select
                 value={filters.type}
                 onValueChange={value => handleFilterChange('type', value)}
               >
-                <SelectTrigger className='w-full h-10 rounded-lg border-slate-300 bg-white hover:bg-slate-50 transition-colors'>
+                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
                   <SelectValue placeholder='Selecione o tipo' />
                 </SelectTrigger>
                 <SelectContent>

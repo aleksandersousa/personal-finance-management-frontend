@@ -53,34 +53,34 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md bg-white rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
+      <div className='w-full max-w-md bg-background rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
         {/* Header */}
         <div className='flex items-center gap-3 mb-6'>
-          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
-            <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
+          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-50 border border-red-200'>
+            <TrashIcon className='w-5 h-5 text-error' />
           </div>
-          <h3 className='text-lg font-semibold text-gray-900'>
+          <h3 className='text-lg font-semibold text-foreground'>
             Confirmar Exclusão
           </h3>
         </div>
 
         {/* Content */}
         <div className='mb-6 space-y-4'>
-          <p className='text-sm text-gray-600'>
+          <p className='text-sm text-foreground'>
             Você tem certeza que deseja excluir a entrada:
           </p>
 
           {/* Entry Details */}
-          <div className='p-4 rounded-xl bg-gray-50'>
-            <div className='font-semibold text-gray-900'>
+          <div className='p-4 rounded-xl bg-card-background'>
+            <div className='font-semibold text-foreground'>
               {entry.description}
             </div>
-            <div className='mt-1 text-xs text-gray-500'>
+            <div className='mt-1 text-xs text-neutral-500'>
               {entry.categoryName} • {formatDate(entry.date)}
             </div>
             <div
               className={`mt-2 text-sm font-semibold ${
-                isIncome ? 'text-[#10B981]' : 'text-[#EF4444]'
+                isIncome ? 'text-success' : 'text-error'
               }`}
             >
               {isIncome ? '+' : '-'} R$ {amount}
@@ -109,7 +109,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
                         setDeleteAllOccurrences(checked === true)
                       }
                       disabled={isPending}
-                      className='mt-0.5'
+                      className='mt-0.5 h-4 w-4 data-[state=checked]:bg-amber-700 data-[state=checked]:text-neutral-0 data-[state=checked]:border-none'
                     />
                     <label
                       htmlFor='deleteAllOccurrences'
@@ -124,7 +124,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           )}
 
           {/* Warning Message */}
-          <p className='text-xs text-gray-500'>
+          <p className='text-xs text-foreground'>
             <strong className='font-semibold'>
               Esta ação não pode ser desfeita.
             </strong>{' '}
@@ -143,9 +143,9 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
         {/* Actions */}
         <div className='flex gap-3'>
           <Button
-            onClick={handleClose}
             variant='outline'
             className='flex-1'
+            onClick={handleClose}
             disabled={isPending}
           >
             Cancelar

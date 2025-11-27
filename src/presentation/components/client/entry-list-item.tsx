@@ -48,17 +48,19 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
         onDelete={handleDeleteWithModal}
       />
 
-      <Card className='mb-3 shadow-none transition-all duration-200'>
+      <Card className='mb-4 shadow-none transition-all duration-200'>
         <div className='flex items-center justify-between p-4'>
           <div className='flex-1'>
             <div className='font-medium text-foreground'>
               {entry.description}
             </div>
-            <div className='text-sm text-muted-foreground mt-1 flex items-center gap-2'>
+
+            <div className='text-sm text-neutral-500 mt-1 flex items-center gap-2'>
               <span>
                 {entry.categoryName ?? 'Sem categoria'} •{' '}
                 {formatDate(entry.date)}
               </span>
+
               {entry.isFixed && (
                 <Badge
                   variant='secondary'
@@ -73,7 +75,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
           <div className='flex items-center space-x-3'>
             <div
               className={`font-semibold ${
-                entry.type === 'INCOME' ? 'text-green-600' : 'text-red-600'
+                entry.type === 'INCOME' ? 'text-success' : 'text-error'
               }`}
             >
               {entry.type === 'INCOME' ? '+' : '-'}
@@ -90,7 +92,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                   data-testid='edit-button'
                   className='h-8 w-8'
                 >
-                  <PencilSimpleIcon className='w-4 h-4' weight='bold' />
+                  <PencilSimpleIcon className='w-4 h-4' />
                 </Button>
 
                 <Button
@@ -99,9 +101,9 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                   onClick={handleDeleteClick}
                   title='Excluir entrada'
                   data-testid='delete-button'
-                  className='h-8 w-8 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400'
+                  className='h-8 w-8'
                 >
-                  <TrashIcon className='w-4 h-4' weight='bold' />
+                  <TrashIcon className='w-4 h-4' />
                 </Button>
               </div>
             )}

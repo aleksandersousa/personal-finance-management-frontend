@@ -12,9 +12,21 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
+    ignores: [
+      'node_modules',
+      'dist',
+      'build',
+      'public',
+      'src/presentation/theme/design-system.json',
+      'tailwind.config.ts',
+    ],
+  },
+  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
+      'import/no-anonymous-default-export': 'off',
+      'css.lint.unknownAtRules': 'off',
     },
   },
 ];
