@@ -24,6 +24,8 @@
       transparent
     );
 
+    --color-card-background: var(--color-neutral-800);
+
     --color-button-hover: var(--color-neutral-700);
   }
 }

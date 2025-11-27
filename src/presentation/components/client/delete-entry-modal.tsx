@@ -53,13 +53,13 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md bg-white rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
+      <div className='w-full max-w-md bg-background rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
         {/* Header */}
         <div className='flex items-center gap-3 mb-6'>
           <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
-            <TrashIcon className='w-5 h-5 text-red-600' weight='bold' />
+            <TrashIcon className='w-5 h-5 text-error' />
           </div>
-          <h3 className='text-lg font-semibold text-gray-900'>
+          <h3 className='text-lg font-semibold text-foreground'>
             Confirmar Exclusão
           </h3>
         </div>
@@ -71,8 +71,8 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           </p>
 
           {/* Entry Details */}
-          <div className='p-4 rounded-xl bg-gray-50'>
-            <div className='font-semibold text-gray-900'>
+          <div className='p-4 rounded-xl bg-card-background'>
+            <div className='font-semibold text-foreground'>
               {entry.description}
             </div>
             <div className='mt-1 text-xs text-gray-500'>
@@ -80,7 +80,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
             </div>
             <div
               className={`mt-2 text-sm font-semibold ${
-                isIncome ? 'text-[#10B981]' : 'text-[#EF4444]'
+                isIncome ? 'text-success' : 'text-error'
               }`}
             >
               {isIncome ? '+' : '-'} R$ {amount}
@@ -143,9 +143,9 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
         {/* Actions */}
         <div className='flex gap-3'>
           <Button
-            onClick={handleClose}
             variant='outline'
             className='flex-1'
+            onClick={handleClose}
             disabled={isPending}
           >
             Cancelar

@@ -15,5 +15,11 @@
     transparent
   );
 
+  --color-card-background: color-mix(
+    in srgb,
+    var(--color-neutral-200) 40%,
+    transparent
+  );
+
   --color-button-hover: var(--color-neutral-200);
 }
