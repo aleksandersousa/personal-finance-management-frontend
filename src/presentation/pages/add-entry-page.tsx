@@ -148,14 +148,14 @@ export const AddEntryPage: React.FC = () => {
   };
 
   return (
-    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8'>
+    <div className='min-h-screen bg-background-secondary pt-20 pb-20 lg:pb-8'>
       <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64'>
         <div className='w-full max-w-2xl box-border'>
           <div className='text-center mb-8'>
-            <h1 className='text-3xl font-bold text-slate-900 mb-2'>
+            <h1 className='text-3xl font-bold text-foreground mb-2'>
               Adicionar Nova Entrada
             </h1>
-            <p className='text-slate-600'>
+            <p className='text-foreground'>
               Registre suas receitas e despesas para manter o controle
               financeiro
             </p>
@@ -172,10 +172,10 @@ export const AddEntryPage: React.FC = () => {
               )}
 
               <Input
-                label='Descrição'
+                label='Nome'
                 value={formData.description}
                 onChange={e => handleInputChange('description', e.target.value)}
-                placeholder='Digite a descrição da entrada'
+                placeholder='Digite o nome da entrada'
                 error={errors.description?.[0]}
                 required
                 disabled={isPendingSubmit}
@@ -255,15 +255,16 @@ export const AddEntryPage: React.FC = () => {
                   variant='outline'
                   onClick={() => redirect('/entries')}
                   disabled={isPendingSubmit}
-                  className='flex-1 rounded-xl border-slate-200 bg-white hover:bg-slate-50 font-semibold text-slate-700 hover:text-slate-700 transition-all duration-250'
+                  className='flex-1 rounded-xl'
                 >
                   Cancelar
                 </Button>
                 <Button
                   type='submit'
+                  variant='primary'
                   isLoading={isPendingSubmit}
                   disabled={isPendingSubmit}
-                  className='flex-1 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+                  className='flex-1 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
                 >
                   {isPendingSubmit ? 'Salvando...' : 'Adicionar Entrada'}
                 </Button>

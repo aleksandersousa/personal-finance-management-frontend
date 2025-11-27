@@ -42,10 +42,7 @@ export function DatePicker({
   return (
     <div className='space-y-1'>
       {label && (
-        <label
-          htmlFor={datePickerId}
-          className='block text-sm font-medium text-foreground'
-        >
+        <label htmlFor={datePickerId} className='block text-sm text-foreground'>
           {label}
           {required && <span className='text-red-500'>*</span>}
         </label>
@@ -57,9 +54,9 @@ export function DatePicker({
             id={datePickerId}
             variant='outline'
             className={cn(
-              'w-full justify-start text-left font-normal h-9 rounded-lg',
-              !value && 'text-muted-foreground',
-              error && 'border-destructive',
+              'w-full justify-start text-left font-normal h-9 rounded-lg shadow-none',
+              !value && 'text-foreground',
+              error && 'border-error',
               className
             )}
             disabled={disabled}
@@ -81,22 +78,18 @@ export function DatePicker({
               onChange?.(date);
               setOpen(false);
             }}
-            initialFocus
           />
         </PopoverContent>
       </Popover>
 
       {error && (
-        <p className='text-sm text-destructive' id={`${datePickerId}-error`}>
+        <p className='text-sm text-error' id={`${datePickerId}-error`}>
           {error}
         </p>
       )}
 
       {helperText && !error && (
-        <p
-          className='text-sm text-muted-foreground'
-          id={`${datePickerId}-helper`}
-        >
+        <p className='text-sm text-foreground' id={`${datePickerId}-helper`}>
           {helperText}
         </p>
       )}

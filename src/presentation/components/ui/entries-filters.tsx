@@ -136,7 +136,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
           <Button
             variant='outline'
             onClick={() => setShowFilters(!showFilters)}
-            className='flex-1 h-12 rounded-xl border-border-foreground bg-background hover:bg-accent font-semibold text-foreground transition-all duration-250'
+            className='flex-1 h-12 rounded-xl'
           >
             <FunnelIcon className='w-5 h-5 sm:w-4 sm:h-4' />
             <span className='inline'>Filtros</span>

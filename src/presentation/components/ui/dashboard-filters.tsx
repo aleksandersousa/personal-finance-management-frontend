@@ -353,7 +353,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                     <Button
                       variant='outline'
                       onClick={handleResetFilters}
-                      className='flex-1 h-12 rounded-xl border-border-foreground bg-transparent hover:bg-accent font-semibold text-foreground transition-all duration-250'
+                      className='flex-1 h-12 rounded-xl'
                     >
                       Resetar
                     </Button>
