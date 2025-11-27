@@ -56,7 +56,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
       <div className='w-full max-w-md bg-background rounded-[1.25rem] p-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'>
         {/* Header */}
         <div className='flex items-center gap-3 mb-6'>
-          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-100'>
+          <div className='flex items-center justify-center w-10 h-10 rounded-full bg-red-50 border border-red-200'>
             <TrashIcon className='w-5 h-5 text-error' />
           </div>
           <h3 className='text-lg font-semibold text-foreground'>
@@ -66,7 +66,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 
         {/* Content */}
         <div className='mb-6 space-y-4'>
-          <p className='text-sm text-gray-600'>
+          <p className='text-sm text-foreground'>
             Você tem certeza que deseja excluir a entrada:
           </p>
 
@@ -113,7 +113,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
                     />
                     <label
                       htmlFor='deleteAllOccurrences'
-                      className='text-sm text-amber-700 cursor-pointer leading-tight'
+                      className='text-sm text-neutral-900 cursor-pointer leading-tight'
                     >
                       Excluir todas as ocorrências futuras desta entrada fixa
                     </label>
@@ -124,7 +124,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           )}
 
           {/* Warning Message */}
-          <p className='text-xs text-gray-500'>
+          <p className='text-xs text-foreground'>
             <strong className='font-semibold'>
               Esta ação não pode ser desfeita.
             </strong>{' '}

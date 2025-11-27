@@ -19,6 +19,7 @@ import {
   DatePicker,
   CheckboxWithLabel,
 } from '../components';
+import { ConfirmFixedChangeModal } from '../components/client';
 import { redirect } from 'next/navigation';
 import { typeOptions } from '@/domain/constants';
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
@@ -190,21 +191,21 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
 
   const handleConfirmSubmit = async () => {
     if (pendingSubmit) {
-      try {
-        startUpdateTransition(async () => {
+      startUpdateTransition(async () => {
+        try {
           await updateEntryAction(entryId, pendingSubmit);
-        });
-        setShowFixedModal(false);
-        setPendingSubmit(null);
-        setErrors({});
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        setErrors({
-          general: ['Erro ao atualizar entrada. Tente novamente.'],
-        });
-        setShowFixedModal(false);
-        setPendingSubmit(null);
-      }
+          setShowFixedModal(false);
+          setPendingSubmit(null);
+          setErrors({});
+        } catch (error) {
+          console.error('Error submitting form:', error);
+          setErrors({
+            general: ['Erro ao atualizar entrada. Tente novamente.'],
+          });
+          setShowFixedModal(false);
+          setPendingSubmit(null);
+        }
+      });
     }
   };
 
@@ -344,42 +345,13 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
         </div>
       </div>
 
-      {showFixedModal && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
-          <div className='bg-white rounded-xl p-6 max-w-md w-full'>
-            <h3 className='text-lg font-semibold text-foreground mb-4'>
-              Confirmar Alteração
-            </h3>
-
-            <p className='text-foreground mb-6'>
-              {entry?.isFixed
-                ? 'Você está alterando uma entrada fixa para variável. Isso afetará suas projeções futuras.'
-                : 'Você está alterando uma entrada variável para fixa. Isso incluirá esta entrada nas projeções futuras.'}
-            </p>
-
-            <div className='flex space-x-3'>
-              <Button
-                onClick={handleConfirmSubmit}
-                variant='primary'
-                className='flex-1'
-                isLoading={isPendingUpdate}
-                disabled={isPendingUpdate}
-              >
-                Confirmar
-              </Button>
-
-              <Button
-                onClick={handleCancelModal}
-                variant='secondary'
-                className='flex-1'
-                disabled={isPendingUpdate}
-              >
-                Cancelar
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmFixedChangeModal
+        isOpen={showFixedModal}
+        onClose={handleCancelModal}
+        onConfirm={handleConfirmSubmit}
+        isPending={isPendingUpdate}
+        isFixed={entry?.isFixed ?? false}
+      />
     </>
   );
 };
