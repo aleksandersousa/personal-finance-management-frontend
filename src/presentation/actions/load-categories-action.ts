@@ -22,12 +22,14 @@ export async function loadCategoriesAction(
 
     const page = params?.page ? Number(params.page) : 1;
     const limit = params?.limit ? Number(params.limit) : 5;
+    const search = params?.search;
 
     const loadCategories = makeRemoteLoadCategories();
     const result = await loadCategories.load({
       ...params,
       page,
       limit,
+      ...(search && search.trim() && { search: search.trim() }),
     });
 
     return result;

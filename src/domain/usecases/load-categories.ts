@@ -9,4 +9,5 @@ export interface LoadCategoriesParams {
   includeStats?: boolean;
   page?: number;
   limit?: number;
+  search?: string;
 }

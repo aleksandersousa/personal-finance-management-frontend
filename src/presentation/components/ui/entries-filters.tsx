@@ -182,7 +182,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
         <div className='border-t border-border-foreground pt-4 mt-4 mx-4 md:mx-0'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
             <div>
-              <label className='block text-sm font-medium mb-1'>Mês</label>
+              <label className='block text-sm mb-1'>Mês</label>
               <Select
                 value={filters.month}
                 onValueChange={value => handleFilterChange('month', value)}
@@ -205,9 +205,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             </div>
 
             <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Tipo
-              </label>
+              <label className='block text-sm text-slate-700 mb-1'>Tipo</label>
               <Select
                 value={filters.type}
                 onValueChange={value => handleFilterChange('type', value)}
@@ -230,7 +228,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             </div>
 
             <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
+              <label className='block text-sm text-slate-700 mb-1'>
                 Ordenar por
               </label>
               <Select
@@ -255,9 +253,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             </div>
 
             <div>
-              <label className='block text-sm font-medium text-slate-700 mb-1'>
-                Ordem
-              </label>
+              <label className='block text-sm text-slate-700 mb-1'>Ordem</label>
               <Select
                 value={filters.order}
                 onValueChange={value => handleFilterChange('order', value)}
@@ -278,9 +274,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-slate-700 mb-1'>
-              Buscar
-            </label>
+            <label className='block text-sm text-slate-700 mb-1'>Buscar</label>
             <div className='relative'>
               <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400 z-10' />
               <Input
@@ -297,7 +291,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
             <div className='mt-4 pt-4 border-t border-slate-200'>
               <button
                 onClick={clearFilters}
-                className='inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors'
+                className='inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-800 transition-colors'
               >
                 <XIcon className='w-4 h-4' />
                 Limpar filtros

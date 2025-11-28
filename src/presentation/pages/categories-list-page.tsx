@@ -25,10 +25,12 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
       includeStats: true,
       page,
       limit,
+      search: searchParams.search,
     });
 
     const hasActiveFilters = Boolean(
-      searchParams.type && searchParams.type !== 'all'
+      (searchParams.type && searchParams.type !== 'all') ||
+        (searchParams.search && searchParams.search.trim() !== '')
     );
 
     const filteredCategories = result.data;
