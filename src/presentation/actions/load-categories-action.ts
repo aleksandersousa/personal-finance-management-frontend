@@ -20,8 +20,15 @@ export async function loadCategoriesAction(
       throw new Error('User not authenticated');
     }
 
+    const page = params?.page ? Number(params.page) : 1;
+    const limit = params?.limit ? Number(params.limit) : 5;
+
     const loadCategories = makeRemoteLoadCategories();
-    const result = await loadCategories.load(params);
+    const result = await loadCategories.load({
+      ...params,
+      page,
+      limit,
+    });
 
     return result;
   } catch (error: any) {
