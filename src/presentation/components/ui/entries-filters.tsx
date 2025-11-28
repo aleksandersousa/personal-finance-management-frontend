@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   MagnifyingGlassIcon,
@@ -43,6 +43,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   });
 
   const [showFilters, setShowFilters] = useState(false);
+  const searchDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const generateMonthOptions = () => {
     const options = [];
@@ -83,8 +84,32 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    updateURL(newFilters);
+
+    // Debounce search updates, but immediately update other filters
+    if (key === 'search') {
+      // Clear existing timer
+      if (searchDebounceTimerRef.current) {
+        clearTimeout(searchDebounceTimerRef.current);
+      }
+
+      // Set new timer for debounced update
+      searchDebounceTimerRef.current = setTimeout(() => {
+        updateURL(newFilters);
+      }, 500); // 500ms debounce delay
+    } else {
+      // Update URL immediately for non-search filters
+      updateURL(newFilters);
+    }
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceTimerRef.current) {
+        clearTimeout(searchDebounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(searchParams);
