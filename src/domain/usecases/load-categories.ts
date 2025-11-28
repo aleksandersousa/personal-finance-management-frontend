@@ -7,4 +7,7 @@ export interface LoadCategories {
 export interface LoadCategoriesParams {
   type?: 'INCOME' | 'EXPENSE' | 'all';
   includeStats?: boolean;
+  page?: number;
+  limit?: number;
+  search?: string;
 }

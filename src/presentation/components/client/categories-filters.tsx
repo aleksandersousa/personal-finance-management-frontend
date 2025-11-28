@@ -1,8 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FunnelIcon, XIcon, PlusIcon } from '@phosphor-icons/react/dist/ssr';
+import {
+  FunnelIcon,
+  XIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+} from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import {
   Select,
@@ -11,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 
 interface CategoriesFiltersProps {
@@ -33,15 +39,41 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
 
   const [filters, setFilters] = useState({
     type: searchParams.get('type') || 'all',
+    search: searchParams.get('search') || '',
   });
 
   const [showFilters, setShowFilters] = useState(false);
+  const searchDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    updateURL(newFilters);
+
+    // Debounce search updates, but immediately update other filters
+    if (key === 'search') {
+      // Clear existing timer
+      if (searchDebounceTimerRef.current) {
+        clearTimeout(searchDebounceTimerRef.current);
+      }
+
+      // Set new timer for debounced update
+      searchDebounceTimerRef.current = setTimeout(() => {
+        updateURL(newFilters);
+      }, 500); // 500ms debounce delay
+    } else {
+      // Update URL immediately for non-search filters
+      updateURL(newFilters);
+    }
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceTimerRef.current) {
+        clearTimeout(searchDebounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(searchParams);
@@ -52,18 +84,26 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
       params.delete('type');
     }
 
+    if (newFilters.search && newFilters.search.trim()) {
+      params.set('search', newFilters.search.trim());
+    } else {
+      params.delete('search');
+    }
+
     router.push(`/categories?${params.toString()}`);
   };
 
   const clearFilters = () => {
     const clearedFilters = {
       type: 'all',
+      search: '',
     } as typeof filters;
     setFilters(clearedFilters);
     updateURL(clearedFilters);
   };
 
-  const hasActiveFilters = filters.type !== 'all';
+  const hasActiveFilters =
+    filters.type !== 'all' || (filters.search && filters.search.trim() !== '');
 
   const shouldShowHeader = showHeader || externalHasActiveFilters;
 
@@ -121,6 +161,20 @@ export const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div>
+            <label className='block text-sm text-foreground mt-4'>Buscar</label>
+            <div className='relative'>
+              <MagnifyingGlassIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400 z-10' />
+              <Input
+                type='text'
+                value={filters.search}
+                onChange={e => handleFilterChange('search', e.target.value)}
+                placeholder='Nome da categoria...'
+                className='pl-10'
+              />
             </div>
           </div>
 

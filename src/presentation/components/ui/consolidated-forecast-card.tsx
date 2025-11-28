@@ -17,6 +17,7 @@ import {
 } from '@phosphor-icons/react/dist/ssr';
 import { Card } from './card';
 import { Button } from './button';
+import { MonthlyProjectionChart } from './monthly-projection-chart';
 
 export interface ConsolidatedForecastCardProps {
   summary: ForecastSummaryModel;
@@ -71,7 +72,7 @@ export const ConsolidatedForecastCard: React.FC<
   };
 
   return (
-    <Card className='p-6'>
+    <Card className='p-4'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
         <h3 className='text-lg font-semibold text-foreground'>
           Previsão Financeira ({monthsCount} meses)
@@ -148,6 +149,9 @@ export const ConsolidatedForecastCard: React.FC<
               </p>
             </Card>
           </div>
+
+          {/* Chart */}
+          <MonthlyProjectionChart projections={projections} />
         </div>
       )}
 

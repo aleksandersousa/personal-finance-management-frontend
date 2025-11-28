@@ -11,6 +11,7 @@ export type LoadEntriesByMonthParams = {
   limit?: number;
   type?: 'INCOME' | 'EXPENSE';
   categoryId?: string;
+  search?: string;
 };
 
 export type LoadEntriesByMonthResult = {

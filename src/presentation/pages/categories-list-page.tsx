@@ -5,6 +5,7 @@ import {
   CategoriesFilters,
   CategoryListItem,
 } from '@/presentation/components';
+import { Pagination } from '../components/client';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import { isRedirectError } from '../helpers';
 import Link from 'next/link';
@@ -16,13 +17,20 @@ type Props = {
 
 export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
   try {
+    const page = Number(searchParams.page) || 1;
+    const limit = Number(searchParams.limit) || 5;
+
     const result = await loadCategoriesAction({
       type: searchParams.type as 'INCOME' | 'EXPENSE' | 'all' | undefined,
       includeStats: true,
+      page,
+      limit,
+      search: searchParams.search,
     });
 
     const hasActiveFilters = Boolean(
-      searchParams.type && searchParams.type !== 'all'
+      (searchParams.type && searchParams.type !== 'all') ||
+        (searchParams.search && searchParams.search.trim() !== '')
     );
 
     const filteredCategories = result.data;
@@ -78,6 +86,17 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
                     />
                   ))}
                 </div>
+
+                {result.pagination && (
+                  <div className='mt-8'>
+                    <Pagination
+                      currentPage={result.pagination.page}
+                      totalPages={result.pagination.totalPages}
+                      totalItems={result.pagination.total}
+                      currentLimit={result.pagination.limit}
+                    />
+                  </div>
+                )}
               </>
             )}
           </div>

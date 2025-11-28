@@ -24,6 +24,18 @@ export class RemoteLoadCategories implements LoadCategories {
       queryParams.append('includeStats', params.includeStats.toString());
     }
 
+    if (params?.page !== undefined) {
+      queryParams.append('page', String(params.page));
+    }
+
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', String(params.limit));
+    }
+
+    if (params?.search && params.search.trim()) {
+      queryParams.append('search', params.search.trim());
+    }
+
     const queryString = queryParams.toString();
     const endpoint = queryString ? `${this.url}?${queryString}` : this.url;
 

@@ -27,6 +27,7 @@ export async function loadEntriesByMonthAction(
     const limit = Number(searchParams.limit) || 5;
     const type = searchParams.type as 'INCOME' | 'EXPENSE' | undefined;
     const categoryId = searchParams.categoryId;
+    const search = searchParams.search;
 
     const params: LoadEntriesByMonthParams = {
       month,
@@ -35,6 +36,7 @@ export async function loadEntriesByMonthAction(
       limit,
       ...(type && { type }),
       ...(categoryId && { categoryId }),
+      ...(search && search.trim() && { search: search.trim() }),
     };
 
     const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();

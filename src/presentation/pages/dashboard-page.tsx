@@ -33,7 +33,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   currentForecastMonths,
 }) => {
   const categories: CategoryBreakdownItemModel[] =
-    summary.categoryBreakdown || [];
+    summary.categoryBreakdown?.items || [];
+
+  console.log(summary.categoryBreakdown);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -126,12 +128,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 categories={categories}
                 type='INCOME'
                 title='Receitas por Categoria'
+                totalCategories={summary.categoryBreakdown?.incomeTotal || 0}
               />
 
               <CategoryBreakdown
                 categories={categories}
                 type='EXPENSE'
                 title='Despesas por Categoria'
+                totalCategories={summary.categoryBreakdown?.expenseTotal || 0}
               />
             </div>
           )}
