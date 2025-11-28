@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { CategoryBreakdownItemModel } from '@/domain/models/monthly-summary';
 import { ChartBarIcon } from '@phosphor-icons/react/dist/ssr';
 import { Card, CardHeader, CardTitle, CardContent } from './card';
@@ -7,12 +8,14 @@ export interface CategoryBreakdownProps {
   categories: CategoryBreakdownItemModel[];
   type: 'INCOME' | 'EXPENSE';
   title: string;
+  totalCategories: number;
 }
 
 export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   categories,
   type,
   title,
+  totalCategories,
 }) => {
   const filteredCategories = categories.filter(cat => cat.type === type);
   const total = filteredCategories.reduce((sum, cat) => sum + cat.total, 0);
@@ -32,7 +35,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
 
   if (filteredCategories.length === 0) {
     return (
-      <Card className='p-6'>
+      <Card className='p-4'>
         <CardHeader className='mb-4'>
           <CardTitle className='text-lg text-foreground'>{title}</CardTitle>
         </CardHeader>
@@ -55,7 +58,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   );
 
   return (
-    <Card className='p-6'>
+    <Card className='py-6 px-4'>
       <CardHeader className='flex-row items-center justify-between mb-6'>
         <CardTitle className='text-lg text-foreground'>{title}</CardTitle>
         <div className='text-sm px-3 py-1 rounded-full text-neutral-0 bg-primary'>
@@ -112,6 +115,24 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
           );
         })}
       </CardContent>
+
+      {totalCategories > filteredCategories.length && (
+        <div className='mt-4 flex justify-end text-xs text-neutral-500'>
+          <span>
+            Mostrando {filteredCategories.length} de {totalCategories}{' '}
+            {type === 'INCOME'
+              ? 'categorias de receita'
+              : 'categorias de despesa'}
+            .{' '}
+            <Link
+              href={`/categories?type=${type}`}
+              className='text-primary hover:text-primary-dark underline transition-colors'
+            >
+              Ver todas
+            </Link>
+          </span>
+        </div>
+      )}
     </Card>
   );
 };

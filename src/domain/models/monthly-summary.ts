@@ -1,7 +1,13 @@
+export interface CategoryBreakdownResultModel {
+  items: CategoryBreakdownItemModel[];
+  incomeTotal: number;
+  expenseTotal: number;
+}
+
 export interface MonthlySummaryModel {
   month: string; // YYYY-MM
   summary: MonthlySummaryDataModel;
-  categoryBreakdown?: CategoryBreakdownItemModel[];
+  categoryBreakdown?: CategoryBreakdownResultModel;
   comparisonWithPrevious: PreviousMonthComparisonModel;
 }
 

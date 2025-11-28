@@ -72,7 +72,7 @@ export const ConsolidatedForecastCard: React.FC<
   };
 
   return (
-    <Card className='p-6'>
+    <Card className='p-4'>
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
         <h3 className='text-lg font-semibold text-foreground'>
           Previsão Financeira ({monthsCount} meses)

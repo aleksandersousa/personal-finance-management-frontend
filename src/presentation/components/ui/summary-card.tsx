@@ -111,7 +111,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   return (
     <div className='relative summary-card-container group'>
       <Card
-        className='p-6'
+        className='p-4'
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleCardClick}
