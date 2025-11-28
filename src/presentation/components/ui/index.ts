@@ -7,6 +7,7 @@ export * from './badge';
 export * from './summary-card';
 export * from './category-breakdown';
 export * from './consolidated-forecast-card';
+export * from './monthly-projection-chart';
 export * from './dashboard-filters';
 export * from './entries-filters';
 export * from './loading';
