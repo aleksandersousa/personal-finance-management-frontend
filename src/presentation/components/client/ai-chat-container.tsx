@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { aiChatAction } from '@/presentation/actions';
 import { AiChatMessage } from '@/domain/models';
-import { PaperPlaneRight } from '@phosphor-icons/react/dist/ssr';
+import { PaperPlaneRightIcon } from '@phosphor-icons/react';
 
 export function AiChatContainer() {
   const [messages, setMessages] = useState<AiChatMessage[]>([]);
@@ -12,6 +12,15 @@ export function AiChatContainer() {
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (question: string) => {
     setFeedback({ type: null, message: '' });
@@ -52,9 +61,9 @@ export function AiChatContainer() {
 
   return (
     <div className='flex flex-col gap-4 flex-1 min-h-0'>
-      <div className='space-y-3 flex-1 overflow-y-auto min-h-0 px-2 py-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl'>
+      <div className='space-y-3 flex-1 overflow-y-auto min-h-0 px-2 py-4 rounded-xl'>
         {messages.length === 0 ? (
-          <div className='flex items-center justify-center h-full text-slate-400 text-sm'>
+          <div className='flex items-center justify-center h-full text-neutral-400 text-sm'>
             Nenhuma mensagem ainda. Comece a conversar!
           </div>
         ) : (
@@ -66,8 +75,8 @@ export function AiChatContainer() {
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm ${
                   message.role === 'user'
-                    ? 'bg-emerald-500 text-white rounded-tr-md'
-                    : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-md'
+                    ? 'bg-success text-white rounded-tr-md'
+                    : 'bg-neutral-200 text-neutral-900 rounded-tl-md'
                 }`}
               >
                 <p className='text-sm leading-relaxed'>{message.content}</p>
@@ -81,6 +90,7 @@ export function AiChatContainer() {
             </div>
           ))
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {feedback.type === 'error' && (
@@ -114,26 +124,29 @@ function AiChatForm({ onSubmit, isLoading }: AiChatFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className='flex items-end gap-2'>
-      <div className='flex-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 px-4 py-2 flex items-center shadow-sm'>
+      <div className='flex-1 bg-background-secondary rounded-full border border-border-foreground px-4 py-2 flex items-center shadow-sm'>
         <input
           type='text'
           value={question}
           onChange={e => setQuestion(e.target.value)}
           placeholder='Digite sua mensagem...'
-          className='flex-1 bg-transparent outline-none text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400'
+          className='flex-1 bg-transparent outline-none text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400'
           disabled={isLoading}
         />
       </div>
       <button
         type='submit'
         disabled={isLoading || !question.trim()}
-        className='size-10 rounded-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-sm shrink-0'
+        className='size-10 rounded-full bg-success hover:bg-success/90 disabled:bg-neutral-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-sm shrink-0'
         aria-label='Enviar mensagem'
       >
         {isLoading ? (
           <div className='size-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
         ) : (
-          <PaperPlaneRight className='size-5 text-white' weight='fill' />
+          <PaperPlaneRightIcon
+            className='size-5 text-neutral-0'
+            weight='fill'
+          />
         )}
       </button>
     </form>

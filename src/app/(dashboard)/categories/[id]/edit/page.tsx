@@ -1,7 +1,5 @@
-import { PageLoading } from '@/presentation';
 import { EditCategoryPage } from '@/presentation/pages';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 interface PageProps {
   params: Promise<{
@@ -9,7 +7,7 @@ interface PageProps {
   }>;
 }
 
-async function EditCategoryPageWrapper({ params }: PageProps) {
+export default async function EditCategoryPageRoute({ params }: PageProps) {
   const { id } = await params;
 
   if (!id || id.trim() === '') {
@@ -17,14 +15,6 @@ async function EditCategoryPageWrapper({ params }: PageProps) {
   }
 
   return <EditCategoryPage categoryId={id} />;
-}
-
-export default function EditCategoryPageRoute({ params }: PageProps) {
-  return (
-    <Suspense fallback={<PageLoading text='Carregando categoria...' />}>
-      <EditCategoryPageWrapper params={params} />
-    </Suspense>
-  );
 }
 
 export async function generateMetadata({ params }: PageProps) {

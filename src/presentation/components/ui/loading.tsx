@@ -33,7 +33,7 @@ export const Loading: React.FC<LoadingProps> = ({
         className={cn('animate-spin text-cyan-600', sizeClasses[size])}
         weight='bold'
       />
-      {text && <p className='text-sm text-slate-600 font-medium'>{text}</p>}
+      {text && <p className='text-sm text-foreground font-medium'>{text}</p>}
     </div>
   );
 
@@ -52,9 +52,11 @@ export const PageLoading: React.FC<{ text?: string }> = ({
   text = 'Carregando...',
 }) => {
   return (
-    <div className='min-h-screen bg-slate-50 pt-20 pb-20 lg:pb-8 flex items-center justify-center'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64 w-full'>
-        <Loading size='xl' text={text} className='py-20' />
+    <div className='min-h-screen bg-background-secondary pt-20 lg:pb-8'>
+      <div className='flex justify-center px-4 sm:px-6 lg:px-8 lg:ml-64 h-[calc(100vh-11.225rem)] lg:h-[calc(100vh-7rem)]'>
+        <div className='w-full max-w-4xl flex items-center justify-center'>
+          <Loading size='xl' text={text} />
+        </div>
       </div>
     </div>
   );

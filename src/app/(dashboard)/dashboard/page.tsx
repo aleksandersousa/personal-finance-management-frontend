@@ -1,6 +1,4 @@
-import { Suspense } from 'react';
 import { DashboardPage } from '@/presentation/pages';
-import { PageLoading } from '@/presentation/components';
 import {
   loadMonthlySummaryAction,
   loadCashFlowForecastAction,
@@ -13,7 +11,7 @@ interface PageProps {
   }>;
 }
 
-async function DashboardContent({ searchParams }: PageProps) {
+export default async function DashboardPageRoute({ searchParams }: PageProps) {
   const { month, forecastMonths } = await searchParams;
 
   // Se não especificado, usar mês atual
@@ -40,14 +38,6 @@ async function DashboardContent({ searchParams }: PageProps) {
       currentMonth={currentMonth}
       currentForecastMonths={forecastMonthsCount}
     />
-  );
-}
-
-export default function DashboardPageRoute({ searchParams }: PageProps) {
-  return (
-    <Suspense fallback={<PageLoading text='Carregando dashboard...' />}>
-      <DashboardContent searchParams={searchParams} />
-    </Suspense>
   );
 }
 
