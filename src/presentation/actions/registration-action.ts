@@ -5,6 +5,7 @@ import { RegistrationParams } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
 import { makeRemoteRegistration } from '@/main/factories/usecases/registration-factory';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { isRedirectError } from '../helpers';
 
 export async function registrationAction(
   data: RegistrationFormData
@@ -33,6 +34,10 @@ export async function registrationAction(
 
     redirect('/dashboard');
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Registration error:', error);
     throw error;
   }

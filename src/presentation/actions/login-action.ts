@@ -5,6 +5,7 @@ import { AuthenticationParams } from '@/domain/usecases';
 import { redirect } from 'next/navigation';
 import { makeRemoteAuthentication } from '@/main/factories/usecases/authentication-factory';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
+import { isRedirectError } from '../helpers';
 
 export async function loginAction(data: LoginFormData): Promise<void> {
   const params: AuthenticationParams = {
@@ -26,6 +27,10 @@ export async function loginAction(data: LoginFormData): Promise<void> {
 
     redirect('/dashboard');
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     console.error('Login error:', error);
     throw error;
   }
