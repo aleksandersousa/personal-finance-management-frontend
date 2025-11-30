@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { aiChatAction } from '@/presentation/actions';
 import { AiChatMessage } from '@/domain/models';
 import { PaperPlaneRightIcon } from '@phosphor-icons/react';
@@ -12,6 +12,15 @@ export function AiChatContainer() {
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (question: string) => {
     setFeedback({ type: null, message: '' });
@@ -81,6 +90,7 @@ export function AiChatContainer() {
             </div>
           ))
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {feedback.type === 'error' && (
