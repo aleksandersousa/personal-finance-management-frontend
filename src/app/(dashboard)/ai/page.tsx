@@ -1,5 +1,5 @@
 import { AiChatPage } from '@/presentation/pages';
 
-export default function AiChatPageRoute() {
+export default async function AiChatPageRoute() {
   return <AiChatPage />;
 }

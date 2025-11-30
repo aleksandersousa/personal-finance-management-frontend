@@ -1,7 +1,5 @@
-import { PageLoading } from '@/presentation';
 import { EditEntryPage } from '@/presentation/pages';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 interface PageProps {
   params: Promise<{
@@ -9,7 +7,7 @@ interface PageProps {
   }>;
 }
 
-async function EditEntryPageWrapper({ params }: PageProps) {
+export default async function EditEntryPageRoute({ params }: PageProps) {
   const { id } = await params;
 
   if (!id || id.trim() === '') {
@@ -17,14 +15,6 @@ async function EditEntryPageWrapper({ params }: PageProps) {
   }
 
   return <EditEntryPage entryId={id} />;
-}
-
-export default function EditEntryPageRoute({ params }: PageProps) {
-  return (
-    <Suspense fallback={<PageLoading text='Carregando entrada...' />}>
-      <EditEntryPageWrapper params={params} />
-    </Suspense>
-  );
 }
 
 export async function generateMetadata({ params }: PageProps) {
