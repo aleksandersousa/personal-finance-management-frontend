@@ -146,6 +146,20 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
     };
 
     const labelColor = getCSSVariable('--color-foreground', 'rgb(55, 65, 81)');
+    const tickColor = getCSSVariable(
+      '--color-foreground-secondary',
+      'rgb(156, 163, 175)'
+    );
+    const gridColor = getCSSVariable(
+      '--color-border-foreground',
+      'rgba(229, 231, 235, 0.5)'
+    );
+    const isDark = themeClass === 'dark';
+
+    // For grid color, we need to handle opacity properly
+    const gridColorWithOpacity = isDark
+      ? 'rgba(75, 85, 99, 0.3)' // neutral-600 with opacity for dark mode
+      : 'rgba(229, 231, 235, 0.5)'; // neutral-200 with opacity for light mode
 
     return {
       responsive: true,
@@ -168,7 +182,7 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
           },
         },
         tooltip: {
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backgroundColor: isDark ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.8)',
           padding: 12,
           titleFont: {
             size: 14,
@@ -203,7 +217,7 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
             font: {
               size: 11,
             },
-            color: 'rgb(156, 163, 175)', // neutral-400
+            color: tickColor,
             maxRotation: 45,
             minRotation: 0,
           },
@@ -213,13 +227,13 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
           display: true,
           position: 'left' as const,
           grid: {
-            color: 'rgba(229, 231, 235, 0.5)', // neutral-200 with opacity
+            color: gridColorWithOpacity,
           },
           ticks: {
             font: {
               size: 11,
             },
-            color: 'rgb(156, 163, 175)', // neutral-400
+            color: tickColor,
             callback: function (value: any) {
               return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -241,7 +255,7 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
             font: {
               size: 11,
             },
-            color: 'rgb(156, 163, 175)', // neutral-400
+            color: tickColor,
             callback: function (value: any) {
               return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -254,7 +268,7 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
         },
       },
     };
-  }, []); // Re-compute when theme changes
+  }, [themeClass]); // Re-compute when theme changes
 
   if (!chartData) {
     return null;
