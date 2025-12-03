@@ -1,7 +1,4 @@
-import {
-  DeleteEntry,
-  DeleteEntryParams,
-} from '@/domain/usecases/entries/delete-entry';
+import { DeleteEntry, DeleteEntryParams } from '@/domain/usecases';
 import { HttpClient } from '@/data/protocols/http/http-client';
 
 export class RemoteDeleteEntry implements DeleteEntry {

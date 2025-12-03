@@ -1,4 +1,4 @@
-import { EntryModel } from '../models/entry';
+import { EntryModel } from '@/domain/models';
 
 export interface UpdateEntry {
   update(params: UpdateEntryParams): Promise<EntryModel>;

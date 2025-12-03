@@ -113,6 +113,7 @@ export const LoginPage: React.FC = () => {
         text: result.message || 'Email de verificação reenviado com sucesso!',
       });
     } catch (error) {
+      console.log('error', error);
       setResendMessage({
         type: 'error',
         text: 'Erro ao reenviar email de verificação. Tente novamente.',

@@ -1,4 +1,4 @@
-import { CashFlowForecastModel } from '../models/cash-flow-forecast';
+import { CashFlowForecastModel } from '@/domain/models';
 
 export interface LoadCashFlowForecast {
   load(params: LoadCashFlowForecastParams): Promise<CashFlowForecastModel>;

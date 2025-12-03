@@ -254,7 +254,7 @@ export const MonthlyProjectionChart: React.FC<MonthlyProjectionChartProps> = ({
         },
       },
     };
-  }, [themeClass]); // Re-compute when theme changes
+  }, []); // Re-compute when theme changes
 
   if (!chartData) {
     return null;

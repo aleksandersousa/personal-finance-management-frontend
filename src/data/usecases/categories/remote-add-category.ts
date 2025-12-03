@@ -1,4 +1,4 @@
-import { AddCategory, AddCategoryParams } from '@/domain/usecases/add-category';
+import { AddCategory, AddCategoryParams } from '@/domain/usecases';
 import { CategoryModel } from '@/domain/models/category';
 import { HttpClient } from '@/data/protocols/http/http-client';
 

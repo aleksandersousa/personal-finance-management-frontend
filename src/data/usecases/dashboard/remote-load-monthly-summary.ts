@@ -1,8 +1,8 @@
 import {
   LoadMonthlySummary,
   LoadMonthlySummaryParams,
-} from '@/domain/usecases/load-monthly-summary';
-import { MonthlySummaryModel } from '@/domain/models/monthly-summary';
+} from '@/domain/usecases';
+import { MonthlySummaryModel } from '@/domain/models';
 import { HttpClient } from '@/data/protocols/http/http-client';
 
 export class RemoteLoadMonthlySummary implements LoadMonthlySummary {

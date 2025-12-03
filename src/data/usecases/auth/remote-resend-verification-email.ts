@@ -2,7 +2,7 @@ import {
   ResendVerificationEmail,
   ResendVerificationEmailParams,
   ResendVerificationEmailModel,
-} from '@/domain/usecases/auth/resend-verification-email';
+} from '@/domain/usecases';
 import { HttpClient } from '@/data/protocols';
 
 export class RemoteResendVerificationEmail implements ResendVerificationEmail {

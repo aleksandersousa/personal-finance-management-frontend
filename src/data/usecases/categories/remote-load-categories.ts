@@ -1,7 +1,4 @@
-import {
-  LoadCategories,
-  LoadCategoriesParams,
-} from '@/domain/usecases/load-categories';
+import { LoadCategories, LoadCategoriesParams } from '@/domain/usecases';
 import { CategoryListResponseModel } from '@/domain/models/category';
 import { HttpClient } from '@/data/protocols/http/http-client';
 

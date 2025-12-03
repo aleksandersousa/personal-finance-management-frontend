@@ -33,7 +33,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const getLocalStorage = makeCookieStorageAdapter();
   const navigate = useRouter();
-  const { isDarkMode, isMounted, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [user, setUser] = useState<UserModel | null>(null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       }
     };
     fetchUser();
-  }, []);
+  }, [getLocalStorage]);
 
   const handleSignOut = async () => {
     try {
@@ -53,10 +53,6 @@ export const TopBar: React.FC<TopBarProps> = ({
       console.error('Logout error:', error);
       navigate.push('/login');
     }
-  };
-
-  const handleSettings = () => {
-    navigate.push('/settings');
   };
 
   const handleNotifications = () => {

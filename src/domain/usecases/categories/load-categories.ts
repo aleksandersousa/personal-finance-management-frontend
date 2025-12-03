@@ -1,4 +1,4 @@
-import { CategoryListResponseModel } from '../models';
+import { CategoryListResponseModel } from '@/domain/models';
 
 export interface LoadCategories {
   load(params?: LoadCategoriesParams): Promise<CategoryListResponseModel>;

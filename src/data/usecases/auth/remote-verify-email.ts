@@ -2,7 +2,7 @@ import {
   VerifyEmail,
   VerifyEmailParams,
   VerifyEmailModel,
-} from '@/domain/usecases/auth/verify-email';
+} from '@/domain/usecases';
 import { HttpClient } from '@/data/protocols';
 
 export class RemoteVerifyEmail implements VerifyEmail {

@@ -1,7 +1,4 @@
-import {
-  UpdateCategory,
-  UpdateCategoryParams,
-} from '@/domain/usecases/update-category';
+import { UpdateCategory, UpdateCategoryParams } from '@/domain/usecases';
 import { CategoryModel } from '@/domain/models/category';
 import { HttpClient } from '@/data/protocols/http/http-client';
 

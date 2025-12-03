@@ -1,8 +1,8 @@
 import {
   LoadCashFlowForecast,
   LoadCashFlowForecastParams,
-} from '@/domain/usecases/load-cash-flow-forecast';
-import { CashFlowForecastModel } from '@/domain/models/cash-flow-forecast';
+} from '@/domain/usecases';
+import { CashFlowForecastModel } from '@/domain/models';
 import { HttpClient } from '@/data/protocols/http/http-client';
 
 export class RemoteLoadCashFlowForecast implements LoadCashFlowForecast {

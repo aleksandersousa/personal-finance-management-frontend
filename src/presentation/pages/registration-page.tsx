@@ -68,7 +68,7 @@ export const RegistrationPage: React.FC = () => {
 
     startTransition(async () => {
       try {
-        const registrationResult = await registrationAction(result.data!);
+        await registrationAction(result.data!);
         setRegistrationSuccess(true);
         setUserEmail(result.data!.email);
         setFormData({

@@ -1,4 +1,4 @@
-import { EntryModel } from '../models';
+import { EntryModel } from '@/domain/models';
 
 export interface LoadEntriesByMonth {
   load: (params: LoadEntriesByMonthParams) => Promise<LoadEntriesByMonthResult>;

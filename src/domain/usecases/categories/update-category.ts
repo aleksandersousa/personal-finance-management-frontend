@@ -1,4 +1,4 @@
-import { CategoryModel } from '../models';
+import { CategoryModel } from '@/domain/models';
 
 export interface UpdateCategory {
   update(params: UpdateCategoryParams): Promise<CategoryModel>;

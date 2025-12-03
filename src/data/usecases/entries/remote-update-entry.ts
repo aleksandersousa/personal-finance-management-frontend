@@ -1,4 +1,4 @@
-import { UpdateEntry, UpdateEntryParams } from '@/domain/usecases/update-entry';
+import { UpdateEntry, UpdateEntryParams } from '@/domain/usecases';
 import { EntryModel } from '@/domain/models/entry';
 import { HttpClient } from '@/data/protocols/http/http-client';
 

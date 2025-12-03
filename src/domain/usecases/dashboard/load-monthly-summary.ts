@@ -1,4 +1,4 @@
-import { MonthlySummaryModel } from '../models/monthly-summary';
+import { MonthlySummaryModel } from '@/domain/models';
 
 export interface LoadMonthlySummary {
   load(params: LoadMonthlySummaryParams): Promise<MonthlySummaryModel>;

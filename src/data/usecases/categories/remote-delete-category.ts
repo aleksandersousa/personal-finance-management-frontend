@@ -2,7 +2,7 @@ import {
   DeleteCategory,
   DeleteCategoryParams,
   DeleteCategoryResult,
-} from '@/domain/usecases/categories/delete-category';
+} from '@/domain/usecases';
 import { HttpClient } from '@/data/protocols/http/http-client';
 
 export class RemoteDeleteCategory implements DeleteCategory {
