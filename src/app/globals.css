@@ -23,4 +23,17 @@
     outline: none;
     box-shadow: none;
   }
+
+  /* Sonner toast theme colors */
+  .toast-success {
+    background: var(--color-success) !important;
+    color: var(--color-neutral-0) !important;
+    border: none !important;
+  }
+
+  .toast-error {
+    background: var(--color-error) !important;
+    color: var(--color-neutral-0) !important;
+    border: none !important;
+  }
 }

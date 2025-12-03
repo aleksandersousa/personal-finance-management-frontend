@@ -25,7 +25,7 @@ export async function addCategoryAction(data: CategoryFormData): Promise<void> {
     revalidateTag('categories');
     revalidateTag(`categories-${user.id}`);
 
-    redirect('/categories');
+    redirect('/categories?success=category_created');
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -34,7 +34,8 @@ export async function addCategoryAction(data: CategoryFormData): Promise<void> {
     console.error('Add category error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
+      return;
     }
-    throw error;
+    redirect('/categories?error=category_create_failed');
   }
 }

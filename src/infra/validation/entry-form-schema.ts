@@ -12,7 +12,10 @@ export const entryFormSchema = z.object({
   type: z.enum(['INCOME', 'EXPENSE'], {
     message: 'Tipo deve ser Receita ou Despesa',
   }),
-  categoryId: z.string().optional(),
+  categoryId: z.preprocess(
+    val => (val === null || val === '' ? undefined : val),
+    z.string().optional()
+  ),
   date: z.date({
     message: 'Data inválida',
   }),

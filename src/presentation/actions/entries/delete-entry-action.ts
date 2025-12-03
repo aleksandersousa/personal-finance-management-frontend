@@ -29,7 +29,7 @@ export async function deleteEntryAction(
     revalidateTag(`entry-${id}`);
     revalidateTag('summary');
 
-    redirect('/entries');
+    redirect('/entries?success=entry_deleted');
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -38,7 +38,8 @@ export async function deleteEntryAction(
     console.error('Delete entry error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
+      return;
     }
-    throw error;
+    redirect('/entries?error=entry_delete_failed');
   }
 }

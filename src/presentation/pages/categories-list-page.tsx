@@ -5,7 +5,7 @@ import {
   CategoriesFilters,
   CategoryListItem,
 } from '@/presentation/components';
-import { Pagination } from '../components/client';
+import { Pagination, SnackbarHandler } from '../components/client';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import { isRedirectError } from '../helpers';
 import Link from 'next/link';
@@ -39,6 +39,8 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
     return (
       <div className='min-h-screen bg-background-secondary pt-20 pb-20 lg:pb-8'>
+        <SnackbarHandler />
+
         <div className='flex justify-center sm:px-6 lg:px-8 lg:ml-64'>
           <div className='w-full max-w-4xl box-border flex flex-col'>
             <h1 className='text-3xl font-bold text-foreground mb-8 text-center'>
