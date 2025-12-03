@@ -3,12 +3,14 @@
 import React, { useMemo, useState, useTransition } from 'react';
 import { Button, Input } from '../components';
 import { makeLoginFormValidator } from '@/main/factories/validation';
-import { loginAction } from '../actions';
+import { loginAction, resendVerificationEmailAction } from '../actions';
 import {
   CurrencyCircleDollarIcon,
   XCircleIcon,
   LockIcon,
   ArrowRightIcon,
+  EnvelopeIcon,
+  CheckCircleIcon,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { isRedirectError } from '../helpers';
@@ -20,6 +22,12 @@ export const LoginPage: React.FC = () => {
   });
   const [isLoading, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [isEmailNotVerified, setIsEmailNotVerified] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   const validator = useMemo(() => makeLoginFormValidator(), []);
 
@@ -63,16 +71,55 @@ export const LoginPage: React.FC = () => {
           password: '',
         });
         setErrors({});
+        setIsEmailNotVerified(false);
+        setResendMessage(null);
       } catch (error) {
         if (isRedirectError(error)) {
           throw error;
         }
 
-        setErrors({
-          general: ['Erro ao fazer login. Verifique suas credenciais.'],
-        });
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.log('errorMessage', errorMessage);
+        const isUnverifiedError = errorMessage.includes('Email not verified');
+
+        if (isUnverifiedError) {
+          setIsEmailNotVerified(true);
+          setErrors({
+            general: [
+              'Email não verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação antes de fazer login.',
+            ],
+          });
+        } else {
+          setIsEmailNotVerified(false);
+          setErrors({
+            general: ['Erro ao fazer login. Verifique suas credenciais.'],
+          });
+        }
       }
     });
+  };
+
+  const handleResendVerification = async () => {
+    if (!formData.email) return;
+
+    setIsResending(true);
+    setResendMessage(null);
+
+    try {
+      const result = await resendVerificationEmailAction(formData.email);
+      setResendMessage({
+        type: 'success',
+        text: result.message || 'Email de verificação reenviado com sucesso!',
+      });
+    } catch (error) {
+      setResendMessage({
+        type: 'error',
+        text: 'Erro ao reenviar email de verificação. Tente novamente.',
+      });
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -99,12 +146,61 @@ export const LoginPage: React.FC = () => {
         <div className='bg-white rounded-3xl shadow-xl p-8 backdrop-blur-sm border border-neutral-100'>
           <form onSubmit={handleSubmit} className='space-y-6'>
             {errors.general && (
-              <div className='bg-red-50 border border-red-100 text-red-700 px-5 py-4 rounded-xl flex items-start gap-3'>
+              <div
+                className={`px-5 py-4 rounded-xl flex items-start gap-3 ${
+                  isEmailNotVerified
+                    ? 'bg-error-100 border border-error text-error'
+                    : 'bg-error-100 border border-error text-error'
+                }`}
+              >
                 <XCircleIcon
                   className='w-5 h-5 flex-shrink-0 mt-0.5'
                   weight='fill'
                 />
-                <span className='text-sm font-medium'>{errors.general[0]}</span>
+                <div className='flex-1'>
+                  <span className='text-sm font-medium block mb-2'>
+                    {errors.general[0]}
+                  </span>
+                  {isEmailNotVerified && (
+                    <Button
+                      type='button'
+                      variant='danger'
+                      size='sm'
+                      className='mt-2'
+                      onClick={handleResendVerification}
+                      isLoading={isResending}
+                      disabled={isResending}
+                    >
+                      <EnvelopeIcon className='w-4 h-4 mr-2' weight='bold' />
+                      Reenviar email de verificação
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {resendMessage && (
+              <div
+                className={`px-5 py-4 rounded-xl flex items-start gap-3 ${
+                  resendMessage.type === 'success'
+                    ? 'bg-green-50 border border-green-200 text-green-700'
+                    : 'bg-red-50 border border-red-100 text-red-700'
+                }`}
+              >
+                {resendMessage.type === 'success' ? (
+                  <CheckCircleIcon
+                    className='w-5 h-5 flex-shrink-0 mt-0.5'
+                    weight='fill'
+                  />
+                ) : (
+                  <XCircleIcon
+                    className='w-5 h-5 flex-shrink-0 mt-0.5'
+                    weight='fill'
+                  />
+                )}
+                <span className='text-sm font-medium'>
+                  {resendMessage.text}
+                </span>
               </div>
             )}
 

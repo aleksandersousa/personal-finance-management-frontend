@@ -1,13 +1,7 @@
-import { Suspense } from 'react';
-import { PageLoading } from '@/presentation/components';
 import { RegistrationPage } from '@/presentation/pages';
 
 export default function RegisterPageRoute() {
-  return (
-    <Suspense fallback={<PageLoading text='Carregando cadastro...' />}>
-      <RegistrationPage />
-    </Suspense>
-  );
+  return <RegistrationPage />;
 }
 
 export const metadata = {

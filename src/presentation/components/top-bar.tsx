@@ -16,7 +16,7 @@ import {
 import { Button } from '@/presentation/components/ui/button';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import type { UserModel } from '@/domain';
-import { logoutAction } from '../actions/logout-action';
+import { logoutAction } from '../actions/auth/logout-action';
 import { DashboardFilters } from './ui';
 import { BellIcon } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
