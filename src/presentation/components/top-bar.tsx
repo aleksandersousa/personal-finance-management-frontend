@@ -44,7 +44,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       }
     };
     fetchUser();
-  }, [getLocalStorage]);
+  }, []);
 
   const handleSignOut = async () => {
     try {
