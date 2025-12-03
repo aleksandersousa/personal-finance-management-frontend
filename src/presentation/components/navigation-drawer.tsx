@@ -164,7 +164,7 @@ export const NavigationDrawer: React.FC = () => {
       }
     };
     fetchUser();
-  }, [getLocalStorage]);
+  }, []);
 
   useEffect(() => {
     const savedState = localStorage.getItem('sidebarCollapsed');
