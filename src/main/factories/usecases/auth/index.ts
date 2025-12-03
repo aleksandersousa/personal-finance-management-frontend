@@ -3,3 +3,5 @@ export * from './registration-factory';
 export * from './refresh-token-factory';
 export * from './verify-email-factory';
 export * from './resend-verification-email-factory';
+export * from './request-password-reset-factory';
+export * from './reset-password-factory';

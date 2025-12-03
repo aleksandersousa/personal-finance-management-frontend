@@ -3,3 +3,7 @@ export * from './entry-form-schema';
 export * from './login-form-schema';
 export * from './registration-form-schema';
 export * from './category-form-schema';
+export * from './forgot-password-form-schema';
+export * from './reset-password-form-schema';
+export * from './forgot-password-form-validator';
+export * from './reset-password-form-validator';

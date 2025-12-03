@@ -236,6 +236,15 @@ export const LoginPage: React.FC = () => {
               Entrar
             </Button>
 
+            <div className='text-center mt-4'>
+              <Link
+                href='/forgot-password'
+                className='inline-flex items-center justify-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200'
+              >
+                Esqueceu sua senha?
+              </Link>
+            </div>
+
             <div className='relative my-6'>
               <div className='absolute inset-0 flex items-center'>
                 <div className='w-full border-t border-neutral-200' />

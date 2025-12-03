@@ -9,3 +9,5 @@ export * from './categories-list-page';
 export * from './login-page';
 export * from './registration-page';
 export * from './verify-email-page';
+export * from './forgot-password-page';
+export * from './reset-password-page';
