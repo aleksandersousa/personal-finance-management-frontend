@@ -11,6 +11,7 @@ import {
   ArrowLeftIcon,
   LockIcon,
 } from '@phosphor-icons/react';
+import { isRedirectError } from '../helpers';
 
 export const RegistrationPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -65,7 +66,11 @@ export const RegistrationPage: React.FC = () => {
           password: '',
         });
         setErrors({});
-      } catch {
+      } catch (error) {
+        if (isRedirectError(error)) {
+          throw error;
+        }
+
         setErrors({
           general: ['Erro ao criar conta. Tente novamente.'],
         });

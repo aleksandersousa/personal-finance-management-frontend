@@ -11,6 +11,7 @@ import {
   ArrowRightIcon,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
+import { isRedirectError } from '../helpers';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -62,7 +63,11 @@ export const LoginPage: React.FC = () => {
           password: '',
         });
         setErrors({});
-      } catch {
+      } catch (error) {
+        if (isRedirectError(error)) {
+          throw error;
+        }
+
         setErrors({
           general: ['Erro ao fazer login. Verifique suas credenciais.'],
         });
