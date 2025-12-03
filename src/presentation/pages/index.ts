@@ -8,3 +8,4 @@ export * from './entries-list-page';
 export * from './categories-list-page';
 export * from './login-page';
 export * from './registration-page';
+export * from './verify-email-page';

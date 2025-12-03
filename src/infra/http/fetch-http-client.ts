@@ -33,7 +33,9 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`, {
+        cause: await response.json(),
+      });
     }
 
     return (await response.json()) as T;

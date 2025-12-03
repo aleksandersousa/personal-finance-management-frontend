@@ -47,7 +47,7 @@ export const useTheme = () => {
     };
 
     initializeTheme();
-  }, []);
+  }, [storage]);
 
   const toggleTheme = async () => {
     const newIsDarkMode = !isDarkMode;

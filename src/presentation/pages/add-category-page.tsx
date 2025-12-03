@@ -3,7 +3,7 @@
 import React, { useMemo, useTransition, useState } from 'react';
 import { makeCategoryFormValidator } from '@/main/factories/validation';
 import { addCategoryAction } from '../actions';
-import { Button, Card, Input, PageLoading, Select } from '../components';
+import { Button, Card, Input, Select } from '../components';
 import { typeOptions } from '@/domain/constants';
 import { redirect } from 'next/navigation';
 
@@ -17,7 +17,6 @@ export const AddCategoryPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-  const [isPendingCategory, startCategoryTransition] = useTransition();
   const [isPendingAdd, startAddTransition] = useTransition();
 
   const validator = useMemo(() => makeCategoryFormValidator(), []);
@@ -65,10 +64,6 @@ export const AddCategoryPage: React.FC = () => {
       });
     }
   };
-
-  if (isPendingCategory) {
-    return <PageLoading text='Carregando categorias...' />;
-  }
 
   return (
     <div className='min-h-screen bg-background-secondary pt-20 pb-20 lg:pb-8'>

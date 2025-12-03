@@ -16,7 +16,7 @@ import {
 import { Button } from '@/presentation/components/ui/button';
 import { makeCookieStorageAdapter } from '@/main/factories/storage';
 import type { UserModel } from '@/domain';
-import { logoutAction } from '../actions/logout-action';
+import { logoutAction } from '../actions/auth/logout-action';
 import { DashboardFilters } from './ui';
 import { BellIcon } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const getLocalStorage = makeCookieStorageAdapter();
   const navigate = useRouter();
-  const { isDarkMode, isMounted, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [user, setUser] = useState<UserModel | null>(null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       }
     };
     fetchUser();
-  }, []);
+  }, [getLocalStorage]);
 
   const handleSignOut = async () => {
     try {
@@ -53,10 +53,6 @@ export const TopBar: React.FC<TopBarProps> = ({
       console.error('Logout error:', error);
       navigate.push('/login');
     }
-  };
-
-  const handleSettings = () => {
-    navigate.push('/settings');
   };
 
   const handleNotifications = () => {

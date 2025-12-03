@@ -42,7 +42,7 @@ export class HttpInterceptor implements HttpClient {
     try {
       // Usar Server Action para refresh token
       const { refreshTokenAction } = await import(
-        '@/presentation/actions/refresh-token-action'
+        '@/presentation/actions/auth/refresh-token-action'
       );
       const newTokens = await refreshTokenAction();
 

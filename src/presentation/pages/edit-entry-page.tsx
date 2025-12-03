@@ -125,7 +125,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     if (entry.categoryId && categories.length > 0) {
       handleInputChange('categoryId', entry.categoryId);
     }
-  }, [categories, entry?.categoryId]);
+  }, [categories, entry?.categoryId, entry]);
 
   const handleInputChange = (
     field: string,
