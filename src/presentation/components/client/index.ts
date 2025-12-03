@@ -6,3 +6,4 @@ export * from './entry-list-item';
 export * from './category-list-item';
 export * from './categories-filters';
 export * from './confirm-fixed-change-modal';
+export * from './snackbar-handler';

@@ -71,6 +71,8 @@ export const EditCategoryPage: React.FC<EditCategoryPageProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('aqui');
+
     const validation = validator.validate(formData);
 
     if (!validation.success) {

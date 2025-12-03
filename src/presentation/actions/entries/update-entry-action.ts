@@ -39,7 +39,7 @@ export async function updateEntryAction(
     revalidateTag(`entries-${user.id}`);
     revalidateTag(`entry-${id}`);
 
-    redirect('/entries');
+    redirect('/entries?success=entry_updated');
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -48,7 +48,8 @@ export async function updateEntryAction(
     console.error('Update entry error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
+      return;
     }
-    throw error;
+    redirect('/entries?error=entry_update_failed');
   }
 }

@@ -34,7 +34,7 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     revalidateTag('entries');
     revalidateTag(`entries-${user.id}`);
 
-    redirect('/entries');
+    redirect('/entries?success=entry_created');
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -43,7 +43,8 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     console.error('Add entry error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
+      return;
     }
-    throw error;
+    redirect('/entries?error=entry_create_failed');
   }
 }

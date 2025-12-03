@@ -1,6 +1,9 @@
 import React from 'react';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
-import { EntryListItem } from '@/presentation/components/client';
+import {
+  EntryListItem,
+  SnackbarHandler,
+} from '@/presentation/components/client';
 import { Pagination } from '../components/client';
 import { Button, EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
@@ -33,6 +36,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
 
     return (
       <div className='min-h-screen w-full bg-background-secondary pt-20 pb-20 lg:pb-8'>
+        <SnackbarHandler />
         <EntriesCache entries={entries} />
 
         <div className='flex justify-center sm:px-6 lg:px-8 lg:ml-64'>

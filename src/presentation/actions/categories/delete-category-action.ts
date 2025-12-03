@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { getCurrentUser, isRedirectError } from '@/presentation/helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteDeleteCategory } from '@/main/factories/usecases/categories/delete-category-factory';
@@ -23,6 +24,8 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     revalidateTag('categories');
     revalidateTag(`categories-${user.id}`);
     revalidateTag(`category-${id}`);
+
+    redirect('/categories?success=category_deleted');
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -31,7 +34,8 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     console.error('Delete category error:', error);
     if (error.message.includes('401')) {
       await logoutAction();
+      return;
     }
-    throw error;
+    redirect('/categories?error=category_delete_failed');
   }
 }
