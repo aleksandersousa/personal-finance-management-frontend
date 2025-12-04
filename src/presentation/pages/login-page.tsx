@@ -116,13 +116,17 @@ export const LoginPage: React.FC = () => {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
 
+        console.log('errorMessage', errorMessage);
+
         let delaySeconds = 0;
 
         if (errorMessage.includes('[DELAY:')) {
           const delayMatch = errorMessage.match(/\[DELAY:(\d+)\]/);
+          console.log('delayMatch', delayMatch);
           if (delayMatch) {
             delaySeconds = parseInt(delayMatch[1], 10);
           }
+          console.log('delaySeconds', delaySeconds);
         }
 
         if (delaySeconds && typeof delaySeconds === 'number') {

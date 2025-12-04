@@ -31,14 +31,19 @@ export async function loginAction(data: LoginFormData): Promise<void> {
       throw error;
     }
 
+    console.log('action - error', error);
+
     const errorCause = error.cause || error;
     const errorMessage = errorCause.message || error.message || String(error);
+
+    console.log('action - errorCause', errorCause);
 
     if (
       errorCause.remainingDelaySeconds !== undefined &&
       typeof errorCause.remainingDelaySeconds === 'number'
     ) {
       const delaySeconds = errorCause.remainingDelaySeconds;
+      console.log('action - delaySeconds', delaySeconds);
       const customError: any = new Error(
         `Too many attempts, please try again later [DELAY:${delaySeconds}]`
       );
