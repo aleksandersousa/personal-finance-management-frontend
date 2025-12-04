@@ -7,7 +7,15 @@ import { makeRemoteAuthentication } from '@/main/factories/usecases/auth/authent
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { isRedirectError } from '@/presentation/helpers';
 
-export async function loginAction(data: LoginFormData): Promise<void> {
+export async function loginAction(data: LoginFormData): Promise<
+  | {
+      success: boolean;
+      error: string;
+      remainingDelaySeconds?: number;
+      isEmailNotVerified?: boolean;
+    }
+  | undefined
+> {
   const params: AuthenticationParams = {
     email: data.email,
     password: data.password,
@@ -34,18 +42,34 @@ export async function loginAction(data: LoginFormData): Promise<void> {
     const errorCause = error.cause || error;
     const errorMessage = errorCause.message || error.message || String(error);
 
-    if (
-      errorCause.remainingDelaySeconds !== undefined &&
-      typeof errorCause.remainingDelaySeconds === 'number'
-    ) {
-      const delaySeconds = errorCause.remainingDelaySeconds;
-      const customError: any = new Error(
-        `Too many attempts, please try again later [DELAY:${delaySeconds}]`
-      );
-      customError.remainingDelaySeconds = delaySeconds;
-      throw customError;
+    const delaySeconds = errorCause.remainingDelaySeconds;
+
+    if (delaySeconds) {
+      return {
+        success: false,
+        error: 'Muitas tentativas. Tente novamente mais tarde.',
+        remainingDelaySeconds: delaySeconds,
+      };
     }
 
-    throw new Error(errorMessage);
+    const isUnverifiedError =
+      errorMessage.includes('Email not verified') ||
+      (errorCause.message &&
+        typeof errorCause.message === 'string' &&
+        errorCause.message.includes('Email not verified'));
+
+    if (isUnverifiedError) {
+      return {
+        success: false,
+        error:
+          'E-mail não verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação antes de fazer login.',
+        isEmailNotVerified: true,
+      };
+    }
+
+    return {
+      success: false,
+      error: 'Ocorreu um erro ao fazer login. Verifique suas credenciais.',
+    };
   }
 }
