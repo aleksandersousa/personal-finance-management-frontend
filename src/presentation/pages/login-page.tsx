@@ -99,7 +99,26 @@ export const LoginPage: React.FC = () => {
 
     startTransition(async () => {
       try {
-        await loginAction(result.data!);
+        const loginResult = await loginAction(result.data!);
+
+        if (!loginResult?.success) {
+          setErrors({
+            general: [
+              loginResult?.error ||
+                'Erro ao fazer login. Verifique suas credenciais.',
+            ],
+          });
+
+          if (loginResult?.remainingDelaySeconds) {
+            setRemainingDelaySeconds(loginResult.remainingDelaySeconds);
+            setIsEmailNotVerified(false);
+          } else if (loginResult?.isEmailNotVerified) {
+            setIsEmailNotVerified(true);
+          }
+
+          return;
+        }
+
         setFormData({
           email: '',
           password: '',
@@ -113,43 +132,9 @@ export const LoginPage: React.FC = () => {
           throw error;
         }
 
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-
-        console.log('errorMessage', errorMessage);
-
-        let delaySeconds = 0;
-
-        if (errorMessage.includes('[DELAY:')) {
-          const delayMatch = errorMessage.match(/\[DELAY:(\d+)\]/);
-          console.log('delayMatch', delayMatch);
-          if (delayMatch) {
-            delaySeconds = parseInt(delayMatch[1], 10);
-          }
-          console.log('delaySeconds', delaySeconds);
-        }
-
-        if (delaySeconds && typeof delaySeconds === 'number') {
-          setRemainingDelaySeconds(delaySeconds);
-          setIsEmailNotVerified(false);
-          return;
-        }
-
-        const isUnverifiedError = errorMessage.includes('Email not verified');
-
-        if (isUnverifiedError) {
-          setIsEmailNotVerified(true);
-          setErrors({
-            general: [
-              'Email não verificado. Por favor, verifique sua caixa de entrada e clique no link de verificação antes de fazer login.',
-            ],
-          });
-        } else {
-          setIsEmailNotVerified(false);
-          setErrors({
-            general: ['Erro ao fazer login. Verifique suas credenciais.'],
-          });
-        }
+        setErrors({
+          general: ['Erro ao fazer login. Verifique suas credenciais.'],
+        });
       }
     });
   };
