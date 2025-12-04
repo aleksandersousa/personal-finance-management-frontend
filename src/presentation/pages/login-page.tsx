@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useTransition } from 'react';
+import React, { useMemo, useState, useTransition, useEffect } from 'react';
 import { Button, Input } from '../components';
 import { makeLoginFormValidator } from '@/main/factories/validation';
 import { loginAction, resendVerificationEmailAction } from '../actions';
@@ -11,9 +11,11 @@ import {
   ArrowRightIcon,
   EnvelopeIcon,
   CheckCircleIcon,
+  ClockIcon,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { isRedirectError } from '../helpers';
+import { useCountdownTimer } from '../hooks';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -28,8 +30,36 @@ export const LoginPage: React.FC = () => {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const [remainingDelaySeconds, setRemainingDelaySeconds] = useState(0);
+
+  const { formattedTime, isActive: isDelayed } = useCountdownTimer(
+    remainingDelaySeconds
+  );
 
   const validator = useMemo(() => makeLoginFormValidator(), []);
+
+  useEffect(() => {
+    if (isDelayed && remainingDelaySeconds > 0) {
+      setErrors({
+        general: [`Muitas tentativas. Tente novamente em: ${formattedTime}`],
+      });
+    } else if (!isDelayed && remainingDelaySeconds === 0) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        if (newErrors.general) {
+          const filtered = newErrors.general.filter(
+            msg => !msg.includes('Muitas tentativas')
+          );
+          if (filtered.length === 0) {
+            delete newErrors.general;
+          } else {
+            newErrors.general = filtered;
+          }
+        }
+        return newErrors;
+      });
+    }
+  }, [isDelayed, remainingDelaySeconds, formattedTime]);
 
   const handleInputChange =
     (field: keyof typeof formData) =>
@@ -50,6 +80,10 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isDelayed) {
+      return;
+    }
 
     const dataToValidate = {
       email: formData.email,
@@ -73,6 +107,7 @@ export const LoginPage: React.FC = () => {
         setErrors({});
         setIsEmailNotVerified(false);
         setResendMessage(null);
+        setRemainingDelaySeconds(0);
       } catch (error) {
         if (isRedirectError(error)) {
           throw error;
@@ -80,7 +115,22 @@ export const LoginPage: React.FC = () => {
 
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        console.log('errorMessage', errorMessage);
+
+        let delaySeconds = 0;
+
+        if (errorMessage.includes('[DELAY:')) {
+          const delayMatch = errorMessage.match(/\[DELAY:(\d+)\]/);
+          if (delayMatch) {
+            delaySeconds = parseInt(delayMatch[1], 10);
+          }
+        }
+
+        if (delaySeconds && typeof delaySeconds === 'number') {
+          setRemainingDelaySeconds(delaySeconds);
+          setIsEmailNotVerified(false);
+          return;
+        }
+
         const isUnverifiedError = errorMessage.includes('Email not verified');
 
         if (isUnverifiedError) {
@@ -149,20 +199,31 @@ export const LoginPage: React.FC = () => {
             {errors.general && (
               <div
                 className={`px-5 py-4 rounded-xl flex items-start gap-3 ${
-                  isEmailNotVerified
-                    ? 'bg-error-100 border border-error text-error'
-                    : 'bg-error-100 border border-error text-error'
+                  isDelayed
+                    ? 'bg-yellow-50 border border-yellow-200 text-yellow-800'
+                    : isEmailNotVerified
+                      ? 'bg-error-100 border border-error text-error'
+                      : 'bg-error-100 border border-error text-error'
                 }`}
               >
-                <XCircleIcon
-                  className='w-5 h-5 flex-shrink-0 mt-0.5'
-                  weight='fill'
-                />
+                {isDelayed ? (
+                  <ClockIcon
+                    className='w-5 h-5 flex-shrink-0 mt-0.5'
+                    weight='fill'
+                  />
+                ) : (
+                  <XCircleIcon
+                    className='w-5 h-5 flex-shrink-0 mt-0.5'
+                    weight='fill'
+                  />
+                )}
                 <div className='flex-1'>
                   <span className='text-sm font-medium block mb-2'>
-                    {errors.general[0]}
+                    {isDelayed
+                      ? `Muitas tentativas. Tente novamente em: ${formattedTime}`
+                      : errors.general[0]}
                   </span>
-                  {isEmailNotVerified && (
+                  {isEmailNotVerified && !isDelayed && (
                     <Button
                       type='button'
                       variant='danger'
@@ -231,9 +292,9 @@ export const LoginPage: React.FC = () => {
               size='lg'
               className='w-full mt-8'
               isLoading={isLoading}
-              disabled={isLoading}
+              disabled={isLoading || isDelayed}
             >
-              Entrar
+              {isDelayed ? `Aguarde ${formattedTime}` : 'Entrar'}
             </Button>
 
             <div className='text-center mt-4'>

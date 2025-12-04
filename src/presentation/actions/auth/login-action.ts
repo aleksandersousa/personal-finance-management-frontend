@@ -31,6 +31,21 @@ export async function loginAction(data: LoginFormData): Promise<void> {
       throw error;
     }
 
-    throw new Error(error.cause.message);
+    const errorCause = error.cause || error;
+    const errorMessage = errorCause.message || error.message || String(error);
+
+    if (
+      errorCause.remainingDelaySeconds !== undefined &&
+      typeof errorCause.remainingDelaySeconds === 'number'
+    ) {
+      const delaySeconds = errorCause.remainingDelaySeconds;
+      const customError: any = new Error(
+        `Too many attempts, please try again later [DELAY:${delaySeconds}]`
+      );
+      customError.remainingDelaySeconds = delaySeconds;
+      throw customError;
+    }
+
+    throw new Error(errorMessage);
   }
 }
