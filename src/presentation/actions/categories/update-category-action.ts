@@ -25,9 +25,9 @@ export async function updateCategoryAction(
     const updateCategory = makeRemoteUpdateCategory();
     await updateCategory.update({ id, ...data });
 
-    revalidateTag('categories');
-    revalidateTag(`categories-${user.id}`);
-    revalidateTag(`category-${id}`);
+    revalidateTag('categories', 'max');
+    revalidateTag(`categories-${user.id}`, 'max');
+    revalidateTag(`category-${id}`, 'max');
 
     redirect('/categories?success=category_updated');
   } catch (error: any) {

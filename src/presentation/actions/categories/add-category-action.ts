@@ -22,8 +22,8 @@ export async function addCategoryAction(data: CategoryFormData): Promise<void> {
     const addCategory = makeRemoteAddCategory();
     await addCategory.add(data);
 
-    revalidateTag('categories');
-    revalidateTag(`categories-${user.id}`);
+    revalidateTag('categories', 'max');
+    revalidateTag(`categories-${user.id}`, 'max');
 
     redirect('/categories?success=category_created');
   } catch (error: any) {
