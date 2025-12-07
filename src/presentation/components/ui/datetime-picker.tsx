@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useState, useEffect, useId } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, ClockIcon } from '@phosphor-icons/react/dist/ssr';
@@ -36,22 +36,20 @@ export function DateTimePicker({
   className,
   id,
 }: DateTimePickerProps) {
-  const [open, setOpen] = React.useState(false);
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
-    value
-  );
-  const [hours, setHours] = React.useState<string>(
+  const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(value);
+  const [hours, setHours] = useState<string>(
     value ? String(value.getHours()).padStart(2, '0') : '00'
   );
-  const [minutes, setMinutes] = React.useState<string>(
+  const [minutes, setMinutes] = useState<string>(
     value ? String(value.getMinutes()).padStart(2, '0') : '00'
   );
 
-  const generatedId = React.useId();
+  const generatedId = useId();
   const dateTimePickerId = id || generatedId;
 
   // Update local state when value prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (value) {
       setSelectedDate(value);
       setHours(String(value.getHours()).padStart(2, '0'));
@@ -157,8 +155,8 @@ export function DateTimePicker({
             />
             <div className='border-t pt-3 mt-3'>
               <div className='flex items-center gap-2'>
-                <ClockIcon className='h-4 w-4 text-foreground' />
-                <span className='text-sm font-medium text-foreground'>
+                <ClockIcon className='h-4 w-4 text-neutral-900' />
+                <span className='text-sm font-medium text-neutral-900'>
                   Hora
                 </span>
               </div>
@@ -169,17 +167,17 @@ export function DateTimePicker({
                   max='23'
                   value={hours}
                   onChange={e => handleTimeChange('hours', e.target.value)}
-                  className='w-16 text-center'
+                  className='w-16 text-center text-neutral-900'
                   placeholder='00'
                 />
-                <span className='text-foreground'>:</span>
+                <span className='text-neutral-900'>:</span>
                 <Input
                   type='number'
                   min='0'
                   max='59'
                   value={minutes}
                   onChange={e => handleTimeChange('minutes', e.target.value)}
-                  className='w-16 text-center'
+                  className='w-16 text-center text-neutral-900'
                   placeholder='00'
                 />
               </div>
