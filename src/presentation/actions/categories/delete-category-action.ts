@@ -21,9 +21,9 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     const deleteCategory = makeRemoteDeleteCategory();
     await deleteCategory.delete({ id });
 
-    revalidateTag('categories');
-    revalidateTag(`categories-${user.id}`);
-    revalidateTag(`category-${id}`);
+    revalidateTag('categories', 'max');
+    revalidateTag(`categories-${user.id}`, 'max');
+    revalidateTag(`category-${id}`, 'max');
 
     redirect('/categories?success=category_deleted');
   } catch (error: any) {

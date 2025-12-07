@@ -1,16 +1,8 @@
 import type { NextConfig } from 'next';
-import path from 'path';
 
 const nextConfig: NextConfig = {
-  // Path aliases
-  webpack: config => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': path.resolve(__dirname, 'src'),
-      '@/app': path.resolve(__dirname, 'src/app'),
-    };
-    return config;
-  },
+  // Turbopack configuration (path aliases are handled by tsconfig.json)
+  turbopack: {},
 
   // Security headers
   async headers() {

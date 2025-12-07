@@ -35,9 +35,9 @@ export async function updateEntryAction(
     const updateEntry = makeRemoteUpdateEntry();
     await updateEntry.update(params);
 
-    revalidateTag('entries');
-    revalidateTag(`entries-${user.id}`);
-    revalidateTag(`entry-${id}`);
+    revalidateTag('entries', 'max');
+    revalidateTag(`entries-${user.id}`, 'max');
+    revalidateTag(`entry-${id}`, 'max');
 
     redirect('/entries?success=entry_updated');
   } catch (error: any) {

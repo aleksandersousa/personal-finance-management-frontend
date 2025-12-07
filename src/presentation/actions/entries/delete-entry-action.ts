@@ -24,10 +24,10 @@ export async function deleteEntryAction(
     const deleteEntry = makeRemoteDeleteEntry();
     await deleteEntry.delete({ id, deleteAllOccurrences });
 
-    revalidateTag('entries');
-    revalidateTag(`entries-${user.id}`);
-    revalidateTag(`entry-${id}`);
-    revalidateTag('summary');
+    revalidateTag('entries', 'max');
+    revalidateTag(`entries-${user.id}`, 'max');
+    revalidateTag(`entry-${id}`, 'max');
+    revalidateTag('summary', 'max');
 
     redirect('/entries?success=entry_deleted');
   } catch (error: any) {

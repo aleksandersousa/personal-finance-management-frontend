@@ -31,8 +31,8 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     const addEntry = makeRemoteAddEntry();
     await addEntry.add(params);
 
-    revalidateTag('entries');
-    revalidateTag(`entries-${user.id}`);
+    revalidateTag('entries', 'max');
+    revalidateTag(`entries-${user.id}`, 'max');
 
     redirect('/entries?success=entry_created');
   } catch (error: any) {

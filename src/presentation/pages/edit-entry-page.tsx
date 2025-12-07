@@ -16,8 +16,8 @@ import {
   Input,
   PageLoading,
   Select,
-  DatePicker,
   CheckboxWithLabel,
+  DateTimePicker,
 } from '../components';
 import { ConfirmFixedChangeModal } from '../components/client';
 import { redirect } from 'next/navigation';
@@ -300,14 +300,14 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                   />
                 )}
 
-                <DatePicker
-                  label='Data'
+                <DateTimePicker
+                  label='Data e Hora'
                   value={formData.date}
                   onChange={date => handleInputChange('date', date)}
                   error={errors.date?.[0]}
                   required
                   disabled={isPendingUpdate}
-                  placeholder='Selecione a data'
+                  placeholder='Selecione data e hora'
                 />
 
                 <CheckboxWithLabel

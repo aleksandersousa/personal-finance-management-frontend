@@ -6,7 +6,7 @@ import {
   Card,
   Input,
   Select,
-  DatePicker,
+  DateTimePicker,
   CheckboxWithLabel,
 } from '../components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
@@ -229,14 +229,14 @@ export const AddEntryPage: React.FC = () => {
                 />
               )}
 
-              <DatePicker
-                label='Data'
+              <DateTimePicker
+                label='Data e Hora'
                 value={formData.date}
                 onChange={date => handleInputChange('date', date)}
                 error={errors.date?.[0]}
                 required
                 disabled={isPendingSubmit}
-                placeholder='Selecione a data'
+                placeholder='Selecione data e hora'
               />
 
               <CheckboxWithLabel
