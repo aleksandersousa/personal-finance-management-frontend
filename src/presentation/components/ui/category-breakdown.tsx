@@ -90,7 +90,7 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
                       {category.count === 1 ? 'entrada' : 'entradas'}
                     </span>
                     {type === 'EXPENSE' && category.unpaidAmount > 0 && (
-                      <span className='text-xs text-warning bg-warning/10 px-2 py-0.5 rounded'>
+                      <span className='text-xs text-amber-600 bg-amber-600/10 px-2 py-0.5 rounded'>
                         A pagar: {formatCurrency(category.unpaidAmount)}
                       </span>
                     )}
