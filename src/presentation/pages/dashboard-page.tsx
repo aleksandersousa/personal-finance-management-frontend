@@ -35,8 +35,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const categories: CategoryBreakdownItemModel[] =
     summary.categoryBreakdown?.items || [];
 
-  console.log(summary.categoryBreakdown);
-
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
@@ -106,7 +104,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             />
             <SummaryCard
               title='Despesas'
-              value={summary.summary.totalExpenses}
+              value={summary.summary.totalPaidExpenses}
               type='expense'
               icon={<ArrowDownIcon className='w-6 h-6 text-neutral-0' />}
               comparison={{
@@ -115,8 +113,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   summary.comparisonWithPrevious.percentageChanges.expense,
               }}
               details={{
-                fixed: summary.summary.fixedExpenses,
-                variable: summary.summary.dynamicExpenses,
+                paid: summary.summary.totalPaidExpenses,
+                unpaid: summary.summary.totalUnpaidExpenses,
+                fixed: summary.summary.fixedPaidExpenses,
+                variable: summary.summary.dynamicPaidExpenses,
                 entriesCount: summary.summary.entriesCount.expenses,
               }}
             />

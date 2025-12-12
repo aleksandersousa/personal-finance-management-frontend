@@ -26,6 +26,7 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
       categoryId: data.categoryId || undefined,
       date: data.date,
       isFixed: data.isFixed,
+      isPaid: data.isPaid ?? false,
     };
 
     const addEntry = makeRemoteAddEntry();

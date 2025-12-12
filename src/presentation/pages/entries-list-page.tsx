@@ -29,7 +29,8 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
         (searchParams.category && searchParams.category !== 'all') ||
         (searchParams.sort && searchParams.sort !== 'date') ||
         (searchParams.order && searchParams.order !== 'desc') ||
-        (searchParams.search && searchParams.search.trim() !== '')
+        (searchParams.search && searchParams.search.trim() !== '') ||
+        (searchParams.isPaid && searchParams.isPaid !== 'all')
     );
     const contentInfo =
       searchParams.type === 'INCOME' ? 'receitas' : 'despesas';

@@ -20,6 +20,7 @@ export const entryFormSchema = z.object({
     message: 'Data inválida',
   }),
   isFixed: z.boolean(),
+  isPaid: z.boolean().optional(),
 });
 
 export type EntryFormData = z.infer<typeof entryFormSchema>;

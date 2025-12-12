@@ -4,6 +4,7 @@ export interface EntryModel {
   description: string;
   type: 'INCOME' | 'EXPENSE';
   isFixed: boolean;
+  isPaid: boolean;
   categoryId: string;
   categoryName: string;
   userId: string;

@@ -84,10 +84,17 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
                   <span className='text-foreground'>
                     {category.categoryName}
                   </span>
-                  <span className='text-xs text-neutral-500'>
-                    {category.count}{' '}
-                    {category.count === 1 ? 'entrada' : 'entradas'}
-                  </span>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-xs text-neutral-500'>
+                      {category.count}{' '}
+                      {category.count === 1 ? 'entrada' : 'entradas'}
+                    </span>
+                    {type === 'EXPENSE' && category.unpaidAmount > 0 && (
+                      <span className='text-xs text-warning bg-warning/10 px-2 py-0.5 rounded'>
+                        A pagar: {formatCurrency(category.unpaidAmount)}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className='text-right'>

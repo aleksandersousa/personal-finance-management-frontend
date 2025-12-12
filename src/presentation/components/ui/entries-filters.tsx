@@ -40,6 +40,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     sort: searchParams.get('sort') || 'date',
     order: searchParams.get('order') || 'desc',
     search: searchParams.get('search') || '',
+    isPaid: searchParams.get('isPaid') || 'all',
   });
 
   const [showFilters, setShowFilters] = useState(false);
@@ -133,6 +134,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
       sort: 'date',
       order: 'desc',
       search: '',
+      isPaid: 'all',
     };
     setFilters(clearedFilters);
     updateURL(clearedFilters);
@@ -144,7 +146,8 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     filters.category !== 'all' ||
     filters.sort !== 'date' ||
     filters.order !== 'desc' ||
-    filters.search !== '';
+    filters.search !== '' ||
+    filters.isPaid !== 'all';
 
   const shouldShowHeader = showHeader || externalHasActiveFilters;
 
@@ -226,6 +229,33 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                 </SelectContent>
               </Select>
             </div>
+
+            {filters.type === 'EXPENSE' && (
+              <div>
+                <label className='block text-sm text-slate-700 mb-1'>
+                  Status de Pagamento
+                </label>
+                <Select
+                  value={filters.isPaid}
+                  onValueChange={value => handleFilterChange('isPaid', value)}
+                >
+                  <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
+                    <SelectValue placeholder='Selecione o status' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='all' className='rounded-lg'>
+                      Todas
+                    </SelectItem>
+                    <SelectItem value='true' className='rounded-lg'>
+                      Pagas
+                    </SelectItem>
+                    <SelectItem value='false' className='rounded-lg'>
+                      Não Pagas
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div>
               <label className='block text-sm text-slate-700 mb-1'>
