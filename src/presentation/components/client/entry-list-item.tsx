@@ -1,15 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import { EntryModel } from '@/domain/models';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react/dist/ssr';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatCurrency, formatDate, cn } from '@/lib/utils';
 import { redirect } from 'next/navigation';
-import { deleteEntryAction } from '@/presentation/actions';
+import {
+  deleteEntryAction,
+  toggleEntryPaidStatusAction,
+} from '@/presentation/actions';
 import { DeleteEntryModal } from './delete-entry-modal';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface EntryListItemProps {
   entry: EntryModel;
@@ -21,6 +33,14 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   showActions = true,
 }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isTogglingPaid, startToggleTransition] = useTransition();
+  const [optimisticIsPaid, setOptimisticIsPaid] = useState(entry.isPaid);
+  const router = useRouter();
+
+  // Sync optimistic state with entry prop when it changes
+  useEffect(() => {
+    setOptimisticIsPaid(entry.isPaid);
+  }, [entry.isPaid]);
 
   const handleEdit = () => {
     redirect(`/entries/${entry.id}/edit`);
@@ -39,6 +59,34 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
     setIsDeleteModalOpen(false);
   };
 
+  const handlePaidStatusChange = async (value: string) => {
+    const newIsPaid = value === 'paid';
+
+    // Optimistic update
+    setOptimisticIsPaid(newIsPaid);
+
+    startToggleTransition(async () => {
+      const result = await toggleEntryPaidStatusAction(entry, newIsPaid);
+
+      if (!result.success) {
+        // Revert optimistic update on error
+        setOptimisticIsPaid(entry.isPaid);
+        toast.error(
+          result.error ||
+            'Erro ao atualizar status de pagamento. Tente novamente.'
+        );
+      } else {
+        toast.success(
+          newIsPaid
+            ? 'Despesa marcada como paga'
+            : 'Despesa marcada como não paga'
+        );
+        // Refresh the page to show updated data
+        router.refresh();
+      }
+    });
+  };
+
   return (
     <>
       <DeleteEntryModal
@@ -55,7 +103,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
               {entry.description}
             </div>
 
-            <div className='text-sm text-neutral-500 mt-1 flex items-center gap-2'>
+            <div className='text-sm text-neutral-500 mt-1 flex items-center gap-2 flex-wrap'>
               <span>
                 {entry.categoryName ?? 'Sem categoria'} •{' '}
                 {formatDate(entry.date)}
@@ -68,6 +116,32 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                 >
                   Fixa
                 </Badge>
+              )}
+
+              {entry.type === 'EXPENSE' && (
+                <Select
+                  value={optimisticIsPaid ? 'paid' : 'unpaid'}
+                  onValueChange={handlePaidStatusChange}
+                  disabled={isTogglingPaid}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      '!h-6 px-2 py-0 text-xs font-medium rounded-md border-0 shadow-none focus:ring-0 focus:ring-offset-0 w-auto min-w-fit gap-0 cursor-pointer',
+                      optimisticIsPaid
+                        ? 'bg-success hover:bg-success-400'
+                        : 'bg-error hover:bg-error-400',
+                      isTogglingPaid && 'opacity-50 cursor-not-allowed',
+                      '[&>svg]:hidden' // Hide the dropdown arrow
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+
+                  <SelectContent className='min-w-[120px]'>
+                    <SelectItem value='paid'>Pago</SelectItem>
+                    <SelectItem value='unpaid'>Não pago</SelectItem>
+                  </SelectContent>
+                </Select>
               )}
             </div>
           </div>

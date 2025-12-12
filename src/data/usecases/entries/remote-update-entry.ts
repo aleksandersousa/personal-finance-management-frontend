@@ -9,6 +9,10 @@ export class RemoteUpdateEntry implements UpdateEntry {
   ) {}
 
   async update(params: UpdateEntryParams): Promise<EntryModel> {
+    // Ensure date is a Date object before calling toISOString
+    const date =
+      params.date instanceof Date ? params.date : new Date(params.date);
+
     const httpResponse = await this.httpClient.put<unknown>(
       `${this.url}/${params.id}`,
       {
@@ -16,8 +20,9 @@ export class RemoteUpdateEntry implements UpdateEntry {
         amount: params.amount,
         type: params.type,
         categoryId: params.categoryId,
-        date: params.date.toISOString().split('T')[0], // YYYY-MM-DD
+        date: date.toISOString().split('T')[0], // YYYY-MM-DD
         isFixed: params.isFixed,
+        isPaid: params.isPaid,
       }
     );
 
@@ -31,6 +36,7 @@ export class RemoteUpdateEntry implements UpdateEntry {
       userId: string;
       date: string;
       isFixed: boolean;
+      isPaid: boolean;
       createdAt: string;
       updatedAt: string;
     };
@@ -45,6 +51,7 @@ export class RemoteUpdateEntry implements UpdateEntry {
       userId: apiResponse.userId,
       date: new Date(apiResponse.date),
       isFixed: apiResponse.isFixed,
+      isPaid: apiResponse.isPaid ?? false,
       createdAt: new Date(apiResponse.createdAt),
       updatedAt: new Date(apiResponse.updatedAt),
     };

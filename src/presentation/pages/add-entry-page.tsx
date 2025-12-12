@@ -26,6 +26,7 @@ export const AddEntryPage: React.FC = () => {
     categoryId: string;
     date: Date | undefined;
     isFixed: boolean;
+    isPaid: boolean;
   }>({
     description: '',
     amount: '0,00',
@@ -33,6 +34,7 @@ export const AddEntryPage: React.FC = () => {
     categoryId: '',
     date: new Date(),
     isFixed: false,
+    isPaid: false,
   });
 
   const [isPendingSubmit, startSubmitTransition] = useTransition();
@@ -113,6 +115,7 @@ export const AddEntryPage: React.FC = () => {
       categoryId: formData.categoryId,
       date: formData.date,
       isFixed: formData.isFixed,
+      isPaid: formData.isPaid,
     };
 
     const result = validator.validate(dataToValidate);
@@ -137,6 +140,7 @@ export const AddEntryPage: React.FC = () => {
         categoryId: '',
         date: new Date(),
         isFixed: false,
+        isPaid: false,
       });
       setErrors({});
     } catch (error) {
@@ -248,6 +252,18 @@ export const AddEntryPage: React.FC = () => {
                 disabled={isPendingSubmit}
                 label='Entrada fixa (recorrente mensalmente)'
               />
+
+              {formData.type === 'EXPENSE' && (
+                <CheckboxWithLabel
+                  id='isPaid'
+                  checked={formData.isPaid}
+                  onCheckedChange={checked =>
+                    handleInputChange('isPaid', checked as boolean)
+                  }
+                  disabled={isPendingSubmit}
+                  label='Marcado como pago'
+                />
+              )}
 
               <div className='flex space-x-4'>
                 <Button

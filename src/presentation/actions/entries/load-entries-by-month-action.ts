@@ -28,6 +28,15 @@ export async function loadEntriesByMonthAction(
     const type = searchParams.type as 'INCOME' | 'EXPENSE' | undefined;
     const categoryId = searchParams.categoryId;
     const search = searchParams.search;
+    const isPaidParam = searchParams.isPaid;
+    let isPaid: boolean | 'all' | undefined = undefined;
+    if (isPaidParam === 'true') {
+      isPaid = true;
+    } else if (isPaidParam === 'false') {
+      isPaid = false;
+    } else if (isPaidParam === 'all') {
+      isPaid = 'all';
+    }
 
     const params: LoadEntriesByMonthParams = {
       month,
@@ -37,6 +46,7 @@ export async function loadEntriesByMonthAction(
       ...(type && { type }),
       ...(categoryId && { categoryId }),
       ...(search && search.trim() && { search: search.trim() }),
+      ...(isPaid !== undefined && { isPaid }),
     };
 
     const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();

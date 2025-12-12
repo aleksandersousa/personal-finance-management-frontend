@@ -37,6 +37,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     categoryId: string;
     date: Date | undefined;
     isFixed: boolean;
+    isPaid: boolean;
   }>({
     description: '',
     amount: '',
@@ -44,6 +45,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     categoryId: '',
     date: undefined,
     isFixed: false,
+    isPaid: false,
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [showFixedModal, setShowFixedModal] = useState(false);
@@ -99,6 +101,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
         categoryId: entry.categoryId,
         date: new Date(entry.date),
         isFixed: entry.isFixed,
+        isPaid: entry.isPaid ?? false,
       });
     }
   }, [entry]);
@@ -161,6 +164,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
       categoryId: formData.categoryId,
       date: formData.date,
       isFixed: formData.isFixed,
+      isPaid: formData.isPaid,
     };
 
     const result = validator.validate(dataToValidate);
@@ -319,6 +323,18 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                   disabled={isPendingUpdate}
                   label='Entrada fixa (recorrente mensalmente)'
                 />
+
+                {formData.type === 'EXPENSE' && (
+                  <CheckboxWithLabel
+                    id='isPaid'
+                    checked={formData.isPaid}
+                    onCheckedChange={checked =>
+                      handleInputChange('isPaid', checked as boolean)
+                    }
+                    disabled={isPendingUpdate}
+                    label='Marcado como pago'
+                  />
+                )}
 
                 <div className='flex space-x-4'>
                   <Button

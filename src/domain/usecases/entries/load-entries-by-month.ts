@@ -12,6 +12,7 @@ export type LoadEntriesByMonthParams = {
   type?: 'INCOME' | 'EXPENSE';
   categoryId?: string;
   search?: string;
+  isPaid?: boolean | 'all';
 };
 
 export type LoadEntriesByMonthResult = {

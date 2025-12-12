@@ -15,8 +15,10 @@ export interface SummaryCardProps {
   };
   icon?: React.ReactNode;
   details?: {
-    fixed: number;
-    variable: number;
+    paid?: number;
+    unpaid?: number;
+    fixed?: number;
+    variable?: number;
     entriesCount: number;
   };
 }
@@ -161,33 +163,91 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
               <h4 className='text-sm text-foreground mb-3'>Detalhamento</h4>
 
               <div className='space-y-2'>
-                <div className='flex justify-between items-center py-1'>
-                  <div className='flex items-center gap-2'>
-                    <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
-                    />
-                    <span className='text-sm text-foreground'>Fixas</span>
-                  </div>
-                  <span
-                    className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
-                  >
-                    {formatCurrency(details.fixed)}
-                  </span>
-                </div>
+                {type === 'expense' &&
+                details.paid !== undefined &&
+                details.unpaid !== undefined ? (
+                  <>
+                    <div className='flex justify-between items-center py-1'>
+                      <div className='flex items-center gap-2'>
+                        <div className='w-2 h-2 rounded-full bg-success' />
+                        <span className='text-sm text-foreground'>Pagas</span>
+                      </div>
+                      <span className='text-sm text-success'>
+                        {formatCurrency(details.paid)}
+                      </span>
+                    </div>
 
-                <div className='flex justify-between items-center py-1'>
-                  <div className='flex items-center gap-2'>
-                    <div
-                      className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
-                    />
-                    <span className='text-sm text-foreground'>Variáveis</span>
-                  </div>
-                  <span
-                    className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
-                  >
-                    {formatCurrency(details.variable)}
-                  </span>
-                </div>
+                    <div className='flex justify-between items-center py-1'>
+                      <div className='flex items-center gap-2'>
+                        <div className='w-2 h-2 rounded-full bg-warning' />
+                        <span className='text-sm text-foreground'>A Pagar</span>
+                      </div>
+                      <span className='text-sm text-warning'>
+                        {formatCurrency(details.unpaid)}
+                      </span>
+                    </div>
+
+                    <div className='pt-2 mt-2 border-t border-border-foreground'>
+                      <div className='space-y-2'>
+                        <div className='flex justify-between items-center py-1'>
+                          <div className='flex items-center gap-2'>
+                            <div className='w-2 h-2 rounded-full bg-error' />
+                            <span className='text-sm text-foreground'>
+                              Fixas (Pagas)
+                            </span>
+                          </div>
+                          <span className='text-sm text-error'>
+                            {formatCurrency(details.fixed || 0)}
+                          </span>
+                        </div>
+
+                        <div className='flex justify-between items-center py-1'>
+                          <div className='flex items-center gap-2'>
+                            <div className='w-2 h-2 rounded-full bg-error' />
+                            <span className='text-sm text-foreground'>
+                              Variáveis (Pagas)
+                            </span>
+                          </div>
+                          <span className='text-sm text-error'>
+                            {formatCurrency(details.variable || 0)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className='flex justify-between items-center py-1'>
+                      <div className='flex items-center gap-2'>
+                        <div
+                          className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
+                        />
+                        <span className='text-sm text-foreground'>Fixas</span>
+                      </div>
+                      <span
+                        className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
+                      >
+                        {formatCurrency(details.fixed || 0)}
+                      </span>
+                    </div>
+
+                    <div className='flex justify-between items-center py-1'>
+                      <div className='flex items-center gap-2'>
+                        <div
+                          className={`w-2 h-2 rounded-full ${type === 'income' ? 'bg-success' : 'bg-error'}`}
+                        />
+                        <span className='text-sm text-foreground'>
+                          Variáveis
+                        </span>
+                      </div>
+                      <span
+                        className={`text-sm ${type === 'income' ? 'text-success' : 'text-error'}`}
+                      >
+                        {formatCurrency(details.variable || 0)}
+                      </span>
+                    </div>
+                  </>
+                )}
 
                 <div className='pt-2 mt-2 border-t border-border-foreground'>
                   <div className='flex justify-between items-center'>

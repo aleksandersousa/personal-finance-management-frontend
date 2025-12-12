@@ -12,4 +12,5 @@ export interface UpdateEntryParams {
   categoryId?: string;
   date: Date;
   isFixed: boolean;
+  isPaid?: boolean;
 }

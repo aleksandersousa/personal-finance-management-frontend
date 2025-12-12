@@ -14,7 +14,15 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
   async load(
     params: LoadEntriesByMonthParams
   ): Promise<LoadEntriesByMonthResult> {
-    const { month, page = 1, limit = 20, type, categoryId, search } = params;
+    const {
+      month,
+      page = 1,
+      limit = 20,
+      type,
+      categoryId,
+      search,
+      isPaid,
+    } = params;
     const query = new URLSearchParams({
       month,
       page: String(page),
@@ -22,6 +30,9 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
       ...(type ? { type } : {}),
       ...(categoryId ? { categoryId } : {}),
       ...(search && search.trim() ? { search: search.trim() } : {}),
+      ...(isPaid !== undefined && isPaid !== 'all'
+        ? { isPaid: String(isPaid) }
+        : {}),
     }).toString();
     const response = await this.httpClient.get<LoadEntriesByMonthResult>(
       `${this.url}?${query}`

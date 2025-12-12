@@ -9,7 +9,14 @@ export class RemoteAddEntry implements AddEntry {
   ) {}
 
   async add(params: AddEntryParams): Promise<EntryModel> {
-    const response = await this.httpClient.post<EntryModel>(this.url, params);
+    const requestParams = {
+      ...params,
+      isPaid: params.isPaid ?? false,
+    };
+    const response = await this.httpClient.post<EntryModel>(
+      this.url,
+      requestParams
+    );
 
     return {
       id: response.id,
@@ -20,6 +27,7 @@ export class RemoteAddEntry implements AddEntry {
       categoryName: response.categoryName || 'Desconhecida',
       userId: response.userId,
       isFixed: response.isFixed,
+      isPaid: response.isPaid ?? false,
       date: new Date(response.date),
       createdAt: new Date(response.createdAt),
       updatedAt: new Date(response.updatedAt),

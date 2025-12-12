@@ -30,6 +30,7 @@ export async function updateEntryAction(
       categoryId: data.categoryId,
       date: data.date,
       isFixed: data.isFixed,
+      isPaid: data.isPaid,
     };
 
     const updateEntry = makeRemoteUpdateEntry();
