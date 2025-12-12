@@ -6,6 +6,8 @@ import {
 import { isRedirectError } from '@/presentation/helpers';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   searchParams: Promise<{
     month?: string;
