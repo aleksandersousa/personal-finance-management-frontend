@@ -48,7 +48,7 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
             </h1>
 
             <CategoriesFilters
-              showHeader={filteredCategories.length > 0}
+              showHeader={true}
               hasActiveFilters={hasActiveFilters}
             />
           </div>
@@ -65,8 +65,8 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
                   Nenhuma categoria encontrada
                 </h3>
                 <p className='text-foreground opacity-80 mb-8 max-w-md mx-auto'>
-                  {searchParams.type && searchParams.type !== 'all'
-                    ? `Não há categorias de ${contentInfo}.`
+                  {hasActiveFilters
+                    ? 'Nenhuma categoria encontrada com os filtros aplicados. Tente ajustar os filtros ou limpar para ver todas as categorias.'
                     : 'Comece criando suas primeiras categorias para organizar suas finanças.'}
                 </p>
                 <Button

@@ -18,6 +18,7 @@ import {
 } from './select';
 import { Input } from './input';
 import { Button } from './button';
+import { loadEntriesMonthsYearsAction } from '@/presentation/actions';
 
 interface EntriesFiltersProps {
   currentMonth: string;
@@ -45,6 +46,10 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   const [showFilters, setShowFilters] = useState(false);
   const searchDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [monthOptions, setMonthOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+  const [isLoadingMonths, setIsLoadingMonths] = useState(true);
 
   const generateMonthOptions = () => {
     const options = [];
@@ -59,28 +64,47 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const value = `${year}-${month}`;
-
-      const monthNames = [
-        'Janeiro',
-        'Fevereiro',
-        'Março',
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-        'Setembro',
-        'Outubro',
-        'Novembro',
-        'Dezembro',
-      ];
-
-      const label = `${monthNames[date.getMonth()]} ${year}`;
+      const label = date.toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: 'long',
+      });
       options.push({ value, label });
     }
 
     return options;
   };
+
+  useEffect(() => {
+    const fetchMonthsYears = async () => {
+      try {
+        setIsLoadingMonths(true);
+        const result = await loadEntriesMonthsYearsAction();
+
+        if (result.monthsYears && result.monthsYears.length > 0) {
+          const options = result.monthsYears.map(({ year, month }) => {
+            const date = new Date(year, month - 1, 1);
+            const value = `${year}-${String(month).padStart(2, '0')}`;
+            const label = date.toLocaleDateString('pt-BR', {
+              year: 'numeric',
+              month: 'long',
+            });
+            return { value, label };
+          });
+
+          setMonthOptions(options);
+        } else {
+          setMonthOptions(generateMonthOptions());
+        }
+      } catch (error) {
+        console.error('Error loading months/years:', error);
+        setMonthOptions(generateMonthOptions());
+      } finally {
+        setIsLoadingMonths(false);
+      }
+    };
+
+    fetchMonthsYears();
+  }, []);
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -157,12 +181,43 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   return (
     <div className='mb-6'>
-      <div className='flex justify-end'>
-        <div className='flex gap-2 mr-4 md:mr-0'>
+      {/* Always visible controls: Month selector + Action buttons */}
+      <div className='flex flex-col sm:flex-row gap-4 mb-4 items-start sm:items-center justify-between mr-4 ml-4 md:ml-0 md:mr-0'>
+        {/* Month selector - Always visible */}
+        <div className='w-full sm:w-auto sm:min-w-[200px]'>
+          <label className='block text-sm font-medium mb-2'>Período</label>
+          <Select
+            value={filters.month}
+            onValueChange={value => handleFilterChange('month', value)}
+            disabled={isLoadingMonths}
+          >
+            <SelectTrigger className='w-full h-12 rounded-xl transition-colors'>
+              <SelectValue
+                placeholder={
+                  isLoadingMonths ? 'Carregando...' : 'Selecione o mês'
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {monthOptions.map(option => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className='rounded-lg'
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Action buttons */}
+        <div className='flex gap-2 w-full sm:w-auto'>
           <Button
             variant='outline'
             onClick={() => setShowFilters(!showFilters)}
-            className='flex-1 h-12 rounded-xl'
+            className='flex-1 sm:flex-initial h-12 rounded-xl'
           >
             <FunnelIcon className='w-5 h-5 sm:w-4 sm:h-4' />
             <span className='inline'>Filtros</span>
@@ -173,7 +228,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
           <Button
             variant='primary'
-            className='flex-1 h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
+            className='flex-1 sm:flex-initial h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-250'
           >
             <PlusIcon className='w-5 h-5 sm:w-4 sm:h-4' />
             <Link href='/entries/add'>Adicionar Entrada</Link>
@@ -181,32 +236,10 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
         </div>
       </div>
 
+      {/* Collapsible filter section */}
       {showFilters && (
         <div className='border-t border-border-foreground pt-4 mt-4 mx-4 md:mx-0'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-            <div>
-              <label className='block text-sm mb-1'>Mês</label>
-              <Select
-                value={filters.month}
-                onValueChange={value => handleFilterChange('month', value)}
-              >
-                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
-                  <SelectValue placeholder='Selecione o mês' />
-                </SelectTrigger>
-                <SelectContent>
-                  {generateMonthOptions().map(option => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      className='rounded-lg'
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
             <div>
               <label className='block text-sm text-slate-700 mb-1'>Tipo</label>
               <Select

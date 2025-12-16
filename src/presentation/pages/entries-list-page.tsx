@@ -50,7 +50,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
               currentMonth={
                 searchParams.month || new Date().toISOString().slice(0, 7)
               }
-              showHeader={entries.length > 0}
+              showHeader={true}
               hasActiveFilters={hasActiveFilters}
             />
           </div>
@@ -68,8 +68,8 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                   Nenhuma entrada encontrada
                 </h3>
                 <p className='text-foreground opacity-80 mb-8 max-w-md mx-auto'>
-                  {searchParams.type && searchParams.type !== 'all'
-                    ? `Não há ${contentInfo} para este mês.`
+                  {hasActiveFilters
+                    ? 'Nenhuma entrada encontrada com os filtros aplicados. Tente ajustar os filtros ou limpar para ver todas as entradas.'
                     : 'Comece adicionando suas primeiras entradas financeiras.'}
                 </p>
 
