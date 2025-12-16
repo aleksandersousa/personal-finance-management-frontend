@@ -43,28 +43,19 @@ export const AddEntryPage: React.FC = () => {
   const validator = useMemo(() => makeEntryFormValidator(), []);
 
   const categoryOptions = useMemo(() => {
-    const mapCategories = (categories: CategoryWithStatsModel[]) => {
-      return categories.map(category => ({
-        value: category.id,
-        label: category.name,
-      }));
-    };
-
-    if (!formData.type) {
-      return mapCategories(categories);
-    }
-
-    const filteredCategories = categories.filter(
-      category => category.type === formData.type
-    );
-
-    return mapCategories(filteredCategories);
+    return categories.map(category => ({
+      value: category.id,
+      label: category.name,
+    }));
   }, [categories, formData.type]);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const result = await loadCategoriesAction({ includeStats: false });
+        const result = await loadCategoriesAction({
+          includeStats: false,
+          type: formData.type as 'INCOME' | 'EXPENSE',
+        });
         setCategories(result.data);
       } catch (error) {
         console.error('Error loading categories:', error);
@@ -75,7 +66,7 @@ export const AddEntryPage: React.FC = () => {
     startCategoriesTransition(() => {
       loadCategories();
     });
-  }, []);
+  }, [formData.type]);
 
   const handleInputChange = (
     field: string,
