@@ -185,7 +185,9 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
       <div className='flex flex-col sm:flex-row gap-4 mb-4 items-start sm:items-center justify-between mr-4 ml-4 md:ml-0 md:mr-0'>
         {/* Month selector - Always visible */}
         <div className='w-full sm:w-auto sm:min-w-[200px]'>
-          <label className='block text-sm font-medium mb-2'>Período</label>
+          <label className='block text-sm font-medium mb-2 text-foreground'>
+            Período
+          </label>
           <Select
             value={filters.month}
             onValueChange={value => handleFilterChange('month', value)}
