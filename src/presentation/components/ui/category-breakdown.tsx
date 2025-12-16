@@ -21,7 +21,10 @@ export const CategoryBreakdown: React.FC<CategoryBreakdownProps> = ({
   const total = filteredCategories.reduce((sum, cat) => sum + cat.total, 0);
 
   const formatCurrency = (amount: number) => {
-    return `R$ ${(amount / 100).toFixed(2).replace('.', ',')}`;
+    return Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(amount / 100);
   };
 
   const getPercentage = (amount: number) => {
