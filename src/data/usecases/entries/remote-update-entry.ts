@@ -20,7 +20,7 @@ export class RemoteUpdateEntry implements UpdateEntry {
         amount: params.amount,
         type: params.type,
         categoryId: params.categoryId,
-        date: date.toISOString().split('T')[0], // YYYY-MM-DD
+        date: date.toISOString(),
         isFixed: params.isFixed,
         isPaid: params.isPaid,
       }
