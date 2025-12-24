@@ -61,13 +61,13 @@ export const AccumulatedSummaryCard: React.FC<AccumulatedSummaryCardProps> = ({
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2'>
               <div className='p-1.5 rounded-full bg-warning/10'>
-                <WarningCircleIcon className='w-4 h-4 text-warning' />
+                <WarningCircleIcon className='w-4 h-4 text-amber-600' />
               </div>
               <span className='text-sm text-foreground'>
                 Despesas Não Pagas (Meses Anteriores)
               </span>
             </div>
-            <span className='text-lg font-semibold text-warning'>
+            <span className='text-lg font-semibold text-amber-600'>
               {formatCurrency(accumulated.previousMonthsUnpaidExpenses || 0)}
             </span>
           </div>
