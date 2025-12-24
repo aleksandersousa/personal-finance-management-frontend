@@ -23,6 +23,11 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     const entries = result.data;
 
     const currentMonth = new Date().toISOString().slice(0, 7);
+
+    const selectedMonth = searchParams.month || currentMonth;
+    const [selectedYear, selectedMonthNum] = selectedMonth
+      .split('-')
+      .map(Number);
     const hasActiveFilters = Boolean(
       (searchParams.month && searchParams.month !== currentMonth) ||
         (searchParams.type && searchParams.type !== 'all') ||
@@ -85,7 +90,12 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
               <>
                 <div className='divide-y divide-neutral-200'>
                   {entries.map(entry => (
-                    <EntryListItem key={entry.id} entry={entry} />
+                    <EntryListItem
+                      key={entry.id}
+                      entry={entry}
+                      currentYear={selectedYear}
+                      currentMonth={selectedMonthNum}
+                    />
                   ))}
                 </div>
 
