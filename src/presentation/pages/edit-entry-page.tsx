@@ -168,7 +168,6 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     };
 
     const result = validator.validate(dataToValidate);
-    console.log(result);
 
     if (!result.success) {
       setErrors(result.errors || {});

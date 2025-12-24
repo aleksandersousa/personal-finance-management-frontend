@@ -116,8 +116,6 @@ export const AddEntryPage: React.FC = () => {
       return;
     }
 
-    console.log(result.data);
-
     try {
       startSubmitTransition(async () => {
         await addEntryAction({
