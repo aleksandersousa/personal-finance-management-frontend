@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   SummaryCard,
+  AccumulatedSummaryCard,
   CategoryBreakdown,
   ConsolidatedForecastCard,
   TopBar,
@@ -119,6 +120,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 variable: summary.summary.dynamicPaidExpenses,
                 entriesCount: summary.summary.entriesCount.expenses,
               }}
+            />
+          </div>
+
+          <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
+            <AccumulatedSummaryCard
+              title='Saldo Acumulado'
+              accumulated={summary.accumulated}
             />
           </div>
 
