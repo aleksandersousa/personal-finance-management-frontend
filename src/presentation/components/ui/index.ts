@@ -5,6 +5,7 @@ export * from './label';
 export * from './card';
 export * from './badge';
 export * from './summary-card';
+export * from './accumulated-summary-card';
 export * from './category-breakdown';
 export * from './consolidated-forecast-card';
 export * from './monthly-projection-chart';

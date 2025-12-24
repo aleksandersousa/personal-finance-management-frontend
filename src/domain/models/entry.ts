@@ -9,6 +9,7 @@ export interface EntryModel {
   categoryName: string;
   userId: string;
   date: Date;
+  isFromPreviousMonth?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

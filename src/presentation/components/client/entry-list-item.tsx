@@ -118,6 +118,15 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                 </Badge>
               )}
 
+              {entry.isFromPreviousMonth && (
+                <Badge
+                  variant='outline'
+                  className='border-warning text-warning text-xs'
+                >
+                  Mês Anterior
+                </Badge>
+              )}
+
               {entry.type === 'EXPENSE' && (
                 <Select
                   value={optimisticIsPaid ? 'paid' : 'unpaid'}

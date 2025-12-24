@@ -4,9 +4,17 @@ export interface CategoryBreakdownResultModel {
   expenseTotal: number;
 }
 
+export interface AccumulatedSummaryDataModel {
+  totalIncome: number;
+  totalPaidExpenses: number;
+  previousMonthsUnpaidExpenses: number;
+  realBalance: number;
+}
+
 export interface MonthlySummaryModel {
   month: string; // YYYY-MM
   summary: MonthlySummaryDataModel;
+  accumulated: AccumulatedSummaryDataModel;
   categoryBreakdown?: CategoryBreakdownResultModel;
   comparisonWithPrevious: PreviousMonthComparisonModel;
 }

@@ -14,6 +14,7 @@ export interface SummaryCardProps {
     change: number; // percentual
   };
   icon?: React.ReactNode;
+  titleColor?: 'income' | 'expense' | 'balance';
   details?: {
     paid?: number;
     unpaid?: number;
@@ -110,6 +111,16 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
     }
   };
 
+  const getValueColor = () => {
+    if (type === 'expense') {
+      return 'text-error';
+    } else if (type === 'income') {
+      return 'text-success';
+    } else {
+      return 'text-foreground';
+    }
+  };
+
   return (
     <div className='relative summary-card-container group'>
       <Card
@@ -127,7 +138,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
 
         <CardContent className='space-y-3'>
           <div>
-            <div className={`text-3xl text-foreground`}>
+            <div className={`text-3xl ${getValueColor()}`}>
               {getCardIndicator(value)}
               {formatCurrency(value)}
             </div>
