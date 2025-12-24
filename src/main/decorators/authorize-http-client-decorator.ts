@@ -48,6 +48,15 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     return this.httpClient.put<T>(url, data, configWithAuth);
   }
 
+  async patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: unknown
+  ): Promise<T> {
+    const configWithAuth = await this.addAuthorizationHeader(config);
+    return this.httpClient.patch<T>(url, data, configWithAuth);
+  }
+
   async delete<T = unknown>(url: string, config?: unknown): Promise<T> {
     const configWithAuth = await this.addAuthorizationHeader(config);
     return this.httpClient.delete<T>(url, configWithAuth);

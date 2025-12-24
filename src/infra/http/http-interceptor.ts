@@ -140,6 +140,24 @@ export class HttpInterceptor implements HttpClient {
     });
   }
 
+  async patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: unknown
+  ): Promise<T> {
+    return this.makeRequestWithAuth(async () => {
+      const accessToken = await this.getAccessToken();
+      const configWithAuth = {
+        ...((config as Record<string, unknown>) || {}),
+        headers: {
+          ...(config as any)?.headers,
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        },
+      };
+      return this.httpClient.patch<T>(url, data, configWithAuth);
+    });
+  }
+
   async delete<T = unknown>(url: string, config?: unknown): Promise<T> {
     return this.makeRequestWithAuth(async () => {
       const accessToken = await this.getAccessToken();

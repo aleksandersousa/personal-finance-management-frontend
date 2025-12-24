@@ -5,3 +5,4 @@ export * from './load-entries-months-years-action';
 export * from './add-entry-action';
 export * from './delete-entry-action';
 export * from './toggle-entry-paid-status-action';
+export * from './toggle-monthly-payment-status-action';

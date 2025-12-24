@@ -18,6 +18,7 @@ import { redirect } from 'next/navigation';
 import {
   deleteEntryAction,
   toggleEntryPaidStatusAction,
+  toggleMonthlyPaymentStatusAction,
 } from '@/presentation/actions';
 import { DeleteEntryModal } from './delete-entry-modal';
 import { useRouter } from 'next/navigation';
@@ -26,11 +27,15 @@ import { toast } from 'sonner';
 interface EntryListItemProps {
   entry: EntryModel;
   showActions?: boolean;
+  currentYear?: number;
+  currentMonth?: number;
 }
 
 export const EntryListItem: React.FC<EntryListItemProps> = ({
   entry,
   showActions = true,
+  currentYear,
+  currentMonth,
 }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isTogglingPaid, startToggleTransition] = useTransition();
@@ -66,7 +71,20 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
     setOptimisticIsPaid(newIsPaid);
 
     startToggleTransition(async () => {
-      const result = await toggleEntryPaidStatusAction(entry, newIsPaid);
+      let result;
+
+      // For fixed entries, use monthly payment status if we have current month/year
+      if (entry.isFixed && currentYear && currentMonth) {
+        result = await toggleMonthlyPaymentStatusAction({
+          entryId: entry.id,
+          year: currentYear,
+          month: currentMonth,
+          isPaid: newIsPaid,
+        });
+      } else {
+        // For non-fixed entries or when month context is missing, use the original action
+        result = await toggleEntryPaidStatusAction(entry, newIsPaid);
+      }
 
       if (!result.success) {
         // Revert optimistic update on error
@@ -76,11 +94,16 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
             'Erro ao atualizar status de pagamento. Tente novamente.'
         );
       } else {
-        toast.success(
-          newIsPaid
-            ? 'Despesa marcada como paga'
-            : 'Despesa marcada como não paga'
-        );
+        const message =
+          entry.isFixed && currentYear && currentMonth
+            ? newIsPaid
+              ? `Despesa marcada como paga para ${currentMonth}/${currentYear}`
+              : `Despesa marcada como não paga para ${currentMonth}/${currentYear}`
+            : newIsPaid
+              ? 'Despesa marcada como paga'
+              : 'Despesa marcada como não paga';
+
+        toast.success(message);
         // Refresh the page to show updated data
         router.refresh();
       }

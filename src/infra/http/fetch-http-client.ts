@@ -62,6 +62,27 @@ export class FetchHttpClient implements HttpClient {
     return (await response.json()) as T;
   }
 
+  async patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: RequestInit
+  ): Promise<T> {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...config?.headers,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return (await response.json()) as T;
+  }
+
   async delete<T = unknown>(url: string, config?: RequestInit): Promise<T> {
     const response = await fetch(url, {
       method: 'DELETE',
