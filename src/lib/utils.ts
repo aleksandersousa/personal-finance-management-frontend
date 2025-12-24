@@ -12,10 +12,21 @@ export const formatDate = (date: Date | string) => {
     return 'Data inválida';
   }
 
-  const month = dateObj.getUTCMonth() + 1;
-  const day = dateObj.getUTCDate();
-  const year = dateObj.getUTCFullYear();
-  return `${month}/${day}/${year}`;
+  let month = String(dateObj.getUTCMonth() + 1);
+  let day = String(dateObj.getUTCDate());
+  let year = String(dateObj.getUTCFullYear());
+
+  if (Number(day) < 10) {
+    day = `0${day}`;
+  }
+  if (Number(month) < 10) {
+    month = `0${month}`;
+  }
+  if (Number(year) < 10) {
+    year = `0${year}`;
+  }
+
+  return `${day}/${month}/${year}`;
 };
 
 export const formatCurrency = (amount: number) => {
