@@ -26,7 +26,7 @@ export async function loadEntriesByMonthAction(
     const page = Number(searchParams.page) || 1;
     const limit = Number(searchParams.limit) || 5;
     const type = searchParams.type as 'INCOME' | 'EXPENSE' | undefined;
-    const categoryId = searchParams.categoryId;
+    const category = searchParams.category;
     const search = searchParams.search;
     const isPaidParam = searchParams.isPaid;
     let isPaid: boolean | 'all' | undefined = undefined;
@@ -44,7 +44,7 @@ export async function loadEntriesByMonthAction(
       page,
       limit,
       ...(type && { type }),
-      ...(categoryId && { categoryId }),
+      ...(category && { category }),
       ...(search && search.trim() && { search: search.trim() }),
       ...(isPaid !== undefined && { isPaid }),
     };
