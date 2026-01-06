@@ -18,7 +18,11 @@ import {
 } from './select';
 import { Input } from './input';
 import { Button } from './button';
-import { loadEntriesMonthsYearsAction } from '@/presentation/actions';
+import {
+  loadEntriesMonthsYearsAction,
+  loadCategoriesAction,
+} from '@/presentation/actions';
+import { CategoryModel } from '@/domain/models/category';
 
 interface EntriesFiltersProps {
   currentMonth: string;
@@ -50,29 +54,17 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     Array<{ value: string; label: string }>
   >([]);
   const [isLoadingMonths, setIsLoadingMonths] = useState(true);
+  const [categories, setCategories] = useState<CategoryModel[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
 
-  const generateMonthOptions = () => {
-    const options = [];
-    const currentDate = new Date();
-
-    for (let i = 0; i < 12; i++) {
-      const date = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() - i,
-        1
-      );
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const value = `${year}-${month}`;
-      const label = date.toLocaleDateString('pt-BR', {
-        year: 'numeric',
-        month: 'long',
-      });
-      options.push({ value, label });
-    }
-
-    return options;
-  };
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceTimerRef.current) {
+        clearTimeout(searchDebounceTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchMonthsYears = async () => {
@@ -106,8 +98,65 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     fetchMonthsYears();
   }, []);
 
+  // Load categories on mount and when type filter changes
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoadingCategories(true);
+        const typeParam =
+          filters.type === 'all'
+            ? undefined
+            : (filters.type as 'INCOME' | 'EXPENSE');
+        const result = await loadCategoriesAction({
+          type: typeParam,
+          limit: 100, // Load all categories
+        });
+
+        if (result.data) {
+          setCategories(result.data);
+        } else {
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        setCategories([]);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, [filters.type]);
+
+  // Reset category filter when type changes to avoid invalid selections
+  useEffect(() => {
+    if (filters.category !== 'all' && categories.length > 0) {
+      // Check if the selected category exists and is valid for the current type
+      const selectedCategory = categories.find(
+        cat => cat.id === filters.category
+      );
+
+      // If category doesn't exist or type doesn't match (when type filter is set), reset to 'all'
+      if (
+        !selectedCategory ||
+        (filters.type !== 'all' && selectedCategory.type !== filters.type)
+      ) {
+        // Category is invalid, reset to 'all'
+        const newFilters = { ...filters, category: 'all' };
+        setFilters(newFilters);
+        updateURL(newFilters);
+      }
+    }
+  }, [filters.type, filters.category, categories]);
+
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
+
+    // If type changes to a specific type (not 'all'), reset category to 'all' to avoid invalid selections
+    if (key === 'type' && value !== 'all' && filters.type !== value) {
+      newFilters.category = 'all';
+    }
+
     setFilters(newFilters);
 
     // Debounce search updates, but immediately update other filters
@@ -126,16 +175,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
       updateURL(newFilters);
     }
   };
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (searchDebounceTimerRef.current) {
-        clearTimeout(searchDebounceTimerRef.current);
-      }
-    };
-  }, []);
-
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(searchParams);
 
@@ -162,6 +201,29 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     };
     setFilters(clearedFilters);
     updateURL(clearedFilters);
+  };
+
+  const generateMonthOptions = () => {
+    const options = [];
+    const currentDate = new Date();
+
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        1
+      );
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const value = `${year}-${month}`;
+      const label = date.toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: 'long',
+      });
+      options.push({ value, label });
+    }
+
+    return options;
   };
 
   const hasActiveFilters =
@@ -261,6 +323,49 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                   <SelectItem value='EXPENSE' className='rounded-lg'>
                     Despesas
                   </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className='block text-sm text-slate-700 mb-1'>
+                Categoria
+              </label>
+              <Select
+                value={filters.category}
+                onValueChange={value => handleFilterChange('category', value)}
+                disabled={isLoadingCategories}
+              >
+                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
+                  <SelectValue
+                    placeholder={
+                      isLoadingCategories
+                        ? 'Carregando...'
+                        : 'Selecione a categoria'
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all' className='rounded-lg'>
+                    Todas
+                  </SelectItem>
+                  {categories
+                    .filter(category => {
+                      // Filter categories based on type filter
+                      if (filters.type === 'all') {
+                        return true; // Show all categories when type is 'all'
+                      }
+                      return category.type === filters.type;
+                    })
+                    .map(category => (
+                      <SelectItem
+                        key={category.id}
+                        value={category.id}
+                        className='rounded-lg'
+                      >
+                        {category.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
