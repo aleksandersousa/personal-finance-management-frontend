@@ -10,7 +10,7 @@ export type LoadEntriesByMonthParams = {
   page?: number;
   limit?: number;
   type?: 'INCOME' | 'EXPENSE';
-  categoryId?: string;
+  category?: string;
   search?: string;
   isPaid?: boolean | 'all';
 };

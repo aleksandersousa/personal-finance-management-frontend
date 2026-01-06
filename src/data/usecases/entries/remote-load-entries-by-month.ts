@@ -19,7 +19,7 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
       page = 1,
       limit = 20,
       type,
-      categoryId,
+      category,
       search,
       isPaid,
     } = params;
@@ -28,7 +28,7 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
       page: String(page),
       limit: String(limit),
       ...(type ? { type } : {}),
-      ...(categoryId ? { categoryId } : {}),
+      ...(category ? { category } : {}),
       ...(search && search.trim() ? { search: search.trim() } : {}),
       ...(isPaid !== undefined && isPaid !== 'all'
         ? { isPaid: String(isPaid) }
