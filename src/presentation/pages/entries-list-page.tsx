@@ -37,8 +37,6 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
         (searchParams.search && searchParams.search.trim() !== '') ||
         (searchParams.isPaid && searchParams.isPaid !== 'all')
     );
-    const contentInfo =
-      searchParams.type === 'INCOME' ? 'receitas' : 'despesas';
 
     return (
       <div className='min-h-screen w-full bg-background-secondary pt-20 pb-20 lg:pb-8'>
