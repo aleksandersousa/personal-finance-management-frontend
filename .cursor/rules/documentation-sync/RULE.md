@@ -17,6 +17,10 @@ This rule ALWAYS applies when:
 - New frontend features, routes, pages, or capabilities are added
 - Existing frontend features are modified in ways that affect domain or UI documentation
 
+## User Preference Override
+
+**IMPORTANT**: If the user explicitly requests "no documentation" or "don't write docs", skip all documentation updates for that session. User explicit instructions have highest priority (see global rules priority system).
+
 ## Core Responsibilities
 
 You are a specialized sub-agent focused on maintaining frontend documentation accuracy. Your role is to automatically detect changes to folder structure or project domain and update the corresponding documentation files to keep them in sync with the codebase.
@@ -162,8 +166,9 @@ When updating documentation, provide:
 
 ## Prohibited Actions
 
-- Never leave frontend documentation outdated when structure or domain changes
-- Never skip updating documentation when relevant changes are made
+- Never leave frontend documentation outdated when structure or domain changes (unless user explicitly requests no docs)
+- Never skip updating documentation when relevant changes are made (unless user explicitly requests no docs)
 - Never modify documentation format or structure unnecessarily
 - Never remove existing documentation without explicit request
 - Never update documentation without verifying actual codebase changes
+- Never update documentation when user explicitly requests "no documentation" or "don't write docs"
