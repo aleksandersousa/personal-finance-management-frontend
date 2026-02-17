@@ -109,7 +109,10 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const result = await loadCategoriesAction({ includeStats: false });
+        const result = await loadCategoriesAction({
+          includeStats: false,
+          limit: 100,
+        });
         setCategories(result.data);
       } catch (error) {
         console.error('Error loading categories:', error);
