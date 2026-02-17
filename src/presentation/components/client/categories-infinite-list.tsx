@@ -8,8 +8,6 @@ import {
   CategoryListResponseModel,
 } from '@/domain/models';
 import { LoadCategoriesParams } from '@/domain/usecases';
-import { RemoteLoadCategories } from '@/data/usecases';
-import { makeApiUrl, makeFetchHttpClient } from '@/main/factories/http';
 
 type CategoriesInfiniteListProps = {
   initialResult: CategoryListResponseModel;
@@ -17,12 +15,6 @@ type CategoriesInfiniteListProps = {
     includeStats?: boolean;
   };
 };
-
-const httpClient = makeFetchHttpClient();
-const remoteLoadCategories = new RemoteLoadCategories(
-  makeApiUrl('/categories'),
-  httpClient
-);
 
 export const CategoriesInfiniteList: React.FC<CategoriesInfiniteListProps> = ({
   initialResult,
@@ -47,13 +39,37 @@ export const CategoriesInfiniteList: React.FC<CategoriesInfiniteListProps> = ({
     totalPages: number;
     total: number;
   }> => {
-    const result = await remoteLoadCategories.load({
-      type: filters.type,
-      includeStats: filters.includeStats,
-      page,
-      limit: pagination?.limit,
-      search: filters.search,
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(pagination?.limit),
     });
+
+    if (filters.type && filters.type !== 'all') {
+      params.append('type', filters.type);
+    }
+
+    if (filters.includeStats !== undefined) {
+      params.append('includeStats', String(filters.includeStats));
+    }
+
+    if (filters.search && filters.search.trim()) {
+      params.append('search', filters.search.trim());
+    }
+
+    const url = `/api/frontend/categories?${params.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to load more categories: ${response.status}`);
+    }
+
+    const result = (await response.json()) as CategoryListResponseModel;
 
     return {
       items: result.data,
