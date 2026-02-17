@@ -5,7 +5,6 @@ import { InfiniteScrollList } from './infinite-scroll-list';
 import { EntryListItem } from './entry-list-item';
 import { EntryModel } from '@/domain/models';
 import { LoadEntriesByMonthResult } from '@/domain/usecases';
-import { makeApiUrl, makeFetchHttpClient } from '@/main/factories/http';
 
 type EntriesFilters = {
   month: string;
@@ -19,9 +18,6 @@ type EntriesInfiniteListProps = {
   initialResult: LoadEntriesByMonthResult;
   filters: EntriesFilters;
 };
-
-const httpClient = makeFetchHttpClient();
-const baseUrl = makeApiUrl('/entries');
 
 export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
   initialResult,
@@ -57,8 +53,20 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
       params.append('isPaid', String(filters.isPaid));
     }
 
-    const url = `${baseUrl}?${params.toString()}`;
-    const result = await httpClient.get<LoadEntriesByMonthResult>(url);
+    const url = `/api/frontend/entries?${params.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to load more entries: ${response.status}`);
+    }
+
+    const result = (await response.json()) as LoadEntriesByMonthResult;
 
     return {
       items: result.data,
