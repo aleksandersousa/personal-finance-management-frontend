@@ -5,7 +5,7 @@ import {
   CategoriesFilters,
   CategoryListItem,
 } from '@/presentation/components';
-import { Pagination, SnackbarHandler } from '../components/client';
+import { CategoriesInfiniteList, SnackbarHandler } from '../components/client';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import { isRedirectError } from '../helpers';
 import Link from 'next/link';
@@ -78,28 +78,18 @@ export const CategoriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 </Button>
               </div>
             ) : (
-              <>
-                <div className='divide-y divide-neutral-200'>
-                  {filteredCategories.map(category => (
-                    <CategoryListItem
-                      key={category.id}
-                      category={category}
-                      showActions={!category.isDefault}
-                    />
-                  ))}
-                </div>
-
-                {result.pagination && (
-                  <div className='mt-8'>
-                    <Pagination
-                      currentPage={result.pagination.page}
-                      totalPages={result.pagination.totalPages}
-                      totalItems={result.pagination.total}
-                      currentLimit={result.pagination.limit}
-                    />
-                  </div>
-                )}
-              </>
+              <CategoriesInfiniteList
+                initialResult={result}
+                filters={{
+                  type: searchParams.type as
+                    | 'INCOME'
+                    | 'EXPENSE'
+                    | 'all'
+                    | undefined,
+                  includeStats: true,
+                  search: searchParams.search,
+                }}
+              />
             )}
           </div>
         </div>

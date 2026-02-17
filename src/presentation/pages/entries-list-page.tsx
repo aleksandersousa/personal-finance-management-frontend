@@ -1,10 +1,9 @@
 import React from 'react';
 import { loadEntriesByMonthAction } from '@/presentation/actions';
 import {
-  EntryListItem,
+  EntriesInfiniteList,
   SnackbarHandler,
 } from '@/presentation/components/client';
-import { Pagination } from '../components/client';
 import { Button, EntriesFilters } from '@/presentation/components';
 import { ErrorReloadButton } from '@/presentation/components/error-reload-button';
 import Link from 'next/link';
@@ -25,9 +24,6 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     const selectedMonth = searchParams.month || currentMonth;
-    const [selectedYear, selectedMonthNum] = selectedMonth
-      .split('-')
-      .map(Number);
     const hasActiveFilters = Boolean(
       (searchParams.month && searchParams.month !== currentMonth) ||
         (searchParams.type && searchParams.type !== 'all') ||
@@ -85,27 +81,23 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 </Button>
               </div>
             ) : (
-              <>
-                <div className='divide-y divide-neutral-200'>
-                  {entries.map(entry => (
-                    <EntryListItem
-                      key={entry.id}
-                      entry={entry}
-                      currentYear={selectedYear}
-                      currentMonth={selectedMonthNum}
-                    />
-                  ))}
-                </div>
-
-                <div className='mt-8'>
-                  <Pagination
-                    currentPage={result.pagination.page}
-                    totalPages={result.pagination.totalPages}
-                    totalItems={result.pagination.total}
-                    currentLimit={result.pagination.limit}
-                  />
-                </div>
-              </>
+              <EntriesInfiniteList
+                initialResult={result}
+                filters={{
+                  month: selectedMonth,
+                  type: searchParams.type as 'INCOME' | 'EXPENSE' | undefined,
+                  category: searchParams.category,
+                  search: searchParams.search,
+                  isPaid:
+                    searchParams.isPaid === 'true'
+                      ? true
+                      : searchParams.isPaid === 'false'
+                        ? false
+                        : searchParams.isPaid === 'all'
+                          ? 'all'
+                          : undefined,
+                }}
+              />
             )}
           </div>
         </div>
