@@ -55,6 +55,7 @@ export const AddEntryPage: React.FC = () => {
         const result = await loadCategoriesAction({
           includeStats: false,
           type: formData.type as 'INCOME' | 'EXPENSE',
+          limit: 100,
         });
         setCategories(result.data);
       } catch (error) {
