@@ -29,6 +29,7 @@ interface EntryListItemProps {
   showActions?: boolean;
   currentYear?: number;
   currentMonth?: number;
+  listMonthFilter?: string;
 }
 
 export const EntryListItem: React.FC<EntryListItemProps> = ({
@@ -36,6 +37,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   showActions = true,
   currentYear,
   currentMonth,
+  listMonthFilter,
 }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isTogglingPaid, startToggleTransition] = useTransition();
@@ -48,7 +50,11 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   }, [entry.isPaid]);
 
   const handleEdit = () => {
-    redirect(`/entries/${entry.id}/edit`);
+    const query =
+      listMonthFilter && /^\d{4}-\d{2}$/.test(listMonthFilter)
+        ? `?month=${encodeURIComponent(listMonthFilter)}`
+        : '';
+    redirect(`/entries/${entry.id}/edit${query}`);
   };
 
   const handleDeleteClick = () => {
