@@ -26,9 +26,13 @@ import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 
 export interface EditEntryPageProps {
   entryId: string;
+  listMonthFilter?: string;
 }
 
-export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
+export const EditEntryPage: React.FC<EditEntryPageProps> = ({
+  entryId,
+  listMonthFilter,
+}) => {
   const [entry, setEntry] = useState<EntryModel | null>(null);
   const [formData, setFormData] = useState<{
     description: string;
@@ -81,7 +85,10 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
   useEffect(() => {
     const loadEntry = async () => {
       startEntryTransition(async () => {
-        const cachedEntry = await loadEntryByIdFromCache(entryId);
+        const cachedEntry = await loadEntryByIdFromCache(
+          entryId,
+          listMonthFilter
+        );
 
         if (cachedEntry) {
           setEntry(cachedEntry);
@@ -90,7 +97,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     };
 
     loadEntry();
-  }, [entryId]);
+  }, [entryId, listMonthFilter]);
 
   useEffect(() => {
     if (entry) {
@@ -185,7 +192,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
 
     try {
       startUpdateTransition(async () => {
-        await updateEntryAction(entryId, result.data!);
+        await updateEntryAction(entryId, result.data!, listMonthFilter);
       });
       setErrors({});
     } catch (error) {
@@ -200,7 +207,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
     if (pendingSubmit) {
       startUpdateTransition(async () => {
         try {
-          await updateEntryAction(entryId, pendingSubmit);
+          await updateEntryAction(entryId, pendingSubmit, listMonthFilter);
           setShowFixedModal(false);
           setPendingSubmit(null);
           setErrors({});
@@ -342,7 +349,13 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({ entryId }) => {
                   <Button
                     type='button'
                     variant='outline'
-                    onClick={() => redirect('/entries')}
+                    onClick={() =>
+                      redirect(
+                        listMonthFilter
+                          ? `/entries?month=${encodeURIComponent(listMonthFilter)}`
+                          : '/entries'
+                      )
+                    }
                     disabled={isPendingUpdate}
                     className='flex-1 rounded-xl'
                   >

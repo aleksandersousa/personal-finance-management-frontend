@@ -7,10 +7,12 @@ import { getCurrentUser, isRedirectError } from '@/presentation/helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteUpdateEntry } from '@/main/factories/usecases/entries/update-entry-factory';
 import { logoutAction } from '@/presentation/actions/auth/logout-action';
+import { toggleMonthlyPaymentStatusAction } from './toggle-monthly-payment-status-action';
 
 export async function updateEntryAction(
   id: string,
-  data: EntryFormData
+  data: EntryFormData,
+  listMonthFilter?: string
 ): Promise<void> {
   try {
     const getStorage = makeNextCookiesStorageAdapter();
@@ -36,11 +38,39 @@ export async function updateEntryAction(
     const updateEntry = makeRemoteUpdateEntry();
     await updateEntry.update(params);
 
+    if (
+      data.isFixed &&
+      data.type === 'EXPENSE' &&
+      listMonthFilter &&
+      /^\d{4}-\d{2}$/.test(listMonthFilter)
+    ) {
+      const [yStr, mStr] = listMonthFilter.split('-');
+      const year = Number(yStr);
+      const month = Number(mStr);
+      if (month >= 1 && month <= 12 && year >= 2000) {
+        const monthlyResult = await toggleMonthlyPaymentStatusAction({
+          entryId: id,
+          year,
+          month,
+          isPaid: data.isPaid ?? false,
+        });
+        if (!monthlyResult.success) {
+          throw new Error(
+            monthlyResult.error || 'Falha ao sincronizar status do mês'
+          );
+        }
+      }
+    }
+
     revalidateTag('entries', 'max');
     revalidateTag(`entries-${user.id}`, 'max');
     revalidateTag(`entry-${id}`, 'max');
 
-    redirect('/entries?success=entry_updated');
+    const successPath =
+      listMonthFilter && /^\d{4}-\d{2}$/.test(listMonthFilter)
+        ? `/entries?month=${encodeURIComponent(listMonthFilter)}&success=entry_updated`
+        : '/entries?success=entry_updated';
+    redirect(successPath);
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
@@ -51,6 +81,10 @@ export async function updateEntryAction(
       await logoutAction();
       return;
     }
-    redirect('/entries?error=entry_update_failed');
+    const failPath =
+      listMonthFilter && /^\d{4}-\d{2}$/.test(listMonthFilter)
+        ? `/entries?month=${encodeURIComponent(listMonthFilter)}&error=entry_update_failed`
+        : '/entries?error=entry_update_failed';
+    redirect(failPath);
   }
 }
