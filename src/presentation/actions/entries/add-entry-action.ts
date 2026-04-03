@@ -1,14 +1,19 @@
 'use server';
 
 import { EntryFormData } from '@/infra/validation';
-import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
 import { getCurrentUser, isRedirectError } from '@/presentation/helpers';
 import { makeRemoteAddEntry } from '@/main/factories/usecases';
 import { logoutAction } from '@/presentation/actions/auth/logout-action';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 
-export async function addEntryAction(data: EntryFormData): Promise<void> {
+export type AddEntryActionResult =
+  | { ok: true }
+  | { ok: false; error: 'entry_create_failed' };
+
+export async function addEntryAction(
+  data: EntryFormData
+): Promise<AddEntryActionResult> {
   try {
     const getStorage = makeNextCookiesStorageAdapter();
     const user = await getCurrentUser(getStorage);
@@ -16,7 +21,7 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     if (!user) {
       console.warn('User not found, redirecting to logout');
       await logoutAction();
-      return;
+      return { ok: false, error: 'entry_create_failed' };
     }
 
     const params = {
@@ -35,17 +40,16 @@ export async function addEntryAction(data: EntryFormData): Promise<void> {
     revalidateTag('entries', 'max');
     revalidateTag(`entries-${user.id}`, 'max');
 
-    redirect('/entries?success=entry_created');
+    return { ok: true };
   } catch (error: any) {
     if (isRedirectError(error)) {
       throw error;
     }
 
     console.error('Add entry error:', error);
-    if (error.message.includes('401')) {
+    if (String(error?.message ?? '').includes('401')) {
       await logoutAction();
-      return;
     }
-    redirect('/entries?error=entry_create_failed');
+    return { ok: false, error: 'entry_create_failed' };
   }
 }
