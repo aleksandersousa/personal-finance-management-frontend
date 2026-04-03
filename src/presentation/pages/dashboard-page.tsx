@@ -123,12 +123,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             />
           </div>
 
-          <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
-            <AccumulatedSummaryCard
-              title='Saldo Acumulado'
-              accumulated={summary.accumulated}
-            />
-          </div>
+          {forecast && (
+            <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300'>
+              <ConsolidatedForecastCard
+                summary={forecast.summary}
+                insights={forecast.insights}
+                monthsCount={forecast.forecastPeriod.monthsCount}
+                categoryBreakdown={summary.categoryBreakdown}
+                currentMonthYyyyMm={currentMonth}
+              />
+            </div>
+          )}
 
           {categories.length > 0 && (
             <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150'>
@@ -148,16 +153,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
           )}
 
-          {forecast && (
-            <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300'>
-              <ConsolidatedForecastCard
-                summary={forecast.summary}
-                insights={forecast.insights}
-                monthsCount={forecast.forecastPeriod.monthsCount}
-                projections={forecast.monthlyProjections}
-              />
-            </div>
-          )}
+          <div className='mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
+            <AccumulatedSummaryCard
+              title='Saldo Acumulado'
+              accumulated={summary.accumulated}
+            />
+          </div>
         </div>
       </div>
     </div>
