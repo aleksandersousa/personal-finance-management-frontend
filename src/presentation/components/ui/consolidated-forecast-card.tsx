@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import {
+import { useState, type FC } from 'react';
+import type {
   ForecastSummaryModel,
   ForecastInsightsModel,
-  MonthlyProjectionModel,
 } from '@/domain/models';
+import type { CategoryBreakdownResultModel } from '@/domain/models/monthly-summary';
 import {
   MinusIcon,
   CheckCircleIcon,
@@ -17,18 +17,23 @@ import {
 } from '@phosphor-icons/react/dist/ssr';
 import { Card } from './card';
 import { Button } from './button';
-import { MonthlyProjectionChart } from './monthly-projection-chart';
+import { ForecastCategoryDonuts } from './forecast-category-donuts';
 
 export interface ConsolidatedForecastCardProps {
   summary: ForecastSummaryModel;
   insights: ForecastInsightsModel;
   monthsCount: number;
-  projections: MonthlyProjectionModel[];
+  categoryBreakdown?: CategoryBreakdownResultModel;
+  currentMonthYyyyMm: string;
 }
 
-export const ConsolidatedForecastCard: React.FC<
-  ConsolidatedForecastCardProps
-> = ({ summary, insights, monthsCount, projections }) => {
+export const ConsolidatedForecastCard: FC<ConsolidatedForecastCardProps> = ({
+  summary,
+  insights,
+  monthsCount,
+  categoryBreakdown,
+  currentMonthYyyyMm,
+}) => {
   const [activeTab, setActiveTab] = useState<'summary' | 'insights'>('summary');
 
   const formatCurrency = (cents: number): string => {
@@ -70,6 +75,9 @@ export const ConsolidatedForecastCard: React.FC<
         return 'Alto';
     }
   };
+
+  const breakdownItems =
+    categoryBreakdown?.allItems ?? categoryBreakdown?.items ?? [];
 
   return (
     <Card className='p-4'>
@@ -150,14 +158,15 @@ export const ConsolidatedForecastCard: React.FC<
             </Card>
           </div>
 
-          {/* Chart */}
-          <MonthlyProjectionChart projections={projections} />
+          <ForecastCategoryDonuts
+            items={breakdownItems}
+            currentMonthYyyyMm={currentMonthYyyyMm}
+          />
         </div>
       )}
 
       {activeTab === 'insights' && (
         <div className='space-y-4'>
-          {/* Trend and Risk */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <Card className='rounded-lg p-4 text-foreground '>
               <div className='flex items-center justify-between mb-2'>
@@ -178,13 +187,12 @@ export const ConsolidatedForecastCard: React.FC<
             </Card>
           </div>
 
-          {/* Recommendations */}
           {insights.recommendations && insights.recommendations.length > 0 && (
             <Card className='rounded-lg p-4'>
               <h4 className='text-sm text-foreground mb-3'>Recomendações</h4>
               <ul className='space-y-2'>
-                {insights.recommendations.map((recommendation, index) => (
-                  <li key={index} className='flex items-start'>
+                {insights.recommendations.map(recommendation => (
+                  <li key={recommendation} className='flex items-start'>
                     <CheckCircleIcon className='w-4 h-4 text-foreground mr-2 mt-0.5 flex-shrink-0' />
                     <span className='text-sm text-foreground'>
                       {recommendation}

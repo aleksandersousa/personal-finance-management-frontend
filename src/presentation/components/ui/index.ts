@@ -8,7 +8,7 @@ export * from './summary-card';
 export * from './accumulated-summary-card';
 export * from './category-breakdown';
 export * from './consolidated-forecast-card';
-export * from './monthly-projection-chart';
+export * from './forecast-category-donuts';
 export * from './dashboard-filters';
 export * from './entries-filters';
 export * from './loading';

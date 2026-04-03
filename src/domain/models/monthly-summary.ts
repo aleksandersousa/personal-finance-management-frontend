@@ -1,5 +1,8 @@
 export interface CategoryBreakdownResultModel {
+  /** Top categories for compact widgets (e.g. top 3) */
   items: CategoryBreakdownItemModel[];
+  /** All categories with amounts for the month (full list) */
+  allItems?: CategoryBreakdownItemModel[];
   incomeTotal: number;
   expenseTotal: number;
 }
