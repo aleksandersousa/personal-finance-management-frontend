@@ -13,10 +13,13 @@ import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
 import { typeOptions } from '@/domain/constants';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
+import { toast } from 'sonner';
+import { isRedirectError } from '@/presentation/helpers';
 
 export const AddEntryPage: React.FC = () => {
+  const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
   const [formData, setFormData] = useState<{
@@ -117,30 +120,41 @@ export const AddEntryPage: React.FC = () => {
       return;
     }
 
-    try {
-      startSubmitTransition(async () => {
-        await addEntryAction({
+    startSubmitTransition(async () => {
+      try {
+        const actionResult = await addEntryAction({
           ...result.data!,
           categoryId: result.data!.categoryId || undefined,
         });
-      });
-
-      setFormData({
-        description: '',
-        amount: '0,00',
-        type: '',
-        categoryId: '',
-        date: new Date(),
-        isFixed: false,
-        isPaid: false,
-      });
-      setErrors({});
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setErrors({
-        general: ['Erro ao salvar entrada. Tente novamente.'],
-      });
-    }
+        if (actionResult.ok) {
+          toast.success('Entrada criada com sucesso');
+          setFormData({
+            description: '',
+            amount: '0,00',
+            type: '',
+            categoryId: '',
+            date: new Date(),
+            isFixed: false,
+            isPaid: false,
+          });
+          setErrors({});
+        } else {
+          toast.error('Erro ao criar entrada. Tente novamente.');
+          setErrors({
+            general: ['Erro ao salvar entrada. Tente novamente.'],
+          });
+        }
+      } catch (error) {
+        if (isRedirectError(error)) {
+          throw error;
+        }
+        console.error('Error submitting form:', error);
+        toast.error('Erro ao criar entrada. Tente novamente.');
+        setErrors({
+          general: ['Erro ao salvar entrada. Tente novamente.'],
+        });
+      }
+    });
   };
 
   return (
@@ -261,7 +275,7 @@ export const AddEntryPage: React.FC = () => {
                 <Button
                   type='button'
                   variant='outline'
-                  onClick={() => redirect('/entries')}
+                  onClick={() => router.push('/entries')}
                   disabled={isPendingSubmit}
                   className='flex-1 rounded-xl'
                 >
