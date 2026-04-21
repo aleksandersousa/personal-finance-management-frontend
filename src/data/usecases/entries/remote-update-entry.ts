@@ -18,6 +18,7 @@ export class RemoteUpdateEntry implements UpdateEntry {
         dueDate: params.dueDate.toISOString(),
         categoryId: params.categoryId,
         recurrenceId: params.recurrenceId,
+        recurrenceType: params.recurrenceType,
       }
     );
 

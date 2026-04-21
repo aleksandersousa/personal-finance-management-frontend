@@ -13,7 +13,9 @@ export async function updateEntryAction(
   id: string,
   data: EntryFormData,
   listMonthFilter?: string,
-  isPaid?: boolean
+  isPaid?: boolean,
+  isRecurring?: boolean,
+  existingRecurrenceId?: string | null
 ): Promise<void> {
   try {
     const getStorage = makeNextCookiesStorageAdapter();
@@ -32,6 +34,9 @@ export async function updateEntryAction(
       categoryId: data.categoryId,
       issueDate: data.date,
       dueDate: data.date,
+      recurrenceId: isRecurring ? (existingRecurrenceId ?? undefined) : null,
+      recurrenceType:
+        isRecurring && !existingRecurrenceId ? ('MONTHLY' as const) : undefined,
     };
 
     const updateEntry = makeRemoteUpdateEntry();

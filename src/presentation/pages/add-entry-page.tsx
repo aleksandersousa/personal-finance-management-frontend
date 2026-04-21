@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
-import { Button, Card, Input, Select, DateTimePicker } from '../components';
+import {
+  Button,
+  Card,
+  Input,
+  Select,
+  DateTimePicker,
+  CheckboxWithLabel,
+} from '../components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
@@ -19,11 +26,15 @@ export const AddEntryPage: React.FC = () => {
     amount: string;
     categoryId: string;
     date: Date | undefined;
+    isPaid: boolean;
+    isRecurring: boolean;
   }>({
     description: '',
     amount: '0,00',
     categoryId: '',
     date: new Date(),
+    isPaid: false,
+    isRecurring: false,
   });
 
   const [isPendingSubmit, startSubmitTransition] = useTransition();
@@ -37,6 +48,11 @@ export const AddEntryPage: React.FC = () => {
       label: category.name,
     }));
   }, [categories]);
+  const selectedCategory = useMemo(
+    () =>
+      categories.find(category => category.id === formData.categoryId) ?? null,
+    [categories, formData.categoryId]
+  );
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -103,6 +119,8 @@ export const AddEntryPage: React.FC = () => {
         const actionResult = await addEntryAction({
           ...result.data!,
           categoryId: result.data!.categoryId,
+          isPaid: formData.isPaid,
+          isRecurring: formData.isRecurring,
         });
         if (actionResult.ok) {
           toast.success('Entrada criada com sucesso');
@@ -111,6 +129,8 @@ export const AddEntryPage: React.FC = () => {
             amount: '0,00',
             categoryId: '',
             date: new Date(),
+            isPaid: false,
+            isRecurring: false,
           });
           setErrors({});
         } else {
@@ -208,6 +228,28 @@ export const AddEntryPage: React.FC = () => {
                 required
                 disabled={isPendingSubmit}
                 placeholder='Selecione data e hora'
+              />
+
+              {selectedCategory?.type === 'EXPENSE' && (
+                <CheckboxWithLabel
+                  id='isPaid'
+                  checked={formData.isPaid}
+                  onCheckedChange={checked =>
+                    handleInputChange('isPaid', checked as boolean)
+                  }
+                  disabled={isPendingSubmit}
+                  label='Marcar como pago'
+                />
+              )}
+
+              <CheckboxWithLabel
+                id='isRecurring'
+                checked={formData.isRecurring}
+                onCheckedChange={checked =>
+                  handleInputChange('isRecurring', checked as boolean)
+                }
+                disabled={isPendingSubmit}
+                label='Marcar como recorrente'
               />
 
               <div className='flex space-x-4'>

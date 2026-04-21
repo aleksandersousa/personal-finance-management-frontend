@@ -37,12 +37,16 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     categoryId: string;
     date: Date | undefined;
     isPaid: boolean;
+    isRecurring: boolean;
+    recurrenceId: string | null;
   }>({
     description: '',
     amount: '',
     categoryId: '',
     date: undefined,
     isPaid: false,
+    isRecurring: false,
+    recurrenceId: null,
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
@@ -84,6 +88,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
         categoryId: entry.categoryId || '',
         date: new Date(entry.dueDate),
         isPaid: entry.isPaid ?? false,
+        isRecurring: !!entry.recurrenceId,
+        recurrenceId: entry.recurrenceId,
       });
     }
   }, [entry]);
@@ -157,7 +163,9 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
           entryId,
           result.data!,
           listMonthFilter,
-          formData.isPaid
+          formData.isPaid,
+          formData.isRecurring,
+          formData.recurrenceId
         );
       });
       setErrors({});
@@ -265,9 +273,19 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
                       handleInputChange('isPaid', checked as boolean)
                     }
                     disabled={isPendingUpdate}
-                    label='Marcado como pago'
+                    label='Marcar como pago'
                   />
                 )}
+
+                <CheckboxWithLabel
+                  id='isRecurring'
+                  checked={formData.isRecurring}
+                  onCheckedChange={checked =>
+                    handleInputChange('isRecurring', checked as boolean)
+                  }
+                  disabled={isPendingUpdate}
+                  label='Marcar como recorrente'
+                />
 
                 <div className='flex space-x-4'>
                   <Button

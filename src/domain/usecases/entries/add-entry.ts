@@ -10,5 +10,6 @@ export type AddEntryParams = {
   issueDate: Date;
   dueDate: Date;
   categoryId: string;
-  recurrenceId?: string;
+  recurrenceId?: string | null;
+  recurrenceType?: 'MONTHLY';
 };

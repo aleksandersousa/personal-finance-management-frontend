@@ -16,6 +16,7 @@ export class RemoteAddEntry implements AddEntry {
       dueDate: params.dueDate.toISOString(),
       categoryId: params.categoryId,
       recurrenceId: params.recurrenceId,
+      recurrenceType: params.recurrenceType,
     };
     const response = await this.httpClient.post<EntryModel>(
       this.url,
