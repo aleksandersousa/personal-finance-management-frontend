@@ -27,11 +27,9 @@ export async function addEntryAction(
     const params = {
       description: data.description,
       amount: Math.round(data.amount * 100),
-      type: data.type,
-      categoryId: data.categoryId || undefined,
-      date: data.date,
-      isFixed: data.isFixed,
-      isPaid: data.isPaid ?? false,
+      categoryId: data.categoryId,
+      issueDate: data.date,
+      dueDate: data.date,
     };
 
     const addEntry = makeRemoteAddEntry();

@@ -10,8 +10,12 @@ export class RemoteAddEntry implements AddEntry {
 
   async add(params: AddEntryParams): Promise<EntryModel> {
     const requestParams = {
-      ...params,
-      isPaid: params.isPaid ?? false,
+      description: params.description,
+      amount: params.amount,
+      issueDate: params.issueDate.toISOString(),
+      dueDate: params.dueDate.toISOString(),
+      categoryId: params.categoryId,
+      recurrenceId: params.recurrenceId,
     };
     const response = await this.httpClient.post<EntryModel>(
       this.url,
@@ -20,15 +24,16 @@ export class RemoteAddEntry implements AddEntry {
 
     return {
       id: response.id,
+      recurrenceId: response.recurrenceId,
+      userId: response.userId,
+      categoryId: response.categoryId,
       description: response.description,
       amount: response.amount,
-      type: response.type,
-      categoryId: response.categoryId,
-      categoryName: response.categoryName || 'Desconhecida',
-      userId: response.userId,
-      isFixed: response.isFixed,
+      issueDate: new Date(response.issueDate),
+      dueDate: new Date(response.dueDate),
       isPaid: response.isPaid ?? false,
-      date: new Date(response.date),
+      entryType: response.entryType,
+      categoryName: response.categoryName || null,
       createdAt: new Date(response.createdAt),
       updatedAt: new Date(response.updatedAt),
     };

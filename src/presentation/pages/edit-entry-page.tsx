@@ -8,7 +8,6 @@ import {
   loadEntryByIdFromCache,
   updateEntryAction,
 } from '../actions';
-import type { EntryFormData } from '@/infra/validation';
 import type { CategoryWithStatsModel } from '@/domain/models';
 import {
   Button,
@@ -16,12 +15,10 @@ import {
   Input,
   PageLoading,
   Select,
-  CheckboxWithLabel,
   DateTimePicker,
+  CheckboxWithLabel,
 } from '../components';
-import { ConfirmFixedChangeModal } from '../components/client';
 import { redirect } from 'next/navigation';
-import { typeOptions } from '@/domain/constants';
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 
 export interface EditEntryPageProps {
@@ -37,25 +34,17 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
   const [formData, setFormData] = useState<{
     description: string;
     amount: string;
-    type: string;
     categoryId: string;
     date: Date | undefined;
-    isFixed: boolean;
     isPaid: boolean;
   }>({
     description: '',
     amount: '',
-    type: '',
     categoryId: '',
     date: undefined,
-    isFixed: false,
     isPaid: false,
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const [showFixedModal, setShowFixedModal] = useState(false);
-  const [pendingSubmit, setPendingSubmit] = useState<EntryFormData | null>(
-    null
-  );
   const [categories, setCategories] = useState<CategoryWithStatsModel[]>([]);
 
   const [isPendingEntry, startEntryTransition] = useTransition();
@@ -64,23 +53,11 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
 
   const validator = useMemo(() => makeEntryFormValidator(), []);
   const categoryOptions = useMemo(() => {
-    const mapCategories = (categories: CategoryWithStatsModel[]) => {
-      return categories.map(category => ({
-        value: category.id,
-        label: category.name,
-      }));
-    };
-
-    if (!formData.type) {
-      return mapCategories(categories);
-    }
-
-    const filteredCategories = categories.filter(
-      category => category.type === formData.type
-    );
-
-    return mapCategories(filteredCategories);
-  }, [categories, formData.type]);
+    return categories.map(category => ({
+      value: category.id,
+      label: category.name,
+    }));
+  }, [categories]);
 
   useEffect(() => {
     const loadEntry = async () => {
@@ -104,10 +81,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
       setFormData({
         description: entry.description,
         amount: formatCurrencyInput(entry.amount.toString()),
-        type: entry.type,
-        categoryId: entry.categoryId,
-        date: new Date(entry.date),
-        isFixed: entry.isFixed,
+        categoryId: entry.categoryId || '',
+        date: new Date(entry.dueDate),
         isPaid: entry.isPaid ?? false,
       });
     }
@@ -157,11 +132,6 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     }
   };
 
-  const handleCancelModal = () => {
-    setShowFixedModal(false);
-    setPendingSubmit(null);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -170,11 +140,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     const dataToValidate = {
       description: formData.description,
       amount: parseCurrencyInput(formData.amount),
-      type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
       date: formData.date,
-      isFixed: formData.isFixed,
-      isPaid: formData.isPaid,
     };
 
     const result = validator.validate(dataToValidate);
@@ -184,41 +151,20 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
       return;
     }
 
-    if (entry.isFixed !== formData.isFixed) {
-      setPendingSubmit(result.data!);
-      setShowFixedModal(true);
-      return;
-    }
-
     try {
       startUpdateTransition(async () => {
-        await updateEntryAction(entryId, result.data!, listMonthFilter);
+        await updateEntryAction(
+          entryId,
+          result.data!,
+          listMonthFilter,
+          formData.isPaid
+        );
       });
       setErrors({});
     } catch (error) {
       console.error('Error submitting form:', error);
       setErrors({
         general: ['Erro ao atualizar entrada. Tente novamente.'],
-      });
-    }
-  };
-
-  const handleConfirmSubmit = async () => {
-    if (pendingSubmit) {
-      startUpdateTransition(async () => {
-        try {
-          await updateEntryAction(entryId, pendingSubmit, listMonthFilter);
-          setShowFixedModal(false);
-          setPendingSubmit(null);
-          setErrors({});
-        } catch (error) {
-          console.error('Error submitting form:', error);
-          setErrors({
-            general: ['Erro ao atualizar entrada. Tente novamente.'],
-          });
-          setShowFixedModal(false);
-          setPendingSubmit(null);
-        }
       });
     }
   };
@@ -282,19 +228,9 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
                   disabled={isPendingUpdate}
                 />
 
-                <Select
-                  required
-                  label='Tipo'
-                  value={formData.type}
-                  onValueChange={value => handleInputChange('type', value)}
-                  options={typeOptions}
-                  placeholder='Selecione o tipo'
-                  error={errors.type?.[0]}
-                  disabled={isPendingUpdate}
-                />
-
                 {categoryOptions.length > 0 && (
                   <Select
+                    required
                     label='Categoria'
                     value={formData.categoryId}
                     onValueChange={value =>
@@ -304,12 +240,10 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
                     placeholder={
                       isPendingUpdate
                         ? 'Carregando categorias...'
-                        : formData.type
-                          ? 'Selecione a categoria'
-                          : 'Selecione primeiro o tipo'
+                        : 'Selecione a categoria'
                     }
                     error={errors.categoryId?.[0]}
-                    disabled={isPendingUpdate || !formData.type}
+                    disabled={isPendingUpdate}
                   />
                 )}
 
@@ -323,17 +257,7 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
                   placeholder='Selecione data e hora'
                 />
 
-                <CheckboxWithLabel
-                  id='isFixed'
-                  checked={formData.isFixed}
-                  onCheckedChange={checked =>
-                    handleInputChange('isFixed', checked as boolean)
-                  }
-                  disabled={isPendingUpdate}
-                  label='Entrada fixa (recorrente mensalmente)'
-                />
-
-                {formData.type === 'EXPENSE' && (
+                {entry.entryType === 'EXPENSE' && (
                   <CheckboxWithLabel
                     id='isPaid'
                     checked={formData.isPaid}
@@ -376,14 +300,6 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
           </div>
         </div>
       </div>
-
-      <ConfirmFixedChangeModal
-        isOpen={showFixedModal}
-        onClose={handleCancelModal}
-        onConfirm={handleConfirmSubmit}
-        isPending={isPendingUpdate}
-        isFixed={entry?.isFixed ?? false}
-      />
     </>
   );
 };

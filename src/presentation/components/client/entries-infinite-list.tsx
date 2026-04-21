@@ -8,28 +8,16 @@ import { LoadEntriesByMonthResult } from '@/domain/usecases';
 
 type EntriesFilters = {
   month: string;
-  type?: 'INCOME' | 'EXPENSE';
   category?: string;
   search?: string;
-  isPaid?: boolean | 'all';
+  sort?: 'dueDate' | 'amount' | 'description';
+  order?: 'asc' | 'desc';
 };
 
 type EntriesInfiniteListProps = {
   initialResult: LoadEntriesByMonthResult;
   filters: EntriesFilters;
 };
-
-function parseCalendarYearMonth(isoMonth: string): {
-  year: number;
-  month: number;
-} {
-  const match = /^(\d{4})-(\d{2})$/.exec(isoMonth.trim());
-  if (!match) {
-    const now = new Date();
-    return { year: now.getFullYear(), month: now.getMonth() + 1 };
-  }
-  return { year: Number(match[1]), month: Number(match[2]) };
-}
 
 export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
   initialResult,
@@ -49,10 +37,6 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
       limit: String(initialResult.pagination.limit),
     });
 
-    if (filters.type) {
-      params.append('type', filters.type);
-    }
-
     if (filters.category) {
       params.append('category', filters.category);
     }
@@ -61,8 +45,12 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
       params.append('search', filters.search.trim());
     }
 
-    if (filters.isPaid !== undefined && filters.isPaid !== 'all') {
-      params.append('isPaid', String(filters.isPaid));
+    if (filters.sort) {
+      params.append('sort', filters.sort);
+    }
+
+    if (filters.order) {
+      params.append('order', filters.order);
     }
 
     const url = `/api/frontend/entries?${params.toString()}`;
@@ -88,10 +76,6 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
     };
   };
 
-  const { year: listYear, month: listMonth } = parseCalendarYearMonth(
-    filters.month
-  );
-
   return (
     <InfiniteScrollList<EntryModel>
       initialItems={initialResult.data}
@@ -104,8 +88,6 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
         <EntryListItem
           key={entry.id}
           entry={entry}
-          currentYear={listYear}
-          currentMonth={listMonth}
           listMonthFilter={filters.month}
         />
       )}

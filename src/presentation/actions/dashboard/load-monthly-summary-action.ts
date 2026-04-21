@@ -24,7 +24,6 @@ export async function loadMonthlySummaryAction(
     const params: LoadMonthlySummaryParams = {
       month,
       includeCategories,
-      userId: user.id,
     };
 
     const loadMonthlySummary = makeRemoteLoadMonthlySummary();

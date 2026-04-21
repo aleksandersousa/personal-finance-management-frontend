@@ -18,21 +18,19 @@ export class RemoteLoadEntriesByMonth implements LoadEntriesByMonth {
       month,
       page = 1,
       limit = 20,
-      type,
       category,
       search,
-      isPaid,
+      sort,
+      order,
     } = params;
     const query = new URLSearchParams({
       month,
       page: String(page),
       limit: String(limit),
-      ...(type ? { type } : {}),
       ...(category ? { category } : {}),
       ...(search && search.trim() ? { search: search.trim() } : {}),
-      ...(isPaid !== undefined && isPaid !== 'all'
-        ? { isPaid: String(isPaid) }
-        : {}),
+      ...(sort ? { sort } : {}),
+      ...(order ? { order } : {}),
     }).toString();
     const response = await this.httpClient.get<LoadEntriesByMonthResult>(
       `${this.url}?${query}`

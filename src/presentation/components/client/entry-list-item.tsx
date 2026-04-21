@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useTransition, useEffect } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { EntryModel } from '@/domain/models';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -13,12 +13,11 @@ import {
   SelectValue,
 } from '../ui/select';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react/dist/ssr';
-import { formatCurrency, formatDate, cn } from '@/lib/utils';
+import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 import {
   deleteEntryAction,
   toggleEntryPaidStatusAction,
-  toggleMonthlyPaymentStatusAction,
 } from '@/presentation/actions';
 import { DeleteEntryModal } from './delete-entry-modal';
 import { useRouter } from 'next/navigation';
@@ -27,16 +26,12 @@ import { toast } from 'sonner';
 interface EntryListItemProps {
   entry: EntryModel;
   showActions?: boolean;
-  currentYear?: number;
-  currentMonth?: number;
   listMonthFilter?: string;
 }
 
 export const EntryListItem: React.FC<EntryListItemProps> = ({
   entry,
   showActions = true,
-  currentYear,
-  currentMonth,
   listMonthFilter,
 }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -44,7 +39,6 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
   const [optimisticIsPaid, setOptimisticIsPaid] = useState(entry.isPaid);
   const router = useRouter();
 
-  // Sync optimistic state with entry prop when it changes
   useEffect(() => {
     setOptimisticIsPaid(entry.isPaid);
   }, [entry.isPaid]);
@@ -72,45 +66,23 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
 
   const handlePaidStatusChange = async (value: string) => {
     const newIsPaid = value === 'paid';
-
-    // Optimistic update
     setOptimisticIsPaid(newIsPaid);
 
     startToggleTransition(async () => {
-      let result;
-
-      // For fixed entries, use monthly payment status if we have current month/year
-      if (entry.isFixed && currentYear && currentMonth) {
-        result = await toggleMonthlyPaymentStatusAction({
-          entryId: entry.id,
-          year: currentYear,
-          month: currentMonth,
-          isPaid: newIsPaid,
-        });
-      } else {
-        // For non-fixed entries or when month context is missing, use the original action
-        result = await toggleEntryPaidStatusAction(entry, newIsPaid);
-      }
+      const result = await toggleEntryPaidStatusAction(entry, newIsPaid);
 
       if (!result.success) {
-        // Revert optimistic update on error
         setOptimisticIsPaid(entry.isPaid);
         toast.error(
           result.error ||
             'Erro ao atualizar status de pagamento. Tente novamente.'
         );
       } else {
-        const message =
-          entry.isFixed && currentYear && currentMonth
-            ? newIsPaid
-              ? `Despesa marcada como paga para ${currentMonth}/${currentYear}`
-              : `Despesa marcada como não paga para ${currentMonth}/${currentYear}`
-            : newIsPaid
-              ? 'Despesa marcada como paga'
-              : 'Despesa marcada como não paga';
-
-        toast.success(message);
-        // Refresh the page to show updated data
+        toast.success(
+          newIsPaid
+            ? 'Despesa marcada como paga'
+            : 'Despesa marcada como não paga'
+        );
         router.refresh();
       }
     });
@@ -135,10 +107,10 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
             <div className='text-sm text-neutral-500 mt-1 flex items-center gap-2 flex-wrap'>
               <span>
                 {entry.categoryName ?? 'Sem categoria'} •{' '}
-                {formatDate(entry.date)}
+                {formatDate(entry.dueDate)}
               </span>
 
-              {entry.isFixed && (
+              {entry.recurrenceId && (
                 <Badge
                   variant='secondary'
                   className='bg-primary/10 text-primary'
@@ -156,7 +128,7 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                 </Badge>
               )}
 
-              {entry.type === 'EXPENSE' && (
+              {entry.entryType === 'EXPENSE' && (
                 <Select
                   value={optimisticIsPaid ? 'paid' : 'unpaid'}
                   onValueChange={handlePaidStatusChange}
@@ -169,12 +141,11 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
                         ? 'bg-success hover:bg-success-400'
                         : 'bg-error hover:bg-error-400',
                       isTogglingPaid && 'opacity-50 cursor-not-allowed',
-                      '[&>svg]:hidden' // Hide the dropdown arrow
+                      '[&>svg]:hidden'
                     )}
                   >
                     <SelectValue />
                   </SelectTrigger>
-
                   <SelectContent className='min-w-[120px]'>
                     <SelectItem value='paid'>Pago</SelectItem>
                     <SelectItem value='unpaid'>Não pago</SelectItem>
@@ -186,11 +157,12 @@ export const EntryListItem: React.FC<EntryListItemProps> = ({
 
           <div className='flex items-center space-x-3'>
             <div
-              className={`font-semibold ${
-                entry.type === 'INCOME' ? 'text-success' : 'text-error'
-              }`}
+              className={cn(
+                'font-semibold',
+                entry.entryType === 'INCOME' ? 'text-success' : 'text-error'
+              )}
             >
-              {entry.type === 'INCOME' ? '+' : '-'}
+              {entry.entryType === 'INCOME' ? '+' : '-'}
               {formatCurrency(entry.amount)}
             </div>
 

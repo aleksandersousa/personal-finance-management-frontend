@@ -1,18 +1,10 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
-import {
-  Button,
-  Card,
-  Input,
-  Select,
-  DateTimePicker,
-  CheckboxWithLabel,
-} from '../components';
+import { Button, Card, Input, Select, DateTimePicker } from '../components';
 import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
-import { typeOptions } from '@/domain/constants';
 import { useRouter } from 'next/navigation';
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -25,19 +17,13 @@ export const AddEntryPage: React.FC = () => {
   const [formData, setFormData] = useState<{
     description: string;
     amount: string;
-    type: string;
     categoryId: string;
     date: Date | undefined;
-    isFixed: boolean;
-    isPaid: boolean;
   }>({
     description: '',
     amount: '0,00',
-    type: '',
     categoryId: '',
     date: new Date(),
-    isFixed: false,
-    isPaid: false,
   });
 
   const [isPendingSubmit, startSubmitTransition] = useTransition();
@@ -50,14 +36,13 @@ export const AddEntryPage: React.FC = () => {
       value: category.id,
       label: category.name,
     }));
-  }, [categories, formData.type]);
+  }, [categories]);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const result = await loadCategoriesAction({
           includeStats: false,
-          type: formData.type as 'INCOME' | 'EXPENSE',
           limit: 100,
         });
         setCategories(result.data);
@@ -70,7 +55,7 @@ export const AddEntryPage: React.FC = () => {
     startCategoriesTransition(() => {
       loadCategories();
     });
-  }, [formData.type]);
+  }, []);
 
   const handleInputChange = (
     field: string,
@@ -83,10 +68,6 @@ export const AddEntryPage: React.FC = () => {
       };
 
       // Se o tipo mudou, limpar a categoria selecionada
-      if (field === 'type') {
-        newData.categoryId = '';
-      }
-
       return newData;
     });
 
@@ -106,11 +87,8 @@ export const AddEntryPage: React.FC = () => {
     const dataToValidate = {
       description: formData.description,
       amount: parseCurrencyInput(formData.amount),
-      type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
       date: formData.date,
-      isFixed: formData.isFixed,
-      isPaid: formData.isPaid,
     };
 
     const result = validator.validate(dataToValidate);
@@ -124,18 +102,15 @@ export const AddEntryPage: React.FC = () => {
       try {
         const actionResult = await addEntryAction({
           ...result.data!,
-          categoryId: result.data!.categoryId || undefined,
+          categoryId: result.data!.categoryId,
         });
         if (actionResult.ok) {
           toast.success('Entrada criada com sucesso');
           setFormData({
             description: '',
             amount: '0,00',
-            type: '',
             categoryId: '',
             date: new Date(),
-            isFixed: false,
-            isPaid: false,
           });
           setErrors({});
         } else {
@@ -206,19 +181,9 @@ export const AddEntryPage: React.FC = () => {
                 disabled={isPendingSubmit}
               />
 
-              <Select
-                required
-                label='Tipo'
-                value={formData.type}
-                onValueChange={value => handleInputChange('type', value)}
-                options={typeOptions}
-                placeholder='Selecione o tipo'
-                error={errors.type?.[0]}
-                disabled={isPendingSubmit}
-              />
-
               {categoryOptions.length > 0 && (
                 <Select
+                  required
                   label='Categoria'
                   value={formData.categoryId}
                   onValueChange={value =>
@@ -228,14 +193,10 @@ export const AddEntryPage: React.FC = () => {
                   placeholder={
                     isPendingCategories
                       ? 'Carregando categorias...'
-                      : formData.type
-                        ? 'Selecione a categoria'
-                        : 'Selecione primeiro o tipo'
+                      : 'Selecione a categoria'
                   }
                   error={errors.categoryId?.[0]}
-                  disabled={
-                    isPendingSubmit || isPendingCategories || !formData.type
-                  }
+                  disabled={isPendingSubmit || isPendingCategories}
                 />
               )}
 
@@ -248,28 +209,6 @@ export const AddEntryPage: React.FC = () => {
                 disabled={isPendingSubmit}
                 placeholder='Selecione data e hora'
               />
-
-              <CheckboxWithLabel
-                id='isFixed'
-                checked={formData.isFixed}
-                onCheckedChange={checked =>
-                  handleInputChange('isFixed', checked as boolean)
-                }
-                disabled={isPendingSubmit}
-                label='Entrada fixa (recorrente mensalmente)'
-              />
-
-              {formData.type === 'EXPENSE' && (
-                <CheckboxWithLabel
-                  id='isPaid'
-                  checked={formData.isPaid}
-                  onCheckedChange={checked =>
-                    handleInputChange('isPaid', checked as boolean)
-                  }
-                  disabled={isPendingSubmit}
-                  label='Marcado como pago'
-                />
-              )}
 
               <div className='flex space-x-4'>
                 <Button
