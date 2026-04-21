@@ -34,8 +34,8 @@ export async function addEntryAction(
       description: data.description,
       amount: Math.round(data.amount * 100),
       categoryId: data.categoryId,
-      issueDate: data.date,
-      dueDate: data.date,
+      issueDate: data.issueDate,
+      dueDate: data.dueDate,
       recurrenceType: data.isRecurring ? ('MONTHLY' as const) : undefined,
     };
 

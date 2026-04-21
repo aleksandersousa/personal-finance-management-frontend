@@ -35,7 +35,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     description: string;
     amount: string;
     categoryId: string;
-    date: Date | undefined;
+    issueDate: Date | undefined;
+    dueDate: Date | undefined;
     isPaid: boolean;
     isRecurring: boolean;
     recurrenceId: string | null;
@@ -43,7 +44,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     description: '',
     amount: '',
     categoryId: '',
-    date: undefined,
+    issueDate: undefined,
+    dueDate: undefined,
     isPaid: false,
     isRecurring: false,
     recurrenceId: null,
@@ -86,7 +88,8 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
         description: entry.description,
         amount: formatCurrencyInput(entry.amount.toString()),
         categoryId: entry.categoryId || '',
-        date: new Date(entry.dueDate),
+        issueDate: new Date(entry.issueDate),
+        dueDate: new Date(entry.dueDate),
         isPaid: entry.isPaid ?? false,
         isRecurring: !!entry.recurrenceId,
         recurrenceId: entry.recurrenceId,
@@ -121,6 +124,22 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
     }
   }, [categories, entry?.categoryId, entry]);
 
+  useEffect(() => {
+    if (!formData.issueDate || !formData.dueDate) return;
+
+    const issueDate = new Date(formData.issueDate);
+    issueDate.setHours(0, 0, 0, 0);
+    const dueDate = new Date(formData.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    if (dueDate.getTime() < issueDate.getTime()) {
+      setFormData(prev => ({
+        ...prev,
+        dueDate: prev.issueDate,
+      }));
+    }
+  }, [formData.issueDate, formData.dueDate]);
+
   const handleInputChange = (
     field: string,
     value: string | boolean | Date | undefined
@@ -141,13 +160,14 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!entry || !formData.date) return;
+    if (!entry || !formData.issueDate || !formData.dueDate) return;
 
     const dataToValidate = {
       description: formData.description,
       amount: parseCurrencyInput(formData.amount),
       categoryId: formData.categoryId,
-      date: formData.date,
+      issueDate: formData.issueDate,
+      dueDate: formData.dueDate,
     };
 
     const result = validator.validate(dataToValidate);
@@ -256,13 +276,24 @@ export const EditEntryPage: React.FC<EditEntryPageProps> = ({
                 )}
 
                 <DateTimePicker
-                  label='Data e Hora'
-                  value={formData.date}
-                  onChange={date => handleInputChange('date', date)}
-                  error={errors.date?.[0]}
+                  label='Data de emissão'
+                  value={formData.issueDate}
+                  onChange={date => handleInputChange('issueDate', date)}
+                  error={errors.issueDate?.[0]}
                   required
                   disabled={isPendingUpdate}
-                  placeholder='Selecione data e hora'
+                  placeholder='Selecione a data de emissão'
+                />
+
+                <DateTimePicker
+                  label='Data de vencimento'
+                  value={formData.dueDate}
+                  onChange={date => handleInputChange('dueDate', date)}
+                  error={errors.dueDate?.[0]}
+                  minDate={formData.issueDate}
+                  required
+                  disabled={isPendingUpdate}
+                  placeholder='Selecione a data de vencimento'
                 />
 
                 {entry.entryType === 'EXPENSE' && (
