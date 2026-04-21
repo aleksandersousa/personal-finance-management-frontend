@@ -27,6 +27,7 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     const hasActiveFilters = Boolean(
       (searchParams.month && searchParams.month !== currentMonth) ||
         (searchParams.category && searchParams.category !== 'all') ||
+        (searchParams.entryType && searchParams.entryType !== 'all') ||
         (searchParams.sort && searchParams.sort !== 'dueDate') ||
         (searchParams.order && searchParams.order !== 'desc') ||
         (searchParams.search && searchParams.search.trim() !== '')
@@ -84,6 +85,10 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 filters={{
                   month: selectedMonth,
                   category: searchParams.category,
+                  entryType: searchParams.entryType as
+                    | 'INCOME'
+                    | 'EXPENSE'
+                    | undefined,
                   search: searchParams.search,
                   sort: searchParams.sort as
                     | 'dueDate'

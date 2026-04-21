@@ -10,6 +10,7 @@ export type LoadEntriesByMonthParams = {
   page?: number;
   limit?: number;
   category?: string;
+  entryType?: 'INCOME' | 'EXPENSE';
   search?: string;
   sort?: 'dueDate' | 'amount' | 'description';
   order?: 'asc' | 'desc';

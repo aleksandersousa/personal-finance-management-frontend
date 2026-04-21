@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get('page')) || 1;
     const limit = Number(searchParams.get('limit')) || 5;
     const category = searchParams.get('category') || undefined;
+    const entryType =
+      (searchParams.get('entryType') as 'INCOME' | 'EXPENSE' | null) ||
+      undefined;
     const search = searchParams.get('search') || undefined;
     const sort = searchParams.get('sort') as
       | 'dueDate'
@@ -34,6 +37,7 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       ...(category && { category }),
+      ...(entryType && { entryType }),
       ...(search && search.trim() && { search: search.trim() }),
       ...(sort && { sort }),
       ...(order && { order }),

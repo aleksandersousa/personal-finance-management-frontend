@@ -26,6 +26,10 @@ export async function loadEntriesByMonthAction(
     const page = Number(searchParams.page) || 1;
     const limit = Number(searchParams.limit) || 5;
     const category = searchParams.category;
+    const entryType = searchParams.entryType as
+      | 'INCOME'
+      | 'EXPENSE'
+      | undefined;
     const search = searchParams.search;
     const sort = searchParams.sort as
       | 'dueDate'
@@ -40,6 +44,7 @@ export async function loadEntriesByMonthAction(
       page,
       limit,
       ...(category && { category }),
+      ...(entryType && { entryType }),
       ...(search && search.trim() && { search: search.trim() }),
       ...(sort && { sort }),
       ...(order && { order }),

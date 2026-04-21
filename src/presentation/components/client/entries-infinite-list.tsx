@@ -9,6 +9,7 @@ import { LoadEntriesByMonthResult } from '@/domain/usecases';
 type EntriesFilters = {
   month: string;
   category?: string;
+  entryType?: 'INCOME' | 'EXPENSE';
   search?: string;
   sort?: 'dueDate' | 'amount' | 'description';
   order?: 'asc' | 'desc';
@@ -39,6 +40,9 @@ export const EntriesInfiniteList: React.FC<EntriesInfiniteListProps> = ({
 
     if (filters.category) {
       params.append('category', filters.category);
+    }
+    if (filters.entryType) {
+      params.append('entryType', filters.entryType);
     }
 
     if (filters.search && filters.search.trim()) {

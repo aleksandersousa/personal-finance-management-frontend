@@ -41,6 +41,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   const [filters, setFilters] = useState({
     month: searchParams.get('month') || currentMonth,
     category: searchParams.get('category') || 'all',
+    entryType: searchParams.get('entryType') || 'all',
     sort: searchParams.get('sort') || 'dueDate',
     order: searchParams.get('order') || 'desc',
     search: searchParams.get('search') || '',
@@ -160,6 +161,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     const clearedFilters = {
       month: currentMonth,
       category: 'all',
+      entryType: 'all',
       sort: 'dueDate',
       order: 'desc',
       search: '',
@@ -194,6 +196,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   const hasActiveFilters =
     filters.month !== currentMonth ||
     filters.category !== 'all' ||
+    filters.entryType !== 'all' ||
     filters.sort !== 'dueDate' ||
     filters.order !== 'desc' ||
     filters.search !== '';
@@ -322,6 +325,29 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                   </SelectItem>
                   <SelectItem value='description' className='rounded-lg'>
                     Descrição
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className='block text-sm text-slate-700 mb-1'>Tipo</label>
+              <Select
+                value={filters.entryType}
+                onValueChange={value => handleFilterChange('entryType', value)}
+              >
+                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
+                  <SelectValue placeholder='Selecione o tipo' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all' className='rounded-lg'>
+                    Todos
+                  </SelectItem>
+                  <SelectItem value='INCOME' className='rounded-lg'>
+                    Receita
+                  </SelectItem>
+                  <SelectItem value='EXPENSE' className='rounded-lg'>
+                    Despesa
                   </SelectItem>
                 </SelectContent>
               </Select>
