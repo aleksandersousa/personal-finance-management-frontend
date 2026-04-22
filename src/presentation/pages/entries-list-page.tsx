@@ -26,12 +26,11 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
     const selectedMonth = searchParams.month || currentMonth;
     const hasActiveFilters = Boolean(
       (searchParams.month && searchParams.month !== currentMonth) ||
-        (searchParams.type && searchParams.type !== 'all') ||
         (searchParams.category && searchParams.category !== 'all') ||
-        (searchParams.sort && searchParams.sort !== 'date') ||
+        (searchParams.entryType && searchParams.entryType !== 'all') ||
+        (searchParams.sort && searchParams.sort !== 'dueDate') ||
         (searchParams.order && searchParams.order !== 'desc') ||
-        (searchParams.search && searchParams.search.trim() !== '') ||
-        (searchParams.isPaid && searchParams.isPaid !== 'all')
+        (searchParams.search && searchParams.search.trim() !== '')
     );
 
     return (
@@ -85,17 +84,18 @@ export const EntriesListPage: React.FC<Props> = async ({ searchParams }) => {
                 initialResult={result}
                 filters={{
                   month: selectedMonth,
-                  type: searchParams.type as 'INCOME' | 'EXPENSE' | undefined,
                   category: searchParams.category,
+                  entryType: searchParams.entryType as
+                    | 'INCOME'
+                    | 'EXPENSE'
+                    | undefined,
                   search: searchParams.search,
-                  isPaid:
-                    searchParams.isPaid === 'true'
-                      ? true
-                      : searchParams.isPaid === 'false'
-                        ? false
-                        : searchParams.isPaid === 'all'
-                          ? 'all'
-                          : undefined,
+                  sort: searchParams.sort as
+                    | 'dueDate'
+                    | 'amount'
+                    | 'description'
+                    | undefined,
+                  order: searchParams.order as 'asc' | 'desc' | undefined,
                 }}
               />
             )}

@@ -9,10 +9,11 @@ export type LoadEntriesByMonthParams = {
   userId: string;
   page?: number;
   limit?: number;
-  type?: 'INCOME' | 'EXPENSE';
   category?: string;
+  entryType?: 'INCOME' | 'EXPENSE';
   search?: string;
-  isPaid?: boolean | 'all';
+  sort?: 'dueDate' | 'amount' | 'description';
+  order?: 'asc' | 'desc';
 };
 
 export type LoadEntriesByMonthResult = {
@@ -22,5 +23,13 @@ export type LoadEntriesByMonthResult = {
     limit: number;
     total: number;
     totalPages: number;
+    hasNext?: boolean;
+    hasPrev?: boolean;
+  };
+  summary?: {
+    totalIncome: number;
+    totalExpenses: number;
+    balance: number;
+    entriesCount: number;
   };
 };

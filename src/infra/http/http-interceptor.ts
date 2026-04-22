@@ -67,7 +67,13 @@ export class HttpInterceptor implements HttpClient {
     } catch (error: any) {
       // Verificar se é erro 401
       const statusCode =
-        error.status || error.statusCode || error.response?.status;
+        error?.status ||
+        error?.statusCode ||
+        error?.response?.status ||
+        (typeof error?.message === 'string' &&
+        error.message.includes('status: 401')
+          ? 401
+          : undefined);
 
       if (statusCode === 401) {
         console.log('401 detected, attempting to refresh token...');

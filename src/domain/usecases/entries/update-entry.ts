@@ -7,10 +7,10 @@ export interface UpdateEntry {
 export interface UpdateEntryParams {
   id: string;
   description: string;
-  amount: number; // Em centavos
-  type: 'INCOME' | 'EXPENSE';
-  categoryId?: string;
-  date: Date;
-  isFixed: boolean;
-  isPaid?: boolean;
+  amount: number;
+  issueDate: Date;
+  dueDate: Date;
+  categoryId: string;
+  recurrenceId?: string | null;
+  recurrenceType?: 'MONTHLY';
 }

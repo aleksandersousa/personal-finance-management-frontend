@@ -12,7 +12,6 @@ import {
 import { makeEntryFormValidator } from '@/main/factories/validation';
 import { addEntryAction, loadCategoriesAction } from '../actions';
 import type { CategoryWithStatsModel } from '@/domain/models';
-import { typeOptions } from '@/domain/constants';
 import { useRouter } from 'next/navigation';
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -25,19 +24,19 @@ export const AddEntryPage: React.FC = () => {
   const [formData, setFormData] = useState<{
     description: string;
     amount: string;
-    type: string;
     categoryId: string;
-    date: Date | undefined;
-    isFixed: boolean;
+    issueDate: Date | undefined;
+    dueDate: Date | undefined;
     isPaid: boolean;
+    isRecurring: boolean;
   }>({
     description: '',
     amount: '0,00',
-    type: '',
     categoryId: '',
-    date: new Date(),
-    isFixed: false,
+    issueDate: new Date(),
+    dueDate: new Date(),
     isPaid: false,
+    isRecurring: false,
   });
 
   const [isPendingSubmit, startSubmitTransition] = useTransition();
@@ -50,14 +49,18 @@ export const AddEntryPage: React.FC = () => {
       value: category.id,
       label: category.name,
     }));
-  }, [categories, formData.type]);
+  }, [categories]);
+  const selectedCategory = useMemo(
+    () =>
+      categories.find(category => category.id === formData.categoryId) ?? null,
+    [categories, formData.categoryId]
+  );
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const result = await loadCategoriesAction({
           includeStats: false,
-          type: formData.type as 'INCOME' | 'EXPENSE',
           limit: 100,
         });
         setCategories(result.data);
@@ -70,7 +73,23 @@ export const AddEntryPage: React.FC = () => {
     startCategoriesTransition(() => {
       loadCategories();
     });
-  }, [formData.type]);
+  }, []);
+
+  useEffect(() => {
+    if (!formData.issueDate || !formData.dueDate) return;
+
+    const issueDate = new Date(formData.issueDate);
+    issueDate.setHours(0, 0, 0, 0);
+    const dueDate = new Date(formData.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    if (dueDate.getTime() < issueDate.getTime()) {
+      setFormData(prev => ({
+        ...prev,
+        dueDate: prev.issueDate,
+      }));
+    }
+  }, [formData.issueDate, formData.dueDate]);
 
   const handleInputChange = (
     field: string,
@@ -83,10 +102,6 @@ export const AddEntryPage: React.FC = () => {
       };
 
       // Se o tipo mudou, limpar a categoria selecionada
-      if (field === 'type') {
-        newData.categoryId = '';
-      }
-
       return newData;
     });
 
@@ -101,16 +116,14 @@ export const AddEntryPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.date) return;
+    if (!formData.issueDate || !formData.dueDate) return;
 
     const dataToValidate = {
       description: formData.description,
       amount: parseCurrencyInput(formData.amount),
-      type: formData.type as 'INCOME' | 'EXPENSE',
       categoryId: formData.categoryId,
-      date: formData.date,
-      isFixed: formData.isFixed,
-      isPaid: formData.isPaid,
+      issueDate: formData.issueDate,
+      dueDate: formData.dueDate,
     };
 
     const result = validator.validate(dataToValidate);
@@ -124,18 +137,20 @@ export const AddEntryPage: React.FC = () => {
       try {
         const actionResult = await addEntryAction({
           ...result.data!,
-          categoryId: result.data!.categoryId || undefined,
+          categoryId: result.data!.categoryId,
+          isPaid: formData.isPaid,
+          isRecurring: formData.isRecurring,
         });
         if (actionResult.ok) {
           toast.success('Entrada criada com sucesso');
           setFormData({
             description: '',
             amount: '0,00',
-            type: '',
             categoryId: '',
-            date: new Date(),
-            isFixed: false,
+            issueDate: new Date(),
+            dueDate: new Date(),
             isPaid: false,
+            isRecurring: false,
           });
           setErrors({});
         } else {
@@ -206,19 +221,9 @@ export const AddEntryPage: React.FC = () => {
                 disabled={isPendingSubmit}
               />
 
-              <Select
-                required
-                label='Tipo'
-                value={formData.type}
-                onValueChange={value => handleInputChange('type', value)}
-                options={typeOptions}
-                placeholder='Selecione o tipo'
-                error={errors.type?.[0]}
-                disabled={isPendingSubmit}
-              />
-
               {categoryOptions.length > 0 && (
                 <Select
+                  required
                   label='Categoria'
                   value={formData.categoryId}
                   onValueChange={value =>
@@ -228,38 +233,35 @@ export const AddEntryPage: React.FC = () => {
                   placeholder={
                     isPendingCategories
                       ? 'Carregando categorias...'
-                      : formData.type
-                        ? 'Selecione a categoria'
-                        : 'Selecione primeiro o tipo'
+                      : 'Selecione a categoria'
                   }
                   error={errors.categoryId?.[0]}
-                  disabled={
-                    isPendingSubmit || isPendingCategories || !formData.type
-                  }
+                  disabled={isPendingSubmit || isPendingCategories}
                 />
               )}
 
               <DateTimePicker
-                label='Data e Hora'
-                value={formData.date}
-                onChange={date => handleInputChange('date', date)}
-                error={errors.date?.[0]}
+                label='Data de emissão'
+                value={formData.issueDate}
+                onChange={date => handleInputChange('issueDate', date)}
+                error={errors.issueDate?.[0]}
                 required
                 disabled={isPendingSubmit}
-                placeholder='Selecione data e hora'
+                placeholder='Selecione a data de emissão'
               />
 
-              <CheckboxWithLabel
-                id='isFixed'
-                checked={formData.isFixed}
-                onCheckedChange={checked =>
-                  handleInputChange('isFixed', checked as boolean)
-                }
+              <DateTimePicker
+                label='Data de vencimento'
+                value={formData.dueDate}
+                onChange={date => handleInputChange('dueDate', date)}
+                error={errors.dueDate?.[0]}
+                minDate={formData.issueDate}
+                required
                 disabled={isPendingSubmit}
-                label='Entrada fixa (recorrente mensalmente)'
+                placeholder='Selecione a data de vencimento'
               />
 
-              {formData.type === 'EXPENSE' && (
+              {selectedCategory?.type === 'EXPENSE' && (
                 <CheckboxWithLabel
                   id='isPaid'
                   checked={formData.isPaid}
@@ -267,9 +269,19 @@ export const AddEntryPage: React.FC = () => {
                     handleInputChange('isPaid', checked as boolean)
                   }
                   disabled={isPendingSubmit}
-                  label='Marcado como pago'
+                  label='Marcar como pago'
                 />
               )}
+
+              <CheckboxWithLabel
+                id='isRecurring'
+                checked={formData.isRecurring}
+                onCheckedChange={checked =>
+                  handleInputChange('isRecurring', checked as boolean)
+                }
+                disabled={isPendingSubmit}
+                label='Marcar como recorrente'
+              />
 
               <div className='flex space-x-4'>
                 <Button

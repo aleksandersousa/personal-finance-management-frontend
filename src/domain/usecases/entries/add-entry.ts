@@ -5,11 +5,11 @@ export interface AddEntry {
 }
 
 export type AddEntryParams = {
-  amount: number; // em centavos
+  amount: number;
   description: string;
-  type: 'INCOME' | 'EXPENSE';
-  isFixed: boolean;
-  isPaid?: boolean;
-  categoryId?: string;
-  date: Date;
+  issueDate: Date;
+  dueDate: Date;
+  categoryId: string;
+  recurrenceId?: string | null;
+  recurrenceType?: 'MONTHLY';
 };

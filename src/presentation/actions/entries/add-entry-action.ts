@@ -4,6 +4,7 @@ import { EntryFormData } from '@/infra/validation';
 import { revalidateTag } from 'next/cache';
 import { getCurrentUser, isRedirectError } from '@/presentation/helpers';
 import { makeRemoteAddEntry } from '@/main/factories/usecases';
+import { makeRemoteToggleMonthlyPaymentStatus } from '@/main/factories/usecases';
 import { logoutAction } from '@/presentation/actions/auth/logout-action';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 
@@ -11,8 +12,13 @@ export type AddEntryActionResult =
   | { ok: true }
   | { ok: false; error: 'entry_create_failed' };
 
+type AddEntryActionInput = EntryFormData & {
+  isPaid?: boolean;
+  isRecurring?: boolean;
+};
+
 export async function addEntryAction(
-  data: EntryFormData
+  data: AddEntryActionInput
 ): Promise<AddEntryActionResult> {
   try {
     const getStorage = makeNextCookiesStorageAdapter();
@@ -27,15 +33,22 @@ export async function addEntryAction(
     const params = {
       description: data.description,
       amount: Math.round(data.amount * 100),
-      type: data.type,
-      categoryId: data.categoryId || undefined,
-      date: data.date,
-      isFixed: data.isFixed,
-      isPaid: data.isPaid ?? false,
+      categoryId: data.categoryId,
+      issueDate: data.issueDate,
+      dueDate: data.dueDate,
+      recurrenceType: data.isRecurring ? ('MONTHLY' as const) : undefined,
     };
 
     const addEntry = makeRemoteAddEntry();
-    await addEntry.add(params);
+    const createdEntry = await addEntry.add(params);
+
+    if (createdEntry.entryType === 'EXPENSE' && data.isPaid) {
+      const togglePaymentStatus = makeRemoteToggleMonthlyPaymentStatus();
+      await togglePaymentStatus.toggle({
+        entryId: createdEntry.id,
+        isPaid: true,
+      });
+    }
 
     revalidateTag('entries', 'max');
     revalidateTag(`entries-${user.id}`, 'max');

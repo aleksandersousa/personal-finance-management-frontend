@@ -5,8 +5,6 @@ import { makeRemoteToggleMonthlyPaymentStatus } from '@/main/factories/usecases'
 
 interface ToggleMonthlyPaymentStatusParams {
   entryId: string;
-  year: number;
-  month: number;
   isPaid: boolean;
 }
 
@@ -23,8 +21,6 @@ export async function toggleMonthlyPaymentStatusAction(
 
     await toggleMonthlyPaymentStatus.toggle({
       entryId: params.entryId,
-      year: params.year,
-      month: params.month,
       isPaid: params.isPaid,
     });
 

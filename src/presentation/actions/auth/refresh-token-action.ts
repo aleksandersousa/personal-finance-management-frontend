@@ -31,15 +31,23 @@ export async function refreshTokenAction(): Promise<AuthTokens | null> {
       return null;
     }
 
-    const newTokens = await response.json();
+    const newTokens = (await response.json()) as {
+      accessToken: string;
+      expiresIn: number;
+    };
+    const updatedTokens: AuthTokens = {
+      accessToken: newTokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      expiresIn: newTokens.expiresIn,
+    };
 
     // Atualizar tokens no storage
-    await storage.set('tokens', newTokens);
-    await storage.set('accessToken', newTokens.accessToken);
-    await storage.set('refreshToken', newTokens.refreshToken);
+    await storage.set('tokens', updatedTokens);
+    await storage.set('accessToken', updatedTokens.accessToken);
+    await storage.set('refreshToken', updatedTokens.refreshToken);
 
     console.log('Access token refreshed successfully');
-    return newTokens;
+    return updatedTokens;
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;

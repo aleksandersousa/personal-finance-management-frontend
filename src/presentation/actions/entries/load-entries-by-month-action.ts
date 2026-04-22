@@ -25,28 +25,29 @@ export async function loadEntriesByMonthAction(
     const month = searchParams.month || new Date().toISOString().slice(0, 7); // YYYY-MM
     const page = Number(searchParams.page) || 1;
     const limit = Number(searchParams.limit) || 5;
-    const type = searchParams.type as 'INCOME' | 'EXPENSE' | undefined;
     const category = searchParams.category;
+    const entryType = searchParams.entryType as
+      | 'INCOME'
+      | 'EXPENSE'
+      | undefined;
     const search = searchParams.search;
-    const isPaidParam = searchParams.isPaid;
-    let isPaid: boolean | 'all' | undefined = undefined;
-    if (isPaidParam === 'true') {
-      isPaid = true;
-    } else if (isPaidParam === 'false') {
-      isPaid = false;
-    } else if (isPaidParam === 'all') {
-      isPaid = 'all';
-    }
+    const sort = searchParams.sort as
+      | 'dueDate'
+      | 'amount'
+      | 'description'
+      | undefined;
+    const order = searchParams.order as 'asc' | 'desc' | undefined;
 
     const params: LoadEntriesByMonthParams = {
       month,
       userId: user.id,
       page,
       limit,
-      ...(type && { type }),
       ...(category && { category }),
+      ...(entryType && { entryType }),
       ...(search && search.trim() && { search: search.trim() }),
-      ...(isPaid !== undefined && { isPaid }),
+      ...(sort && { sort }),
+      ...(order && { order }),
     };
 
     const loadEntriesByMonth = makeRemoteLoadEntriesByMonth();

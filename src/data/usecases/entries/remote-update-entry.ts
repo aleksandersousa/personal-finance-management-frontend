@@ -9,51 +9,33 @@ export class RemoteUpdateEntry implements UpdateEntry {
   ) {}
 
   async update(params: UpdateEntryParams): Promise<EntryModel> {
-    // Ensure date is a Date object before calling toISOString
-    const date =
-      params.date instanceof Date ? params.date : new Date(params.date);
-
-    const httpResponse = await this.httpClient.put<unknown>(
+    const httpResponse = await this.httpClient.put<EntryModel>(
       `${this.url}/${params.id}`,
       {
         description: params.description,
         amount: params.amount,
-        type: params.type,
+        issueDate: params.issueDate.toISOString(),
+        dueDate: params.dueDate.toISOString(),
         categoryId: params.categoryId,
-        date: date.toISOString(),
-        isFixed: params.isFixed,
-        isPaid: params.isPaid,
+        recurrenceId: params.recurrenceId,
+        recurrenceType: params.recurrenceType,
       }
     );
 
-    const apiResponse = httpResponse as {
-      id: string;
-      description: string;
-      amount: number;
-      type: 'INCOME' | 'EXPENSE';
-      categoryId: string;
-      categoryName?: string;
-      userId: string;
-      date: string;
-      isFixed: boolean;
-      isPaid: boolean;
-      createdAt: string;
-      updatedAt: string;
-    };
-
     return {
-      id: apiResponse.id,
-      description: apiResponse.description,
-      amount: apiResponse.amount,
-      type: apiResponse.type,
-      categoryId: apiResponse.categoryId,
-      categoryName: apiResponse.categoryName || 'Unknown',
-      userId: apiResponse.userId,
-      date: new Date(apiResponse.date),
-      isFixed: apiResponse.isFixed,
-      isPaid: apiResponse.isPaid ?? false,
-      createdAt: new Date(apiResponse.createdAt),
-      updatedAt: new Date(apiResponse.updatedAt),
+      id: httpResponse.id,
+      recurrenceId: httpResponse.recurrenceId,
+      userId: httpResponse.userId,
+      categoryId: httpResponse.categoryId,
+      description: httpResponse.description,
+      amount: httpResponse.amount,
+      issueDate: new Date(httpResponse.issueDate),
+      dueDate: new Date(httpResponse.dueDate),
+      isPaid: httpResponse.isPaid ?? false,
+      entryType: httpResponse.entryType,
+      categoryName: httpResponse.categoryName || null,
+      createdAt: new Date(httpResponse.createdAt),
+      updatedAt: new Date(httpResponse.updatedAt),
     };
   }
 }
