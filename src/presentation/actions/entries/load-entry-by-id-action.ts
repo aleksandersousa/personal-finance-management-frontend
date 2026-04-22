@@ -6,17 +6,11 @@ import { loadEntriesByMonthAction } from './load-entries-by-month-action';
 function parseEntryDates(entry: EntryModel): EntryModel {
   return {
     ...entry,
-    date: new Date(entry.date),
+    issueDate: new Date(entry.issueDate),
+    dueDate: new Date(entry.dueDate),
     createdAt: new Date(entry.createdAt),
     updatedAt: new Date(entry.updatedAt),
   };
-}
-
-function toMonthKey(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  return `${y}-${m}`;
 }
 
 async function loadEntryFromMonthList(
@@ -72,16 +66,6 @@ export async function loadEntryByIdFromCache(
 
       if (entry) {
         const parsed = parseEntryDates(entry);
-        if (parsed.isFixed && parsed.type === 'EXPENSE' && !listMonthFilter) {
-          const normalized = await loadEntryFromMonthList(
-            id,
-            toMonthKey(parsed.date)
-          );
-          if (normalized) {
-            mergeIntoLocalStorageCache(normalized);
-            return normalized;
-          }
-        }
         return parsed;
       }
     }
@@ -122,16 +106,6 @@ export async function loadEntryByIdFromCache(
     }
 
     let resolved = parseEntryDates(entry);
-
-    if (resolved.isFixed && resolved.type === 'EXPENSE' && !listMonthFilter) {
-      const normalized = await loadEntryFromMonthList(
-        id,
-        toMonthKey(resolved.date)
-      );
-      if (normalized) {
-        resolved = normalized;
-      }
-    }
 
     const updatedCache = [
       ...(cachedEntries ? JSON.parse(cachedEntries) : []),

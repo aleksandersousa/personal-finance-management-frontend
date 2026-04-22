@@ -1,6 +1,41 @@
 import { HttpClient } from '@/data/protocols';
 
+class HttpError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly body?: unknown
+  ) {
+    super(message);
+  }
+}
+
 export class FetchHttpClient implements HttpClient {
+  private async parseResponse<T>(response: Response): Promise<T> {
+    if (response.status === 204) {
+      return undefined as T;
+    }
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      return undefined as T;
+    }
+    return (await response.json()) as T;
+  }
+
+  private async throwHttpError(response: Response): Promise<never> {
+    let errorBody: unknown;
+    try {
+      errorBody = await response.json();
+    } catch {
+      errorBody = undefined;
+    }
+    throw new HttpError(
+      `HTTP error! status: ${response.status}`,
+      response.status,
+      errorBody
+    );
+  }
+
   async get<T = unknown>(url: string, config?: RequestInit): Promise<T> {
     const response = await fetch(url, {
       method: 'GET',
@@ -12,10 +47,10 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      await this.throwHttpError(response);
     }
 
-    return (await response.json()) as T;
+    return this.parseResponse<T>(response);
   }
 
   async post<T = unknown>(
@@ -33,12 +68,10 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`, {
-        cause: await response.json(),
-      });
+      await this.throwHttpError(response);
     }
 
-    return (await response.json()) as T;
+    return this.parseResponse<T>(response);
   }
 
   async put<T = unknown>(
@@ -56,10 +89,10 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      await this.throwHttpError(response);
     }
 
-    return (await response.json()) as T;
+    return this.parseResponse<T>(response);
   }
 
   async patch<T = unknown>(
@@ -77,10 +110,10 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      await this.throwHttpError(response);
     }
 
-    return (await response.json()) as T;
+    return this.parseResponse<T>(response);
   }
 
   async delete<T = unknown>(url: string, config?: RequestInit): Promise<T> {
@@ -93,9 +126,9 @@ export class FetchHttpClient implements HttpClient {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      await this.throwHttpError(response);
     }
 
-    return (await response.json()) as T;
+    return this.parseResponse<T>(response);
   }
 }

@@ -6,13 +6,16 @@ import { revalidateTag } from 'next/cache';
 import { getCurrentUser, isRedirectError } from '@/presentation/helpers';
 import { makeNextCookiesStorageAdapter } from '@/main/factories/storage/next-cookie-storage-adapter-factory';
 import { makeRemoteUpdateEntry } from '@/main/factories/usecases/entries/update-entry-factory';
+import { makeRemoteToggleMonthlyPaymentStatus } from '@/main/factories/usecases';
 import { logoutAction } from '@/presentation/actions/auth/logout-action';
-import { toggleMonthlyPaymentStatusAction } from './toggle-monthly-payment-status-action';
 
 export async function updateEntryAction(
   id: string,
   data: EntryFormData,
-  listMonthFilter?: string
+  listMonthFilter?: string,
+  isPaid?: boolean,
+  isRecurring?: boolean,
+  existingRecurrenceId?: string | null
 ): Promise<void> {
   try {
     const getStorage = makeNextCookiesStorageAdapter();
@@ -28,38 +31,23 @@ export async function updateEntryAction(
       id,
       description: data.description,
       amount: Math.round(data.amount * 100),
-      type: data.type,
       categoryId: data.categoryId,
-      date: data.date,
-      isFixed: data.isFixed,
-      isPaid: data.isPaid,
+      issueDate: data.issueDate,
+      dueDate: data.dueDate,
+      recurrenceId: isRecurring ? (existingRecurrenceId ?? undefined) : null,
+      recurrenceType:
+        isRecurring && !existingRecurrenceId ? ('MONTHLY' as const) : undefined,
     };
 
     const updateEntry = makeRemoteUpdateEntry();
-    await updateEntry.update(params);
+    const updatedEntry = await updateEntry.update(params);
 
-    if (
-      data.isFixed &&
-      data.type === 'EXPENSE' &&
-      listMonthFilter &&
-      /^\d{4}-\d{2}$/.test(listMonthFilter)
-    ) {
-      const [yStr, mStr] = listMonthFilter.split('-');
-      const year = Number(yStr);
-      const month = Number(mStr);
-      if (month >= 1 && month <= 12 && year >= 2000) {
-        const monthlyResult = await toggleMonthlyPaymentStatusAction({
-          entryId: id,
-          year,
-          month,
-          isPaid: data.isPaid ?? false,
-        });
-        if (!monthlyResult.success) {
-          throw new Error(
-            monthlyResult.error || 'Falha ao sincronizar status do mês'
-          );
-        }
-      }
+    if (updatedEntry.entryType === 'EXPENSE' && isPaid !== undefined) {
+      const togglePaymentStatus = makeRemoteToggleMonthlyPaymentStatus();
+      await togglePaymentStatus.toggle({
+        entryId: id,
+        isPaid,
+      });
     }
 
     revalidateTag('entries', 'max');

@@ -40,12 +40,11 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   const [filters, setFilters] = useState({
     month: searchParams.get('month') || currentMonth,
-    type: searchParams.get('type') || 'all',
     category: searchParams.get('category') || 'all',
-    sort: searchParams.get('sort') || 'date',
+    entryType: searchParams.get('entryType') || 'all',
+    sort: searchParams.get('sort') || 'dueDate',
     order: searchParams.get('order') || 'desc',
     search: searchParams.get('search') || '',
-    isPaid: searchParams.get('isPaid') || 'all',
   });
 
   const [showFilters, setShowFilters] = useState(false);
@@ -98,17 +97,12 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     fetchMonthsYears();
   }, []);
 
-  // Load categories on mount and when type filter changes
+  // Load categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoadingCategories(true);
-        const typeParam =
-          filters.type === 'all'
-            ? undefined
-            : (filters.type as 'INCOME' | 'EXPENSE');
         const result = await loadCategoriesAction({
-          type: typeParam,
           limit: 100, // Load all categories
         });
 
@@ -126,36 +120,10 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
     };
 
     fetchCategories();
-  }, [filters.type]);
-
-  // Reset category filter when type changes to avoid invalid selections
-  useEffect(() => {
-    if (filters.category !== 'all' && categories.length > 0) {
-      // Check if the selected category exists and is valid for the current type
-      const selectedCategory = categories.find(
-        cat => cat.id === filters.category
-      );
-
-      // If category doesn't exist or type doesn't match (when type filter is set), reset to 'all'
-      if (
-        !selectedCategory ||
-        (filters.type !== 'all' && selectedCategory.type !== filters.type)
-      ) {
-        // Category is invalid, reset to 'all'
-        const newFilters = { ...filters, category: 'all' };
-        setFilters(newFilters);
-        updateURL(newFilters);
-      }
-    }
-  }, [filters.type, filters.category, categories]);
+  }, []);
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
-
-    // If type changes to a specific type (not 'all'), reset category to 'all' to avoid invalid selections
-    if (key === 'type' && value !== 'all' && filters.type !== value) {
-      newFilters.category = 'all';
-    }
 
     setFilters(newFilters);
 
@@ -192,12 +160,11 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
   const clearFilters = () => {
     const clearedFilters = {
       month: currentMonth,
-      type: 'all',
       category: 'all',
-      sort: 'date',
+      entryType: 'all',
+      sort: 'dueDate',
       order: 'desc',
       search: '',
-      isPaid: 'all',
     };
     setFilters(clearedFilters);
     updateURL(clearedFilters);
@@ -228,12 +195,11 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
 
   const hasActiveFilters =
     filters.month !== currentMonth ||
-    filters.type !== 'all' ||
     filters.category !== 'all' ||
-    filters.sort !== 'date' ||
+    filters.entryType !== 'all' ||
+    filters.sort !== 'dueDate' ||
     filters.order !== 'desc' ||
-    filters.search !== '' ||
-    filters.isPaid !== 'all';
+    filters.search !== '';
 
   const shouldShowHeader = showHeader || externalHasActiveFilters;
 
@@ -305,29 +271,6 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
         <div className='border-t border-border-foreground pt-4 mt-4 mx-4 md:mx-0'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
             <div>
-              <label className='block text-sm text-slate-700 mb-1'>Tipo</label>
-              <Select
-                value={filters.type}
-                onValueChange={value => handleFilterChange('type', value)}
-              >
-                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
-                  <SelectValue placeholder='Selecione o tipo' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all' className='rounded-lg'>
-                    Todos
-                  </SelectItem>
-                  <SelectItem value='INCOME' className='rounded-lg'>
-                    Receitas
-                  </SelectItem>
-                  <SelectItem value='EXPENSE' className='rounded-lg'>
-                    Despesas
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
               <label className='block text-sm text-slate-700 mb-1'>
                 Categoria
               </label>
@@ -349,53 +292,18 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                   <SelectItem value='all' className='rounded-lg'>
                     Todas
                   </SelectItem>
-                  {categories
-                    .filter(category => {
-                      // Filter categories based on type filter
-                      if (filters.type === 'all') {
-                        return true; // Show all categories when type is 'all'
-                      }
-                      return category.type === filters.type;
-                    })
-                    .map(category => (
-                      <SelectItem
-                        key={category.id}
-                        value={category.id}
-                        className='rounded-lg'
-                      >
-                        {category.name}
-                      </SelectItem>
-                    ))}
+                  {categories.map(category => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id}
+                      className='rounded-lg'
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
-
-            {filters.type === 'EXPENSE' && (
-              <div>
-                <label className='block text-sm text-slate-700 mb-1'>
-                  Status de Pagamento
-                </label>
-                <Select
-                  value={filters.isPaid}
-                  onValueChange={value => handleFilterChange('isPaid', value)}
-                >
-                  <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
-                    <SelectValue placeholder='Selecione o status' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='all' className='rounded-lg'>
-                      Todas
-                    </SelectItem>
-                    <SelectItem value='true' className='rounded-lg'>
-                      Pagas
-                    </SelectItem>
-                    <SelectItem value='false' className='rounded-lg'>
-                      Não Pagas
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
 
             <div>
               <label className='block text-sm text-slate-700 mb-1'>
@@ -409,7 +317,7 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                   <SelectValue placeholder='Selecione a ordenação' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='date' className='rounded-lg'>
+                  <SelectItem value='dueDate' className='rounded-lg'>
                     Data
                   </SelectItem>
                   <SelectItem value='amount' className='rounded-lg'>
@@ -417,6 +325,29 @@ export const EntriesFilters: React.FC<EntriesFiltersProps> = ({
                   </SelectItem>
                   <SelectItem value='description' className='rounded-lg'>
                     Descrição
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className='block text-sm text-slate-700 mb-1'>Tipo</label>
+              <Select
+                value={filters.entryType}
+                onValueChange={value => handleFilterChange('entryType', value)}
+              >
+                <SelectTrigger className='w-full h-10 rounded-lg transition-colors'>
+                  <SelectValue placeholder='Selecione o tipo' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all' className='rounded-lg'>
+                    Todos
+                  </SelectItem>
+                  <SelectItem value='INCOME' className='rounded-lg'>
+                    Receita
+                  </SelectItem>
+                  <SelectItem value='EXPENSE' className='rounded-lg'>
+                    Despesa
                   </SelectItem>
                 </SelectContent>
               </Select>

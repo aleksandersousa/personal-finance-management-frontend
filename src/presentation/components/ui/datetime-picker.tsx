@@ -22,6 +22,7 @@ export interface DateTimePickerProps {
   required?: boolean;
   className?: string;
   id?: string;
+  minDate?: Date;
 }
 
 export function DateTimePicker({
@@ -35,6 +36,7 @@ export function DateTimePicker({
   required,
   className,
   id,
+  minDate,
 }: DateTimePickerProps) {
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(value);
@@ -112,6 +114,11 @@ export function DateTimePicker({
     ? format(selectedDate, "PPP 'às' HH:mm", { locale: ptBR })
     : null;
 
+  const normalizedMinDate = minDate ? new Date(minDate) : undefined;
+  if (normalizedMinDate) {
+    normalizedMinDate.setHours(0, 0, 0, 0);
+  }
+
   return (
     <div className='space-y-1'>
       {label && (
@@ -152,6 +159,17 @@ export function DateTimePicker({
               mode='single'
               selected={selectedDate}
               onSelect={handleDateSelect}
+              disabled={
+                normalizedMinDate
+                  ? date => {
+                      const compareDate = new Date(date);
+                      compareDate.setHours(0, 0, 0, 0);
+                      return (
+                        compareDate.getTime() < normalizedMinDate.getTime()
+                      );
+                    }
+                  : undefined
+              }
             />
             <div className='border-t pt-3 mt-3'>
               <div className='flex items-center gap-2'>

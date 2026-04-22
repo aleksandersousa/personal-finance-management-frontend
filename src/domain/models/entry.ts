@@ -1,14 +1,15 @@
 export interface EntryModel {
   id: string;
-  amount: number; // em centavos
-  description: string;
-  type: 'INCOME' | 'EXPENSE';
-  isFixed: boolean;
-  isPaid: boolean;
-  categoryId: string;
-  categoryName: string;
+  recurrenceId: string | null;
   userId: string;
-  date: Date;
+  categoryId: string | null;
+  description: string;
+  amount: number;
+  issueDate: Date;
+  dueDate: Date;
+  isPaid: boolean;
+  entryType?: 'INCOME' | 'EXPENSE';
+  categoryName?: string | null;
   isFromPreviousMonth?: boolean;
   createdAt: Date;
   updatedAt: Date;

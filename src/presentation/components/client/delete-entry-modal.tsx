@@ -48,7 +48,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
 
   if (!isOpen) return null;
 
-  const isIncome = entry.type === 'INCOME';
+  const isIncome = entry.entryType === 'INCOME';
   const amount = (entry.amount / 100).toFixed(2);
 
   return (
@@ -76,7 +76,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
               {entry.description}
             </div>
             <div className='mt-1 text-xs text-neutral-500'>
-              {entry.categoryName} • {formatDate(entry.date)}
+              {entry.categoryName} • {formatDate(entry.dueDate)}
             </div>
             <div
               className={`mt-2 text-sm font-semibold ${
@@ -88,7 +88,7 @@ export const DeleteEntryModal: React.FC<DeleteEntryModalProps> = ({
           </div>
 
           {/* Fixed Entry Warning */}
-          {entry.isFixed && (
+          {entry.recurrenceId && (
             <div className='p-4 border rounded-xl bg-amber-50 border-amber-200'>
               <div className='flex flex-col gap-3'>
                 <div className='flex items-center gap-3'>
